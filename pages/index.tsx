@@ -1,11 +1,21 @@
 import MainLayout from '@/components/layout/main'
+import { useRouter } from 'next/router'
+import { NextpageWithLayout } from '../models'
 
-export default function Home() {
+const Home: NextpageWithLayout = () =>{
+  // const router = useRouter()
+  // function goToListDetail(){
+  //     router.push({
+  //          pathname:'/search'
+  //     })
+  // }
   return (
-    <>
-      <MainLayout>
+      <div>
         Homepage
-      </MainLayout>
-    </>
+      </div>
   )
 }
+
+Home.Layout = MainLayout
+
+export default Home
