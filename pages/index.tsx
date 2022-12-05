@@ -1,5 +1,5 @@
 import MainLayout from '@/components/layout/main'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 import { NextpageWithLayout } from '../models'
 
 const Home: NextpageWithLayout = () =>{
