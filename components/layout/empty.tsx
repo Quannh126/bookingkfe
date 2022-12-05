@@ -2,10 +2,10 @@ import * as React from 'react';
 import { LayoutProps } from '@/models/index';
 
 
-export default function EmptyLayout(props: LayoutProps) {
+export default function EmptyLayout({children}: LayoutProps) {
     return (
-        <div>
-
-        </div>
+        <>
+        {children}
+        </>
     );
 }
