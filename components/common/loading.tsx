@@ -1,24 +1,18 @@
 import * as React from "react";
-import Image from "next/image";
-export interface ILoading {
-    screen: string;
-}
-
-export default function LoadingPage({ screen }: ILoading) {
-    if (screen == "login") {
-        return (
-            <>
-                <Image
-                    src="/public/img/spinner.gif"
-                    alt=""
-                    className="spinner"
-                />
-            </>
-        );
-    }
+import { Box } from "@mui/system";
+export default function LoadingPage() {
     return (
         <>
-            <Image src="/public/img/spinner.gif" alt="" className="spinner" />
+            <Box
+                component="img"
+                sx={{
+                    width: "80%",
+                    height: "30vh",
+                }}
+                src="img/spinner.gif"
+                alt=""
+                className="spinner"
+            />
         </>
     );
 }

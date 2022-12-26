@@ -1,19 +1,17 @@
-import { useAuth } from "@/hooks/index";
-import * as React from "react";
+import MainLayout from "@/components/layout/main";
+import { useAuth } from "@/hooks";
+import React, { useState } from "react";
+import { LoginForm } from "@/components/auth";
 
+// import { DialogTitle, Button } from "@mui/material";
+import { LoginPayload } from "@/models";
 export interface ILoginPage {}
 
 export default function LoginPage() {
     const { profile, login, logout } = useAuth({
         revalidateOnMount: false,
     });
-    async function handelLoginClick() {
-        try {
-            await login();
-        } catch (error) {
-            console.log("failed to login");
-        }
-    }
+
     async function handelLogoutClick() {
         try {
             await logout();
@@ -21,12 +19,19 @@ export default function LoginPage() {
             console.log("failed to logut");
         }
     }
+
+    async function handelLoginSubmit(payload: LoginPayload) {
+        try {
+            await login(payload);
+        } catch (error) {
+            console.log("failed to login");
+        }
+    }
     return (
         <div>
-            <h1>Login</h1>
-            <p>Profile {JSON.stringify(profile || {}, null, 4)}</p>
-            <button onClick={handelLoginClick}>Login</button>
             <button onClick={handelLogoutClick}>Logout</button>
+            <LoginForm onSubmit={handelLoginSubmit} />
         </div>
     );
 }
+LoginPage.Layout = MainLayout;

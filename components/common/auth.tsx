@@ -1,20 +1,29 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { ReactElement, useEffect } from "react";
 import LoadingPage from "./loading";
 
 export interface AuthProp {
-    children: any;
+    children: ReactElement;
 }
 
 export default function Auth({ children }: AuthProp) {
     const router = useRouter();
     const { profile, firstLoading } = useAuth();
     useEffect(() => {
-        if (!firstLoading && !profile?.username) router.push("/login");
+        if (
+            !firstLoading &&
+            !profile?.username &&
+            profile?.username === "adminBooking"
+        )
+            router.push("/");
     }, [router, profile, firstLoading]);
-    if (!profile?.usename) {
-        return LoadingPage;
+    if (process.env.NODE_ENV === "development") {
+        return <>{children}</>;
     }
+    if (!profile?.usename) {
+        return <LoadingPage />;
+    }
+
     return <>{children}</>;
 }

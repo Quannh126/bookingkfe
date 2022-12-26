@@ -1,4 +1,6 @@
-import authApi from "@/api/authApi";
+// import { authApi } from "@/api";
+import { authApi } from "@/api";
+import { LoginPayload } from "@/models";
 import useSWR from "swr";
 import { PublicConfiguration } from "swr/_internal";
 export function useAuth(options?: Partial<PublicConfiguration>) {
@@ -12,11 +14,8 @@ export function useAuth(options?: Partial<PublicConfiguration>) {
         ...options,
     });
     const firstLoading = profile === undefined && error === undefined;
-    async function login() {
-        await authApi.login({
-            email: "Quannh123625@gmail.com",
-            password: "123456789",
-        });
+    async function login(payload: LoginPayload) {
+        await authApi.login(payload);
         await mutate();
     }
 

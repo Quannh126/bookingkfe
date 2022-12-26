@@ -1,21 +1,12 @@
-import AdminLayout from '@/components/layout/admin'
+import AdminLayout from "@/components/layout/admin";
+import { Box } from "@mui/system";
 // import { useRouter } from 'next/router'
-import { NextpageWithLayout } from '../models'
+import { NextpageWithLayout } from "../models";
 
-const Admin: NextpageWithLayout = () =>{
-  // const router = useRouter()
-  // function goToListDetail(){
-  //     router.push({
-  //          pathname:'/search'
-  //     })
-  // }
-  return (
-      <div>
-        Homepage
-      </div>
-  )
-}
+const Admin: NextpageWithLayout = () => {
+    return <Box>Homepage</Box>;
+};
 
-Admin.Layout = AdminLayout
+Admin.Layout = AdminLayout;
 
-export default Admin
+export default Admin;
