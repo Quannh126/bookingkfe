@@ -5,16 +5,30 @@ import { InputField } from "../form";
 import { IconButton, InputAdornment, Button } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoginPayload } from "@/models";
+import yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 export interface LoginFormProps {
+    // eslint-disable-next-line no-unused-vars
     onSubmit?: (payload: LoginPayload) => void;
 }
 export function LoginForm({ onSubmit }: LoginFormProps) {
+    const schema = yup.object().shape({
+        username: yup
+            .string()
+            .required("Please enter username")
+            .min(4, "Username is required to have at least 4 characters"),
+        password: yup
+            .string()
+            .required("Please enter username")
+            .min(6, "Username is required to have at least 6 characters"),
+    });
     const [showPassword, setShowPassword] = useState(false);
     const { control, handleSubmit } = useForm<LoginPayload>({
         defaultValues: {
             email: "",
             password: "",
         },
+        resolver: yupResolver(schema),
     });
     function handleLoginSubmit(payload: LoginPayload) {
         console.log(payload);

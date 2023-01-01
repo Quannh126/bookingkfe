@@ -11,6 +11,7 @@ export function useAuth(options?: Partial<PublicConfiguration>) {
     } = useSWR("/auth", {
         dedupingInterval: 60 * 60 * 1000,
         revalidateOnFocus: false,
+        //revalidateOnMount: false,
         ...options,
     });
     const firstLoading = profile === undefined && error === undefined;

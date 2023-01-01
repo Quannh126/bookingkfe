@@ -19,16 +19,39 @@ export const ROUTE_LIST = [
 
 export const ROUTE_ADMIN = [
     {
-        label: "Dashboard",
-        path: "/Dashboard",
+        label: "Home",
+        path: "/admin",
     },
     {
         label: "Car",
-        path: "/Cars",
+        path: "/admin/cars",
     },
     {
-        label: "Trip",
-        path: "/trip",
+        label: "Trips",
+        path: "/admin/trips",
+    },
+    {
+        label: "User",
+        path: "/admin/user",
+    },
+    {
+        label: "Logout",
+        path: "/logout",
+    },
+];
+
+export const ROUTE_HEADER_ADMIN = [
+    {
+        label: "Car",
+        path: "/admin/cars",
+    },
+    {
+        label: "Booking",
+        path: "/admin/booking",
+    },
+    {
+        label: "User",
+        path: "/admin/user",
     },
     {
         label: "Logout",

@@ -10,6 +10,7 @@ export interface AuthProp {
 export default function Auth({ children }: AuthProp) {
     const router = useRouter();
     const { profile, firstLoading } = useAuth();
+
     useEffect(() => {
         if (
             !firstLoading &&

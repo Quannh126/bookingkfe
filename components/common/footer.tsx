@@ -11,7 +11,7 @@ export function Footer() {
         { icon: Twitter, url: "" },
     ];
     return (
-        <Box component="footer" py={2} textAlign="center">
+        <Box component="footer" sx={{ pl: "200px" }} py={2} textAlign="center">
             <Stack direction="row" justifyContent="center">
                 {link.map((item, idx) => (
                     <Box

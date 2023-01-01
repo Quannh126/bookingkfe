@@ -9,7 +9,7 @@ export type InputFieldProps = TextFieldProps & {
 export function InputField({ name, control, ...rest }: InputFieldProps) {
     const {
         field: { onChange, onBlur, value, ref },
-        // fieldState: { error },
+        fieldState: { error },
     } = useController({
         name,
         control,
@@ -17,13 +17,15 @@ export function InputField({ name, control, ...rest }: InputFieldProps) {
     return (
         <TextField
             size="small"
+            fullWidth
             margin="normal"
-            sx={{ ml: 2 }}
             name={name}
             value={value}
             onChange={onChange}
             onBlur={onBlur}
+            error={!!error}
             inputRef={ref}
+            helperText={error?.message}
             {...rest}
         />
     );

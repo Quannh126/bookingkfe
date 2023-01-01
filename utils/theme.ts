@@ -70,5 +70,15 @@ export const theme = createTheme({
                 },
             },
         },
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    "&.active": {
+                        backgroundColor: "rgba(255, 255, 255, 0.06)",
+                        color: "rgb(255, 255, 255)",
+                    },
+                },
+            },
+        },
     },
 });
