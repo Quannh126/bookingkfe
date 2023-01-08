@@ -5,7 +5,7 @@ import { InputField } from "../form";
 import { IconButton, InputAdornment, Button } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoginPayload } from "@/models";
-import yup from "yup";
+import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 export interface LoginFormProps {
     // eslint-disable-next-line no-unused-vars
