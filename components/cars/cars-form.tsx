@@ -21,7 +21,10 @@ export function CarForm({ onAdd, onCancel, activity }: CarFormProps) {
             .required("Please enter name")
             .min(4, "Username is required to have at least 4 characters"),
         typeCar: yup.string().required("Please enter type"),
-        capacity: yup.number().required("Please enter capacity"),
+        capacity: yup
+            .string()
+            .required("Please enter capacity")
+            .matches(/^[0-9]+$/, "Capacity be only digits"),
     });
     const { control, handleSubmit } = useForm<ICarForm>({
         defaultValues: {

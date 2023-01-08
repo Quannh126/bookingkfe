@@ -1,11 +1,12 @@
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { InputField } from "../form";
 import { Button, InputAdornment } from "@mui/material";
 import { SearchTrip } from "@/models";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 export interface SearchCarProps {
+    // eslint-disable-next-line no-unused-vars
     onSearch?: (search: SearchTrip) => void;
 }
 export function SearchCarForm({ onSearch }: SearchCarProps) {
@@ -21,7 +22,7 @@ export function SearchCarForm({ onSearch }: SearchCarProps) {
         console.log(searchTrip);
         onSearch?.(searchTrip);
     }
-    const minDate = new Date();
+
     return (
         <Box
             component="form"

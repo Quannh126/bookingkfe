@@ -21,6 +21,11 @@
             "@/api/*": ["./api-client/*"]
         }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+    "include": [
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        "components/form/select-field2tsx"
+    ],
     "exclude": ["node_modules"]
 }

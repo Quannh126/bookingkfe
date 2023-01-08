@@ -1,89 +1,57 @@
 import AdminLayout from "@/components/layout/admin";
 import { Box } from "@mui/system";
-import {
-    Button,
-    Typography,
-    Dialog,
-    DialogTitle,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-} from "@mui/material";
+import { Button, Typography, Dialog } from "@mui/material";
 // import { TransitionProps } from "@mui/material/transitions";
-import { useCar } from "@/hooks";
-import { ICarForm, NextpageWithLayout } from "../../models";
-import React, { useState } from "react";
-import { CarForm, TableListCar, CarUpdateForm } from "@/components/cars";
-import { ICarDetail } from "@/models";
+import { useTrip } from "@/hooks";
+import { KeyValue, NextpageWithLayout } from "@/models";
+import React, { useEffect, useState } from "react";
+import { TripForm } from "@/components/trips";
+
+import { ITripForm } from "@/models/Trips/trip-form";
+import { carsApi } from "@/api-client";
+import { TableListTrips } from "@/components/trips/table-list-trips";
 
 // import TableListCar from "@/components/cars/table-list-cars";
 const AdminTrips: NextpageWithLayout = () => {
-    const [showCarForm, setShowCarForm] = useState(false);
-    const [selected, setSelected] = useState({});
-    const [showCarUpdateForm, setShowCarUpdateForm] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
+    const [showTripForm, setShowTripForm] = useState(false);
+
     const handleClose = (event: Object, reason: string) => {
         if (reason && reason == "backdropClick") return;
-        setShowCarForm(false);
-    };
-    const handleClose2 = (event: Object, reason: string) => {
-        if (reason && reason == "backdropClick") return;
-        setShowCarUpdateForm(false);
-    };
-    const handleEditClick = (data: ICarDetail) => {
-        setSelected(data);
-        setShowCarUpdateForm(true);
+        setShowTripForm(false);
     };
 
-    const hanleRemoveClick = (data: ICarDetail) => {
-        setSelected(data);
-        setShowAlert(true);
-    };
+    const { addTrip } = useTrip();
+    const [allOptions, setAllOptions] = useState(Array<KeyValue>);
 
-    const { addCars, listCar, removeCar, updateCar, mutate } = useCar({
-        revalidateOnMount: true,
-    });
-
-    async function handleAddCar(data: ICarForm) {
+    async function handleAddTrip(carid: string, data: ITripForm) {
         try {
-            await addCars(data);
-            setShowCarForm(false);
+            await addTrip(carid, data);
+            setShowTripForm(false);
         } catch (error) {
             console.log("failed to login");
         }
     }
-    async function handleDelelteSubmit(data: ICarDetail) {
-        try {
-            setShowAlert(false);
-            await removeCar(data._id!);
-            mutate();
-        } catch (error) {
-            console.log("Remove failse with error", error);
-        }
-    }
+    useEffect(() => {
+        async function fetchData() {
+            const res = await carsApi.getListNameCars();
 
-    async function handleUpdateSubmit(data: ICarDetail) {
-        try {
-            setShowCarUpdateForm(false);
-            await updateCar(data);
-            mutate();
-        } catch (error) {
-            console.log("Update failse with error: ", error);
+            //const list: Array<KeyValue> = res as Array<KeyValue>
+            setAllOptions(res);
         }
-    }
-
+        fetchData();
+    }, []);
     return (
         <Box>
             <Typography component="h1" variant="h4" p={2}>
                 Trips manager
             </Typography>
 
-            <Button onClick={() => setShowCarForm(true)} variant="outlined">
+            <Button onClick={() => setShowTripForm(true)} variant="outlined">
                 Add trip
             </Button>
 
             <Dialog
-                open={showCarForm}
+                open={showTripForm}
                 // TransitionComponent={Transition}
                 keepMounted={false}
                 onClose={handleClose}
@@ -91,53 +59,14 @@ const AdminTrips: NextpageWithLayout = () => {
                 aria-labelledby="add-trip"
                 aria-describedby="add-trip"
             >
-                <CarForm
-                    onAdd={handleAddCar}
-                    onCancel={() => setShowCarForm(false)}
-                    activity="Create"
+                <TripForm
+                    onAdd={handleAddTrip}
+                    onCancel={() => setShowTripForm(false)}
+                    allOptions={allOptions}
                 />
             </Dialog>
-            <Dialog
-                open={showCarUpdateForm}
-                keepMounted={false}
-                onClose={handleClose2}
-                maxWidth="lg"
-                aria-labelledby="update-trip"
-                aria-describedby="update-trip"
-            >
-                <CarUpdateForm
-                    initData={selected as ICarDetail}
-                    onUpdate={handleUpdateSubmit}
-                    activity="Update"
-                    onCancel={() => setShowCarUpdateForm(false)}
-                />
-            </Dialog>
-            <Dialog open={showAlert} keepMounted>
-                <DialogTitle id="alert-dialog-title">{"Thông báo"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to delete this item?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setShowAlert(false)}>Huỷ</Button>
-                    <Button
-                        onClick={() =>
-                            handleDelelteSubmit(selected as ICarDetail)
-                        }
-                        autoFocus
-                    >
-                        Đồng ý
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            {listCar && (
-                <TableListCar
-                    listCar={listCar}
-                    handleEditClick={handleEditClick}
-                    handleRemoveClick={hanleRemoveClick}
-                />
-            )}
+
+            <TableListTrips listTrips="asd" />
         </Box>
     );
 };

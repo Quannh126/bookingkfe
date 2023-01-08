@@ -22,21 +22,40 @@ export const ROUTE_ADMIN = [
         label: "Home",
         path: "/admin",
     },
+
     {
-        label: "Car",
+        label: "Bán vé",
+        path: "/admin/ticket",
+    },
+
+    {
+        label: "Lập lịch chạy",
+        path: "/admin/schedule",
+    },
+
+    {
+        label: "Quản lý xe",
         path: "/admin/cars",
     },
+
     {
-        label: "Trips",
+        label: "Quản lý chuyến",
         path: "/admin/trips",
     },
+
     {
-        label: "User",
+        label: "Quản lý nhân viên",
         path: "/admin/user",
     },
+
     {
-        label: "Logout",
-        path: "/logout",
+        label: "Quản lý khách hàng",
+        path: "/admin/customer",
+    },
+
+    {
+        label: "Báo cáo",
+        path: "/admin/report",
     },
 ];
 

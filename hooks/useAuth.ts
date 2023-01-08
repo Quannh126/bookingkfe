@@ -2,18 +2,24 @@
 import { authApi } from "@/api";
 import { LoginPayload } from "@/models";
 import useSWR from "swr";
-import { PublicConfiguration } from "swr/_internal";
+import { PublicConfiguration, SWRConfiguration } from "swr/_internal";
+export interface IProfile {
+    name: string;
+    username: string;
+    avatar: string;
+    phone: string;
+}
 export function useAuth(options?: Partial<PublicConfiguration>) {
+    const config: SWRConfiguration = {
+        dedupingInterval: 60 * 60 * 1000,
+        revalidateOnFocus: false,
+        ...options,
+    };
     const {
         data: profile,
         error,
         mutate,
-    } = useSWR("/auth", {
-        dedupingInterval: 60 * 60 * 1000,
-        revalidateOnFocus: false,
-        //revalidateOnMount: false,
-        ...options,
-    });
+    } = useSWR<IProfile, Error>("/auth", null, config);
     const firstLoading = profile === undefined && error === undefined;
     async function login(payload: LoginPayload) {
         await authApi.login(payload);
@@ -22,7 +28,7 @@ export function useAuth(options?: Partial<PublicConfiguration>) {
 
     async function logout() {
         await authApi.logout();
-        mutate({}, false);
+        mutate(undefined, false);
     }
     return {
         profile,

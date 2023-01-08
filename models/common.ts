@@ -14,3 +14,8 @@ export type AppPropsWithLayout = AppProps & {
     Component: NextpageWithLayout;
     emotionCache?: EmotionCache;
 };
+
+export type KeyValue = {
+    key: string;
+    value: string;
+};

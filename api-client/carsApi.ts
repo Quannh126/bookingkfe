@@ -1,4 +1,4 @@
-import { ICarDetail, ICarForm } from "@/models";
+import { ICarDetail, ICarForm, KeyValue } from "@/models";
 import { axiosClient } from "./axiosClient";
 export const carsApi = {
     addCars(data: ICarForm) {
@@ -14,5 +14,9 @@ export const carsApi = {
 
     updateCar(data: ICarDetail) {
         return axiosClient.put("/admin/cars", data);
+    },
+
+    getListNameCars(): Promise<Array<KeyValue>> {
+        return axiosClient.get("/admin/cars/listNameCars");
     },
 };

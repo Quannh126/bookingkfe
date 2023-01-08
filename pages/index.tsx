@@ -2,7 +2,7 @@ import MainLayout from "@/components/layout/main";
 import { SearchCarForm } from "@/components/search";
 import { useSearchTrip } from "@/hooks";
 import { Box } from "@mui/system";
-import { Stack } from "@mui/material";
+// import { Stack } from "@mui/material";
 // import { useRouter } from 'next/router'
 import { NextpageWithLayout, SearchTrip } from "../models";
 import { Popular } from "@/components/home";

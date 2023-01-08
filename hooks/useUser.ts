@@ -20,10 +20,9 @@ export function useCar(options?: Partial<PublicConfiguration>) {
         await carsApi.addCars(date);
         mutate();
     }
-    // async function (date: ICarForm) {
-    //     await carsApi.addCars(date);
-    //     mutate();
-    // }
+    async function getCars() {
+        return await carsApi.getAllCars();
+    }
 
     async function removeCar(id: string) {
         let res = await carsApi.removeCar(id);
@@ -39,7 +38,7 @@ export function useCar(options?: Partial<PublicConfiguration>) {
         listCar,
         error,
         addCars,
-
+        getCars,
         removeCar,
         updateCar,
         mutate,

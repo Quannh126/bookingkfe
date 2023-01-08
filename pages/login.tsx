@@ -1,6 +1,6 @@
 import MainLayout from "@/components/layout/main";
 import { useAuth } from "@/hooks";
-import React, { useState } from "react";
+import React from "react";
 import { LoginForm } from "@/components/auth";
 
 // import { DialogTitle, Button } from "@mui/material";
@@ -8,7 +8,7 @@ import { LoginPayload } from "@/models";
 export interface ILoginPage {}
 
 export default function LoginPage() {
-    const { profile, login, logout } = useAuth({
+    const { login, logout } = useAuth({
         revalidateOnMount: false,
     });
 

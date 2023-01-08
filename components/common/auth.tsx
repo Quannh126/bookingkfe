@@ -22,7 +22,7 @@ export default function Auth({ children }: AuthProp) {
     if (process.env.NODE_ENV === "development") {
         return <>{children}</>;
     }
-    if (!profile?.usename) {
+    if (!profile?.username) {
         return <LoadingPage />;
     }
 
