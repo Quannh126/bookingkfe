@@ -38,9 +38,9 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
         <Box component="form" onSubmit={handleSubmit(handleLoginSubmit)}>
             <InputField
                 type="text"
-                name="email"
+                name="username"
                 control={control}
-                label="Email"
+                label="Username"
             />
             <InputField
                 type={showPassword ? "text" : "password"}
