@@ -6,10 +6,13 @@ export default function LoadingPage() {
             <Box
                 component="img"
                 sx={{
-                    width: "80%",
-                    height: "30vh",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    marginRight: "-50%",
+                    transform: "translate(-50%, -50%)",
                 }}
-                src="img/spinner.gif"
+                src="https://res.cloudinary.com/dhsmam1yc/image/upload/v1673367122/MyImg/Spinner-1s-200px_qcldpc.gif"
                 alt=""
                 className="spinner"
             />

@@ -2,36 +2,32 @@ import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { InputField } from "../form";
-import { IconButton, InputAdornment, Button } from "@mui/material";
+import { IconButton, InputAdornment, Button, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoginPayload } from "@/models";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 export interface LoginFormProps {
+    errorMsg?: string;
     // eslint-disable-next-line no-unused-vars
     onSubmit?: (payload: LoginPayload) => void;
 }
-export function LoginForm({ onSubmit }: LoginFormProps) {
+export function LoginForm({ onSubmit, errorMsg }: LoginFormProps) {
     const schema = yup.object().shape({
-        username: yup
-            .string()
-            .required("Please enter username")
-            .min(4, "Username is required to have at least 4 characters"),
-        password: yup
-            .string()
-            .required("Please enter username")
-            .min(6, "Username is required to have at least 6 characters"),
+        username: yup.string().required("Please enter username"),
+        //.min(4, "Username is required to have at least 4 characters"),
+        password: yup.string().required("Please enter password"),
     });
     const [showPassword, setShowPassword] = useState(false);
     const { control, handleSubmit } = useForm<LoginPayload>({
         defaultValues: {
-            email: "",
+            username: "",
             password: "",
         },
         resolver: yupResolver(schema),
     });
     function handleLoginSubmit(payload: LoginPayload) {
-        console.log(payload);
+        //console.log(payload);
         onSubmit?.(payload);
     }
     return (
@@ -68,8 +64,19 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
                     ),
                 }}
             />
-            <Button type="submit" variant="contained">
-                Submit
+            {errorMsg && (
+                <Typography
+                    component="p"
+                    sx={{
+                        color: "red",
+                        alignSelf: "stretch",
+                    }}
+                >
+                    {errorMsg}
+                </Typography>
+            )}
+            <Button type="submit" variant="contained" fullWidth sx={{ mt: 4 }}>
+                Login
             </Button>
         </Box>
     );

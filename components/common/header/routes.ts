@@ -30,7 +30,7 @@ export const ROUTE_ADMIN = [
 
     {
         label: "Lập lịch chạy",
-        path: "/admin/schedule",
+        path: "/admin/trips",
     },
 
     {
@@ -39,8 +39,8 @@ export const ROUTE_ADMIN = [
     },
 
     {
-        label: "Quản lý chuyến",
-        path: "/admin/trips",
+        label: "Quản lý tuyến",
+        path: "/admin/lines",
     },
 
     {

@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import clsx from "clsx";
 export interface IHeaderDesktopProps {}
 
-export default function HeaderDesktop() {
+export default function HeaderAdmin() {
     const router = useRouter();
     const color1 = alpha("#223354", 0.2);
     const color2 = alpha("#223354", 0.1);

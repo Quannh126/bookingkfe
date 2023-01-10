@@ -25,7 +25,7 @@ export default function AdminLayout({ children }: LayoutProps) {
                 >
                     {children}
                 </Box>
-                <Footer />
+                <Footer isSideBar={true} />
             </Stack>
         </Auth>
     );

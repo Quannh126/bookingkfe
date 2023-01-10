@@ -10,61 +10,61 @@ import {
     DialogContentText,
 } from "@mui/material";
 // import { TransitionProps } from "@mui/material/transitions";
-import { useCar } from "@/hooks";
-import { ICarForm, NextpageWithLayout } from "../../models";
+import { useLines } from "@/hooks";
+import { ILineForm, NextpageWithLayout } from "../../models";
 import React, { useState } from "react";
-import { CarForm, TableListCar, CarUpdateForm } from "@/components/cars";
-import { ICarDetail } from "@/models";
+import { LineForm, TableListLine, LineUpdateForm } from "@/components/lines";
+import { ILineDetail } from "@/models";
 
-// import TableListCar from "@/components/cars/table-list-cars";
-const AdminCars: NextpageWithLayout = () => {
-    const [showCarForm, setShowCarForm] = useState(false);
+// import TableListLine from "@/components/Lines/table-list-Lines";
+const AdminLines: NextpageWithLayout = () => {
+    const [showLineForm, setShowLineForm] = useState(false);
     const [selected, setSelected] = useState({});
-    const [showCarUpdateForm, setShowCarUpdateForm] = useState(false);
+    const [showLineUpdateForm, setShowLineUpdateForm] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const handleClose = (event: Object, reason: string) => {
         if (reason && reason == "backdropClick") return;
-        setShowCarForm(false);
+        setShowLineForm(false);
     };
     const handleClose2 = (event: Object, reason: string) => {
         if (reason && reason == "backdropClick") return;
-        setShowCarUpdateForm(false);
+        setShowLineUpdateForm(false);
     };
-    const handleEditClick = (data: ICarDetail) => {
+    const handleEditClick = (data: ILineDetail) => {
         setSelected(data);
-        setShowCarUpdateForm(true);
+        setShowLineUpdateForm(true);
     };
 
-    const hanleRemoveClick = (data: ICarDetail) => {
+    const hanleRemoveClick = (data: ILineDetail) => {
         setSelected(data);
         setShowAlert(true);
     };
 
-    const { addCars, listCar, removeCar, updateCar } = useCar({
+    const { addLines, listLine, removeLine, updateLine } = useLines({
         revalidateOnMount: true,
     });
 
-    async function handleAddCar(data: ICarForm) {
+    async function handleAddLine(data: ILineForm) {
         try {
-            await addCars(data);
-            setShowCarForm(false);
+            await addLines(data);
+            setShowLineForm(false);
         } catch (error) {
             console.log("failed to login");
         }
     }
-    async function handleDelelteSubmit(data: ICarDetail) {
+    async function handleDelelteSubmit(data: ILineDetail) {
         try {
             setShowAlert(false);
-            await removeCar(data._id!);
+            await removeLine(data._id!);
         } catch (error) {
             console.log("Remove failse with error", error);
         }
     }
 
-    async function handleUpdateSubmit(data: ICarDetail) {
+    async function handleUpdateSubmit(data: ILineDetail) {
         try {
-            setShowCarUpdateForm(false);
-            await updateCar(data);
+            setShowLineUpdateForm(false);
+            await updateLine(data);
         } catch (error) {
             console.log("Update failse with error: ", error);
         }
@@ -72,56 +72,60 @@ const AdminCars: NextpageWithLayout = () => {
 
     return (
         <Box>
-            <Typography component="h1" variant="h4" p={2}>
-                Car manager
+            <Typography
+                component="h1"
+                variant="h4"
+                p={2}
+                className={"labelHeader"}
+            >
+                Line manager
             </Typography>
 
-            <Button onClick={() => setShowCarForm(true)} variant="outlined">
-                Add car
+            <Button onClick={() => setShowLineForm(true)} variant="outlined">
+                Add Line
             </Button>
 
             <Dialog
-                open={showCarForm}
+                open={showLineForm}
                 // TransitionComponent={Transition}
                 keepMounted={false}
                 onClose={handleClose}
                 maxWidth="lg"
-                aria-labelledby="add-car"
-                aria-describedby="add-car"
+                aria-labelledby="add-Line"
+                aria-describedby="add-Line"
             >
-                <CarForm
-                    onAdd={handleAddCar}
-                    onCancel={() => setShowCarForm(false)}
-                    activity="Create"
+                <LineForm
+                    onAdd={handleAddLine}
+                    onCancel={() => setShowLineForm(false)}
                 />
             </Dialog>
             <Dialog
-                open={showCarUpdateForm}
+                open={showLineUpdateForm}
                 keepMounted={false}
                 onClose={handleClose2}
                 maxWidth="lg"
-                aria-labelledby="update-car"
-                aria-describedby="update-car"
+                aria-labelledby="update-Line"
+                aria-describedby="update-Line"
             >
-                <CarUpdateForm
-                    initData={selected as ICarDetail}
+                <LineUpdateForm
+                    initData={selected as ILineDetail}
                     onUpdate={handleUpdateSubmit}
                     activity="Update"
-                    onCancel={() => setShowCarUpdateForm(false)}
+                    onCancel={() => setShowLineUpdateForm(false)}
                 />
             </Dialog>
             <Dialog open={showAlert} keepMounted>
                 <DialogTitle id="alert-dialog-title">{"Thông báo"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to delete this item?
+                        Có chắc chắn muốn xoá bản ghi?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setShowAlert(false)}>Huỷ</Button>
                     <Button
                         onClick={() =>
-                            handleDelelteSubmit(selected as ICarDetail)
+                            handleDelelteSubmit(selected as ILineDetail)
                         }
                         autoFocus
                     >
@@ -129,9 +133,9 @@ const AdminCars: NextpageWithLayout = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-            {listCar && (
-                <TableListCar
-                    listCar={listCar}
+            {listLine && (
+                <TableListLine
+                    listLine={listLine}
                     handleEditClick={handleEditClick}
                     handleRemoveClick={hanleRemoveClick}
                 />
@@ -140,6 +144,6 @@ const AdminCars: NextpageWithLayout = () => {
     );
 };
 
-AdminCars.Layout = AdminLayout;
+AdminLines.Layout = AdminLayout;
 
-export default AdminCars;
+export default AdminLines;

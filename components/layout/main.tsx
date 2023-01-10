@@ -10,7 +10,7 @@ export default function MainLayout({ children }: LayoutProps) {
             <Box component="main" flexGrow={1}>
                 {children}
             </Box>
-            <Footer />
+            <Footer isSideBar={false} />
         </Stack>
     );
 }

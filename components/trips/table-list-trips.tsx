@@ -24,6 +24,7 @@ export function TableListTrips({ listTrips }: ITableListCarProps) {
                                     sx={{
                                         display: "flex",
                                         padding: "12px 16px",
+                                        flexDirection: "column",
                                     }}
                                 >
                                     <Box
@@ -37,7 +38,7 @@ export function TableListTrips({ listTrips }: ITableListCarProps) {
                                             variant="h6"
                                             component="div"
                                         >
-                                            Lizard
+                                            Hà Nội
                                         </Typography>
                                         <Box>
                                             <IconButton
@@ -54,7 +55,16 @@ export function TableListTrips({ listTrips }: ITableListCarProps) {
                                             </IconButton>
                                         </Box>
                                     </Box>
-                                    <Box display="flex">
+                                    <Box
+                                        display="flex"
+                                        sx={{
+                                            justifyContent: "space-between",
+                                            "& div": {
+                                                mt: 1,
+                                                mb: 1,
+                                            },
+                                        }}
+                                    >
                                         <Box>
                                             <Typography>From</Typography>
                                             <Typography>Ha Noi</Typography>
@@ -68,13 +78,21 @@ export function TableListTrips({ listTrips }: ITableListCarProps) {
                                             <Typography>136000</Typography>
                                         </Box>
                                     </Box>
-                                    <Box display="flex">
+                                    <Box
+                                        display="flex"
+                                        sx={{
+                                            justifyContent: "space-between",
+                                            "& div": {
+                                                mt: 1,
+                                                mb: 1,
+                                            },
+                                        }}
+                                    >
                                         <Typography>JourenyDate:</Typography>
-                                        <Typography>Date</Typography>
-                                        <Typography>From:</Typography>
+
                                         <Typography>Ha Noi</Typography>
-                                        <Link>Booking</Link>
                                     </Box>
+                                    <Link>Booking</Link>
                                 </Box>
                             </Paper>
                         </Grid>

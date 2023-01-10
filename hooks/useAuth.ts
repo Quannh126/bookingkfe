@@ -1,10 +1,11 @@
 // import { authApi } from "@/api";
 import { authApi } from "@/api";
 import { LoginPayload } from "@/models";
+// import { useRouter } from "next/router";
 import useSWR from "swr";
 import { PublicConfiguration, SWRConfiguration } from "swr/_internal";
 export interface IProfile {
-    name: string;
+    fullname: string;
     username: string;
     avatar: string;
     phone: string;
@@ -15,11 +16,12 @@ export function useAuth(options?: Partial<PublicConfiguration>) {
         revalidateOnFocus: false,
         ...options,
     };
+    //const router = useRouter();
     const {
         data: profile,
         error,
         mutate,
-    } = useSWR<IProfile, Error>("/auth", null, config);
+    } = useSWR<IProfile, Error>("/auth", config);
     const firstLoading = profile === undefined && error === undefined;
     async function login(payload: LoginPayload) {
         await authApi.login(payload);
@@ -33,6 +35,7 @@ export function useAuth(options?: Partial<PublicConfiguration>) {
     return {
         profile,
         error,
+        mutate,
         login,
         logout,
         firstLoading,

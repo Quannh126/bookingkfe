@@ -1,17 +1,26 @@
 import * as React from "react";
 import { Box, Icon, Stack, Typography } from "@mui/material";
 import { Facebook, Instagram, Twitter } from "@mui/icons-material";
+import clsx from "clsx";
+export interface IFooterProps {
+    isSideBar: boolean;
+}
 
-export interface IFooterProps {}
-
-export function Footer() {
+export function Footer({ isSideBar }: IFooterProps) {
     const link = [
         { icon: Facebook, url: "" },
         { icon: Instagram, url: "" },
         { icon: Twitter, url: "" },
     ];
     return (
-        <Box component="footer" sx={{ pl: "200px" }} py={2} textAlign="center">
+        <Box
+            component="footer"
+            className={clsx({
+                havesidebar: isSideBar,
+            })}
+            py={2}
+            textAlign="center"
+        >
             <Stack direction="row" justifyContent="center">
                 {link.map((item, idx) => (
                     <Box

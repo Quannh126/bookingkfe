@@ -12,16 +12,20 @@ export default function Auth({ children }: AuthProp) {
     const { profile, firstLoading } = useAuth();
 
     useEffect(() => {
+        console.log(!firstLoading && !profile?.username);
+        console.log(firstLoading);
+        console.log(profile);
+
         if (
             !firstLoading &&
-            !profile?.username &&
-            profile?.username === "adminBooking"
-        )
-            router.push("/");
+            !profile?.username
+            //&& profile?.username === "adminBooking"
+        ) {
+            router.push(`/login?from=${encodeURIComponent(router.asPath)}`);
+            //router.push("/login");
+        }
     }, [router, profile, firstLoading]);
-    if (process.env.NODE_ENV === "development") {
-        return <>{children}</>;
-    }
+
     if (!profile?.username) {
         return <LoadingPage />;
     }
