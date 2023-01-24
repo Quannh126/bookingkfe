@@ -8,8 +8,9 @@ import React, { useEffect, useState } from "react";
 import { TripForm } from "@/components/trips";
 
 import { ITripForm } from "@/models/Trips/trip-form";
-import { carsApi } from "@/api-client";
+import { locationApi } from "@/api-client";
 import { TableListTrips } from "@/components/trips/table-list-trips";
+import FilterBar from "@/components/trips/filter_bar";
 
 // import TableListCar from "@/components/cars/table-list-cars";
 const AdminTrips: NextpageWithLayout = () => {
@@ -20,36 +21,36 @@ const AdminTrips: NextpageWithLayout = () => {
         setShowTripForm(false);
     };
 
-    const { addTrip } = useTrip();
-    const [allOptions, setAllOptions] = useState(Array<KeyValue>);
+    const { addTrip, listTrips } = useTrip();
+    const [configProvince, setListProvince] = useState([] as Array<KeyValue>);
 
-    async function handleAddTrip(carid: string, data: ITripForm) {
+    async function handleAddTrip(data: ITripForm) {
         try {
-            await addTrip(carid, data);
+            await addTrip(data);
             setShowTripForm(false);
         } catch (error) {
             console.log("failed to login");
         }
     }
+
     useEffect(() => {
         async function fetchData() {
-            const res = await carsApi.getListNameCars();
-
-            //const list: Array<KeyValue> = res as Array<KeyValue>
-            setAllOptions(res);
+            const listProvince = await locationApi.getListProvince();
+            // const list: Array<KeyValue> = listLocation as Array<KeyValue>
+            setListProvince(listProvince);
         }
         fetchData();
     }, []);
     return (
-        <Box>
-            <Typography component="h1" variant="h4" p={2}>
+        <Box p={2}>
+            <Typography component="h1" variant="h4">
                 Trips manager
             </Typography>
 
             <Button onClick={() => setShowTripForm(true)} variant="outlined">
                 Add trip
             </Button>
-
+            <FilterBar />
             <Dialog
                 open={showTripForm}
                 // TransitionComponent={Transition}
@@ -62,11 +63,11 @@ const AdminTrips: NextpageWithLayout = () => {
                 <TripForm
                     onAdd={handleAddTrip}
                     onCancel={() => setShowTripForm(false)}
-                    allOptions={allOptions}
+                    configProvince={configProvince}
                 />
             </Dialog>
 
-            <TableListTrips listTrips="asd" />
+            <TableListTrips />
         </Box>
     );
 };

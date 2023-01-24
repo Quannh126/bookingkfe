@@ -9,3 +9,5 @@ export * from "./Trips/trip-detail";
 export * from "./Lines/line-detail";
 export * from "./Lines/lines";
 export * from "./Lines/lines-form";
+export * from "./Location/localtion";
+export * from "./Location/locations-form";

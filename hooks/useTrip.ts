@@ -14,20 +14,18 @@ export function useTrip(options?: Partial<PublicConfiguration>) {
         ...options,
     };
     const {
-        data: listCarDetail,
+        data: listTrips,
         error,
         mutate,
     } = useSWR<Array<ICarDetail>, Error>("/admin/trips", null, config);
 
-    async function addTrip(carid: string, date: ITripForm) {
-        await tripApi.addTrip(carid, date);
+    async function addTrip(date: ITripForm) {
+        await tripApi.addTrip(date);
         //mutate();
     }
 
     async function removeTrip(carid: string, tripid: string) {
         await tripApi.removeTrip(carid, tripid);
-        // console.log(res);
-        //mutate();
     }
 
     async function updateTrip(carid: string, data: ITripForm) {
@@ -36,7 +34,7 @@ export function useTrip(options?: Partial<PublicConfiguration>) {
     }
 
     return {
-        listCarDetail,
+        listTrips,
         error,
         addTrip,
         removeTrip,

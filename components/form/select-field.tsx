@@ -9,6 +9,7 @@ import {
     TextField,
     SelectProps,
     InputAdornment,
+    SelectChangeEvent,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Control, useController } from "react-hook-form";
@@ -17,6 +18,8 @@ export type SelectFieldProps = SelectProps & {
     name: string;
     control: Control<any>;
     allOptions: Array<KeyValue>;
+    // eslint-disable-next-line no-unused-vars
+    handleOnChange?: (e: SelectChangeEvent) => void;
 };
 
 export function SelectField({
@@ -24,10 +27,11 @@ export function SelectField({
     label,
     control,
     allOptions,
+    // handleOnChange,
     ...rest
 }: SelectFieldProps) {
     const {
-        field: { onChange, value },
+        field,
         // fieldState: { error },
     } = useController({
         name,
@@ -36,7 +40,7 @@ export function SelectField({
     const containsText = (text: string, searchText: string) =>
         text.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
-    const [selectedOption, setSelectedOption] = useState(value);
+    const [selectedOption, setSelectedOption] = useState(field.value);
 
     function getKey(value: string, allOptions: Array<KeyValue>) {
         return allOptions.find((item) => item.value === value)?.key;
@@ -57,10 +61,7 @@ export function SelectField({
 
     return (
         <FormControl fullWidth>
-            <InputLabel
-                id="search-select-label"
-                className="mui-style-vbyadn-MuiFormLabel-root-MuiInputLabel-root"
-            >
+            <InputLabel id="search-select-label" size="small">
                 {label}
             </InputLabel>
             <Select
@@ -75,9 +76,9 @@ export function SelectField({
                 name={name}
                 onChange={(e) => {
                     setSelectedOption(e.target.value);
-
-                    onChange(getKey(e.target.value, allOptions));
-                    console.log(e);
+                    field.onChange(getKey(e.target.value, allOptions));
+                    //console.log(e);
+                    // handleOnChange;
                 }}
                 onClose={() => setSearchText("")}
                 renderValue={() => selectedOption}

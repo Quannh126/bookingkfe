@@ -1,24 +1,37 @@
 import React from "react";
 import { Box } from "@mui/system";
-import { Grid, Link, Typography, IconButton, Paper } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import ClearIcon from "@mui/icons-material/Clear";
+import { Grid, Typography, Paper } from "@mui/material";
+// import clsx from "clsx";
+import { ITrip } from "@/models";
 // import TablePaginationActions from "./table-with-paging";
 
 // import { Identifier } from "typescript";
 export interface ITableListCarProps {
-    listTrips: string;
+    listTrips?: Array<ITrip> | [];
 }
 
 const list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 export function TableListTrips({ listTrips }: ITableListCarProps) {
     return (
-        <Box p={2} sx={{}}>
+        <Box sx={{}}>
             <Grid container spacing={3}>
                 {listTrips &&
                     list.map((item: Number, index) => (
-                        <Grid key={index} item xs={12} md={6}>
-                            <Paper elevation={2}>
+                        <Grid key={index} item xs={12} md={3}>
+                            <Paper
+                                elevation={2}
+                                sx={{
+                                    backgroundColor: "#ffe5c2",
+                                }}
+                                // className={clsx({
+                                //     fullColor:
+                                //         listTrips[index].seats_booked.length ===
+                                //         Number(listTrips[index].car.capacity),
+                                //     organdColor:
+                                //         listTrips[index].seats_booked.length ===
+                                //         Number(listTrips[index].car.capacity),
+                                // })}
+                            >
                                 <Box
                                     // pl={3}
                                     sx={{
@@ -35,64 +48,49 @@ export function TableListTrips({ listTrips }: ITableListCarProps) {
                                     >
                                         <Typography
                                             gutterBottom
-                                            variant="h6"
+                                            variant="h5"
                                             component="div"
                                         >
-                                            Hà Nội
+                                            12:30
                                         </Typography>
-                                        <Box>
-                                            <IconButton
-                                                aria-label="Edit"
-                                                //onClick={() => handleEditClick(car)}
-                                            >
-                                                <EditIcon />
-                                            </IconButton>
-                                            <IconButton
-                                                aria-label="Delete"
-                                                //onClick={() => handleRemoveClick(car)}
-                                            >
-                                                <ClearIcon />
-                                            </IconButton>
+                                        <Box
+                                        // className={clsx({
+                                        //     fullColorCapacity:
+                                        //         listTrips[index]
+                                        //             .seats_booked.length ===
+                                        //         Number(
+                                        //             listTrips[index].car
+                                        //                 .capacity
+                                        //         ),
+                                        //     organdColorCapacity:
+                                        //         listTrips[index]
+                                        //             .seats_booked.length ===
+                                        //         Number(
+                                        //             listTrips[index].car
+                                        //                 .capacity
+                                        //         ),
+                                        // })}
+                                        >
+                                            {12}/{30}
                                         </Box>
                                     </Box>
-                                    <Box
-                                        display="flex"
-                                        sx={{
-                                            justifyContent: "space-between",
-                                            "& div": {
-                                                mt: 1,
-                                                mb: 1,
-                                            },
-                                        }}
-                                    >
+                                    <Box>
                                         <Box>
-                                            <Typography>From</Typography>
-                                            <Typography>Ha Noi</Typography>
+                                            <Typography>
+                                                From: Tuyen Quang
+                                            </Typography>
+                                            {/* <Typography>Ha Noi</Typography> */}
                                         </Box>
                                         <Box>
-                                            <Typography>To</Typography>
-                                            <Typography>Ha Noi</Typography>
-                                        </Box>
-                                        <Box>
-                                            <Typography>Fare</Typography>
-                                            <Typography>136000</Typography>
+                                            <Typography>To: Ha Noi</Typography>
+                                            {/* <Typography>Ha Noi</Typography> */}
                                         </Box>
                                     </Box>
-                                    <Box
-                                        display="flex"
-                                        sx={{
-                                            justifyContent: "space-between",
-                                            "& div": {
-                                                mt: 1,
-                                                mb: 1,
-                                            },
-                                        }}
-                                    >
-                                        <Typography>JourenyDate:</Typography>
-
-                                        <Typography>Ha Noi</Typography>
+                                    <Box>
+                                        <Typography>
+                                            Biển số: 12A3-1221
+                                        </Typography>
                                     </Box>
-                                    <Link>Booking</Link>
                                 </Box>
                             </Paper>
                         </Grid>
