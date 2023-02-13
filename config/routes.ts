@@ -19,13 +19,13 @@ export const ROUTE_LIST = [
 
 export const ROUTE_ADMIN = [
     {
-        label: "Home",
+        label: "Dashboard",
         path: "/admin",
     },
 
     {
         label: "Bán vé",
-        path: "/admin/ticket",
+        path: "/admin/booking",
     },
 
     {
@@ -38,15 +38,10 @@ export const ROUTE_ADMIN = [
         path: "/admin/cars",
     },
 
-    {
-        label: "Quản lý tuyến",
-        path: "/admin/lines",
-    },
-
-    {
-        label: "Quản lý nhân viên",
-        path: "/admin/user",
-    },
+    // {
+    //     label: "Quản lý tuyến",
+    //     path: "/admin/lines",
+    // },
 
     {
         label: "Quản lý khách hàng",

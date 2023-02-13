@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Box } from "@mui/system";
 import { Container, Stack, Link } from "@mui/material";
-import { ROUTE_LIST } from "./routes";
+import { ROUTE_LIST } from "../../../config/routes";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 export interface IHeaderDesktopProps {}

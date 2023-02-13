@@ -7,6 +7,7 @@ export const config = {
         bodyParser: false,
     },
 };
+
 export default function handler(
     req: NextApiRequest,
     res: NextApiResponse<any>
@@ -14,6 +15,7 @@ export default function handler(
     return new Promise((resolve) => {
         const cookies = new Cookies(req, res);
         const accessToken = cookies.get("accessToken");
+
         if (accessToken) {
             req.headers.authorization = `Bearer ${accessToken}`;
         }

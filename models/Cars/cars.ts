@@ -5,15 +5,14 @@ export interface SearchCar {
     // seat?: Number;
 }
 export default interface ICar {
+    _id: string;
     name: string;
-    typeCar: string;
-    detail: string;
-    imagePath: string;
-    licensePlate: string;
+    type_car: string;
+    phonenumber: string;
+    driver_name: string;
+    license_plate: string;
     capacity: string;
     description: string;
-    driver_id: string;
-    driver2_id: string;
     comment: Array<IComment>;
     status: string;
 }

@@ -1,4 +1,4 @@
-import { ILineDetail, ILineForm, KeyValue } from "@/models";
+import { ILineDetail, ILineForm, NameValue } from "@/models";
 import { axiosClient } from "./axiosClient";
 export const LineApi = {
     addLines(data: ILineForm) {
@@ -16,7 +16,7 @@ export const LineApi = {
         return axiosClient.put("/admin/Lines", data);
     },
 
-    getListNameLines(): Promise<Array<KeyValue>> {
+    getListNameLines(): Promise<Array<NameValue>> {
         return axiosClient.get("/admin/Lines/listNameLines");
     },
 };

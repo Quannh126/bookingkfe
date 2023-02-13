@@ -12,7 +12,7 @@ export default function LoadingPage() {
                     marginRight: "-50%",
                     transform: "translate(-50%, -50%)",
                 }}
-                src="https://res.cloudinary.com/dhsmam1yc/image/upload/v1673367122/MyImg/Spinner-1s-200px_qcldpc.gif"
+                src="https://res.cloudinary.com/dhsmam1yc/image/upload/v1675589764/MyImg/Spinner-1s-200px_sgnprc.gif"
                 alt=""
                 className="spinner"
             />

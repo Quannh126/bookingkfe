@@ -1,7 +1,7 @@
 import * as React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import createEmotionServer from "@emotion/server/create-instance";
-import { theme, createEmotionCache, roboto } from "@/utils/index";
+import { createEmotionCache, roboto, PureLightTheme } from "@/utils/index";
 export default class MyDocument extends Document {
     render() {
         return (
@@ -10,7 +10,7 @@ export default class MyDocument extends Document {
                     {/* PWA primary color */}
                     <meta
                         name="theme-color"
-                        content={theme.palette.primary.main}
+                        content={PureLightTheme.palette.primary.main}
                     />
                     <link rel="shortcut icon" href="/favicon.ico" />
                     <link

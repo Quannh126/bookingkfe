@@ -1,6 +1,6 @@
 import { tripApi } from "@/api";
 
-import { SearchCar } from "@/models";
+// import { SearchCar } from "@/models";
 import useSWR from "swr";
 import { PublicConfiguration } from "swr/_internal";
 export function useSearchTrip(options?: Partial<PublicConfiguration>) {
@@ -14,10 +14,6 @@ export function useSearchTrip(options?: Partial<PublicConfiguration>) {
         ...options,
     });
 
-    async function searchTrip(searchData: SearchCar) {
-        await tripApi.searchTrip(searchData);
-        await mutate();
-    }
     async function getTrip(tripId: string) {
         await tripApi.getDetailTrip(tripId);
         await mutate();
@@ -27,6 +23,5 @@ export function useSearchTrip(options?: Partial<PublicConfiguration>) {
         listCar,
         error,
         getTrip,
-        searchTrip,
     };
 }

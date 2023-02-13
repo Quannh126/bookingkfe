@@ -1,10 +1,11 @@
 import React from "react";
 import { Box } from "@mui/system";
 import { List, ListItem, Button } from "@mui/material";
-import { ROUTE_ADMIN } from "./routes";
+import { ROUTE_ADMIN } from "../../../config/routes";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 import { useAuth } from "@/hooks";
+import { PureLightTheme } from "@/utils";
 export interface IHeaderDesktopProps {}
 
 export default function SideBar() {
@@ -31,8 +32,8 @@ export default function SideBar() {
     return (
         <Box>
             <Box
-                minWidth={200}
                 sx={{
+                    width: PureLightTheme.sidebar.width,
                     color: "rgba(255, 255, 255, 0.7)",
                     zIndex: "7",
                     height: "100%",

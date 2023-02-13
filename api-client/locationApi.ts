@@ -1,4 +1,4 @@
-import { ILocationForm, KeyValue } from "@/models";
+import { ILocation, ILocationForm, NameValue } from "@/models";
 import { axiosClient } from "./axiosClient";
 export const locationApi = {
     getLocation() {
@@ -13,18 +13,21 @@ export const locationApi = {
     removeLocation(province_id: string) {
         return axiosClient.delete(`/admin/locations/${province_id}`);
     },
-    getListProvince(): Promise<Array<KeyValue>> {
+    getListProvince(): Promise<Array<NameValue>> {
         return axiosClient.get(`/admin/locations/options`);
     },
-    getListDistrict(province_id: string): Promise<Array<KeyValue>> {
+    getListDistrict(province_id: string): Promise<Array<NameValue> | []> {
         return axiosClient.get(`/admin/locations/options/${province_id}`);
     },
     getListPoint(
         province_id: string,
         district_id: string
-    ): Promise<Array<KeyValue>> {
+    ): Promise<Array<NameValue>> {
         return axiosClient.get(
             `/admin/locations/options/${province_id}/${district_id}`
         );
+    },
+    getDetailProvince(province_id: string): Promise<ILocation> {
+        return axiosClient.get(`/admin/locations/detail/${province_id}`);
     },
 };

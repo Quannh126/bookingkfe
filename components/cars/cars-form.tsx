@@ -2,42 +2,52 @@ import { Box } from "@mui/system";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { InputField } from "../form";
-import { Button, Grid } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import { ICarForm } from "@/models";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+// import FileUpload from "react-mui-fileuploader";
+// import { UploadFileBox } from "../form/upload-file";
 
 export interface CarFormProps {
     // eslint-disable-next-line no-unused-vars
     onAdd?: (data: ICarForm) => void;
     onCancel: () => void;
-    activity: string;
 }
 
-export function CarForm({ onAdd, onCancel, activity }: CarFormProps) {
+export function CarForm({ onAdd, onCancel }: CarFormProps) {
     const schema = yup.object().shape({
         name: yup
             .string()
-            .required("Please enter name")
-            .min(4, "Username is required to have at least 4 characters"),
-        typeCar: yup.string().required("Please enter type"),
+            .required("Xin vui lòng nhập tên xe")
+            .min(4, "Tên xe ít nhất có 4 kí tự"),
+        type_car: yup.string().required("Vui lòng nhập kiểu xe"),
+        driver_name: yup
+            .string()
+            .required("Xin vui lòng nhập tên tài xế")
+            .min(4, "Tên tài xế ít nhất có 4 kí tự"),
+        license_plate: yup.string().required("Vui lòng nhập biển số xe"),
         capacity: yup
             .string()
-            .required("Please enter capacity")
-            .matches(/^[0-9]+$/, "Capacity be only digits"),
+            .required("Vui lòng nhập số ghế")
+            .matches(/^[0-9]+$/, "Số ghế phải là số"),
+        phonenumber: yup
+            .string()
+            .required("Vui lòng nhập số điện thoại")
+            .matches(/^[0-9]+$/, "số điện thoại phải là chữ số"),
     });
     const { control, handleSubmit } = useForm<ICarForm>({
         defaultValues: {
             name: "",
-            typeCar: "",
-            capacity: 0,
-            imagePath: "",
+            type_car: "",
+            capacity: "",
+            license_plate: "",
             description: "",
-            status: activity,
         },
         resolver: yupResolver(schema),
     });
     function handleAddSubmit(data: ICarForm) {
+        console.log(data);
         onAdd?.(data);
     }
     function handleOnCancel() {
@@ -59,42 +69,85 @@ export function CarForm({ onAdd, onCancel, activity }: CarFormProps) {
         >
             <Grid container spacing={1}>
                 <Grid item xs={12} md={12}>
+                    <Typography gutterBottom variant="h5" component="div">
+                        Thêm mới
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
                     <InputField
                         type="text"
                         name="name"
                         control={control}
-                        label="Name"
+                        label="Tên xe"
                     />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={3}>
                     <InputField
                         type="text"
-                        name="typeCar"
+                        name="type_car"
+                        label="Kiểu xe"
                         control={control}
-                        label="Type"
                     />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={3}>
                     <InputField
                         type="text"
-                        label="Capacity"
+                        label="Số ghế"
                         name="capacity"
                         control={control}
                     />
                 </Grid>
 
+                <Grid item xs={12} md={3}>
+                    <InputField
+                        type="text"
+                        label="Biển số xe"
+                        name="license_plate"
+                        control={control}
+                    />
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                    <InputField
+                        type="text"
+                        label="Tên tài xế"
+                        name="driver_name"
+                        control={control}
+                    />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                    <InputField
+                        type="text"
+                        label="Số điện thoại"
+                        name="phonenumber"
+                        control={control}
+                    />
+                </Grid>
+                {/* <Grid item xs={12} md={6}>
+                    <InputField
+                        type="text"
+                        label="Biển số xe"
+                        name="license_plate"
+                        control={control}
+                    />
+                </Grid> */}
+                {/* <Grid item xs={12} md={12}>
+                    <UploadFileBox name="attachment" control={control} />
+                </Grid> */}
+
                 <Grid item xs={12} md={12}>
                     <InputField
-                        label="Description"
+                        label="Mô tả"
                         type="text"
                         name="description"
                         multiline
                         rows={4}
-                        maxRows={6}
                         control={control}
                     />
                 </Grid>
-                <Grid item xs={2} md={2}>
+                <Grid item xs={12} md={8}></Grid>
+
+                <Grid item xs={12} md={1}>
                     <Button
                         type="submit"
                         variant="contained"
@@ -104,6 +157,9 @@ export function CarForm({ onAdd, onCancel, activity }: CarFormProps) {
                     >
                         Add
                     </Button>
+                </Grid>
+                <Grid item xs={12} md={1}></Grid>
+                <Grid item xs={2} md={1}>
                     <Button onClick={handleOnCancel}>Cancel</Button>
                 </Grid>
             </Grid>

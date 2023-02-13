@@ -1,12 +1,12 @@
-import MainLayout from "@/components/layout/main";
 import { useAuth } from "@/hooks";
 import React, { useState } from "react";
 import { LoginForm } from "@/components/auth";
-import { Typography, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import { Box } from "@mui/system";
 // import { DialogTitle, Button } from "@mui/material";
 import { LoginPayload } from "@/models";
 import { useRouter } from "next/router";
+import EmptyLayout from "@/components/layout/empty";
 
 // import AdminLayout from "@/components/layout/admin";
 export interface ILoginPage {}
@@ -21,11 +21,7 @@ export default function LoginPage() {
         try {
             await login(payload);
             console.log(profile);
-            // router.replace(
-            //     router.query.from
-            //         ? decodeURIComponent(router.query.from.toString())
-            //         : "/admin"
-            // );
+
             if (profile?.username === "Admin") {
                 router.replace(
                     router.query.from
@@ -40,14 +36,11 @@ export default function LoginPage() {
                 );
             }
         } catch (error) {
-            setErrorMsg("Sai rồi");
+            setErrorMsg("Tên đăng nhập hoặc mật khẩu không đúng");
         }
     }
     return (
         <Box>
-            <Typography component="h1" variant="h4" p={2}>
-                Login
-            </Typography>
             <Paper
                 elevation={4}
                 sx={{
@@ -63,4 +56,4 @@ export default function LoginPage() {
         </Box>
     );
 }
-LoginPage.Layout = MainLayout;
+LoginPage.Layout = EmptyLayout;

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Control, useController } from "react-hook-form";
 import { TextField, TextFieldProps } from "@mui/material";
+
 export type InputFieldProps = TextFieldProps & {
     name: string;
     control: Control<any>;
@@ -16,9 +17,9 @@ export function InputField({ name, control, ...rest }: InputFieldProps) {
     });
     return (
         <TextField
+            sx={{ m: 1 }}
             size="small"
             fullWidth
-            margin="normal"
             name={name}
             value={value}
             onChange={onChange}

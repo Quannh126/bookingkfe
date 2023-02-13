@@ -1,13 +1,19 @@
 export interface ILocation {
     name: string;
-    district: IDistrict[];
+    code: number;
+    division_type: string;
+    district: Array<IDistrict>;
 }
 
 export interface IDistrict {
     name: string;
-    pickup_point: IPickup_point[];
+    code: number;
+    division_type: string;
+    province_code: number;
+    point: Array<IPoint>;
 }
-
-export interface IPickup_point {
+export interface IPoint {
+    code: number;
     name: string;
+    address: string;
 }

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Box } from "@mui/system";
 import { Divider, Stack, Link, alpha } from "@mui/material";
-import { ROUTE_HEADER_ADMIN } from "./routes";
+import { ROUTE_HEADER_ADMIN } from "../../../config/routes";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 export interface IHeaderDesktopProps {}
@@ -18,7 +18,7 @@ export default function HeaderAdmin() {
                 color: "#6E759F",
                 position: "absolute",
                 right: 0,
-                left: "200px",
+                left: "218px",
                 width: "auto",
                 zIndex: 6,
                 borderBottom: "1px solid rgba(250, 250, 250, 0.3)",

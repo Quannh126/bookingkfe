@@ -7,6 +7,7 @@ export interface LayoutProps {
 }
 
 export type NextpageWithLayout = NextPage & {
+    // eslint-disable-next-line no-unused-vars
     Layout?: (props: LayoutProps) => ReactElement;
 };
 
@@ -15,7 +16,12 @@ export type AppPropsWithLayout = AppProps & {
     emotionCache?: EmotionCache;
 };
 
-export type KeyValue = {
-    key: string;
+export type NameValue = {
+    name: string;
     value: string;
+};
+
+export type KeyNameValue = {
+    key: string;
+    listOption: Array<NameValue>;
 };

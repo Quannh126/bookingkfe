@@ -14,9 +14,9 @@ export interface LoginFormProps {
 }
 export function LoginForm({ onSubmit, errorMsg }: LoginFormProps) {
     const schema = yup.object().shape({
-        username: yup.string().required("Please enter username"),
+        username: yup.string().required("Xin hãy nhập tài khoản"),
         //.min(4, "Username is required to have at least 4 characters"),
-        password: yup.string().required("Please enter password"),
+        password: yup.string().required("Xin hãy nhập mật khẩu"),
     });
     const [showPassword, setShowPassword] = useState(false);
     const { control, handleSubmit } = useForm<LoginPayload>({
@@ -32,17 +32,20 @@ export function LoginForm({ onSubmit, errorMsg }: LoginFormProps) {
     }
     return (
         <Box component="form" onSubmit={handleSubmit(handleLoginSubmit)}>
+            <Typography component="h1" variant="h4" p={2}>
+                Đăng nhập
+            </Typography>
             <InputField
                 type="text"
                 name="username"
                 control={control}
-                label="Username"
+                label="Tên đăng nhập"
             />
             <InputField
                 type={showPassword ? "text" : "password"}
                 name="password"
                 control={control}
-                label="Password"
+                label="Mật khẩu"
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">

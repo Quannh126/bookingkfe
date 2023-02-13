@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
+// import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 
@@ -10,16 +10,13 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 ) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-export interface AlertContent {
+export interface AlertContentProp {
     content: string;
-    typeAlert: "error" | "info" | "success" | "warning";
+    typeAlert?: "error" | "info" | "success" | "warning";
+    openInit: boolean;
 }
-export function SnackAlert({ content, typeAlert }: AlertContent) {
-    const [open, setOpen] = useState(true);
-
-    const handleClick = () => {
-        setOpen(true);
-    };
+export function SnackAlert({ content, typeAlert, openInit }: AlertContentProp) {
+    const [open, setOpen] = useState(openInit);
 
     const handleClose = (
         event?: React.SyntheticEvent | Event,
@@ -34,13 +31,10 @@ export function SnackAlert({ content, typeAlert }: AlertContent) {
 
     return (
         <Stack spacing={2} sx={{ width: "100%" }}>
-            <Button variant="outlined" onClick={handleClick}>
-                Open success snackbar
-            </Button>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                 <Alert
                     onClose={handleClose}
-                    severity={typeAlert}
+                    severity={!typeAlert ? "info" : typeAlert}
                     sx={{ width: "100%" }}
                 >
                     {content}

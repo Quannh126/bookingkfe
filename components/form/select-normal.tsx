@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
     Select,
@@ -6,14 +6,17 @@ import {
     FormControl,
     InputLabel,
     MenuItem,
+    FormHelperText,
+    SxProps,
+    Theme,
 } from "@mui/material";
 import { Control, useController } from "react-hook-form";
-import { KeyValue } from "@/models";
+import { NameValue } from "@/models";
 type SelectFieldProps = SelectProps & {
     name: string;
     control: Control<any>;
-    allOptions: Array<KeyValue>;
-    // eslint-disable-next-line no-unused-vars
+    allOptions: Array<NameValue> | [];
+    cssFormControll?: SxProps<Theme>;
 };
 
 export function SelectFieldNormal({
@@ -21,48 +24,48 @@ export function SelectFieldNormal({
     label,
     control,
     allOptions,
+    cssFormControll,
     ...rest
 }: SelectFieldProps) {
     const {
-        field,
-        // fieldState: { error },
+        field: { onChange, onBlur, value, ref },
+        fieldState: { error },
     } = useController({
         name,
         control,
     });
-    function getKey(value: string, allOptions: Array<KeyValue>) {
-        return allOptions.find((item) => item.value === value)?.key;
-    }
-
+    const [selectedOption, setSelectedOption] = useState(value);
+    // function getKey(value: string, allOptions: Array<NameValue>) {
+    //     return allOptions.find((item) => item.value === value)?.key;
+    // }
     return (
-        <FormControl fullWidth>
+        <FormControl fullWidth sx={cssFormControll}>
             <InputLabel id="select-label" size="small">
                 {label}
             </InputLabel>
             <Select
                 size="small"
-                fullWidth
                 labelId="select-label"
-                id="select"
+                fullWidth
                 label={label}
                 name={name}
+                inputRef={ref}
+                value={selectedOption}
+                onBlur={onBlur}
+                error={!!error}
                 onChange={(e) => {
-                    field.onChange(
-                        getKey(e.target.value!.toString(), allOptions)
-                    );
-                    // onChange;
-                    // //console.log(e);
-                    // // handleOnChange;
+                    setSelectedOption(e.target.value);
+                    onChange(e.target.value);
                 }}
-                inputRef={field.ref}
                 {...rest}
             >
                 {allOptions.map((item, index) => (
-                    <MenuItem key={index} value={item.key}>
-                        {item.value}
+                    <MenuItem key={index} value={item.value}>
+                        {item.name}
                     </MenuItem>
                 ))}
             </Select>
+            {error && <FormHelperText error>{error?.message}</FormHelperText>}
         </FormControl>
     );
 }

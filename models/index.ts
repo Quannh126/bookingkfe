@@ -11,3 +11,7 @@ export * from "./Lines/lines";
 export * from "./Lines/lines-form";
 export * from "./Location/localtion";
 export * from "./Location/locations-form";
+export * from "./Trips/trip-form";
+export * from "./Trips";
+export * from "./Customer";
+export * from "./Book";
