@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import clsx from "clsx";
 export interface IHeaderDesktopProps {}
 
-export default function HeaderDesktop() {
+export function HeaderDesktop() {
     const router = useRouter();
     return (
         <Box
