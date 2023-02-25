@@ -1,11 +1,6 @@
-import * as React from 'react';
-import { LayoutProps } from '@/models/index';
+import * as React from "react";
+import { LayoutProps } from "@/models/index";
 
-
-export default function EmptyLayout({children}: LayoutProps) {
-    return (
-        <>
-        {children}
-        </>
-    );
+export default function EmptyLayout({ children }: LayoutProps) {
+    return <>{children}</>;
 }

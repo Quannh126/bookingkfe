@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import clsx from "clsx";
 import { useAuth } from "@/hooks";
 import { PureLightTheme } from "@/utils";
-export interface IHeaderDesktopProps {}
 
 export default function SideBar() {
     const router = useRouter();

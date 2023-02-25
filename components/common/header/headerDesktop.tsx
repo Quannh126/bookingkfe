@@ -5,7 +5,7 @@ import { ROUTE_LIST } from "../../../config/routes";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 
-export function HeaderDesktop1() {
+export function HeaderDesktop() {
     const router = useRouter();
     return (
         <Box

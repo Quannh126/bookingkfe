@@ -4,9 +4,8 @@ import { Divider, Stack, Link, alpha } from "@mui/material";
 import { ROUTE_HEADER_ADMIN } from "../../../config/routes";
 import { useRouter } from "next/router";
 import clsx from "clsx";
-export interface IHeaderDesktopProps {}
 
-export default function HeaderAdmin() {
+export function HeaderAdmin() {
     const router = useRouter();
     const color1 = alpha("#223354", 0.2);
     const color2 = alpha("#223354", 0.1);
