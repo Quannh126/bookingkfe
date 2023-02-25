@@ -2,7 +2,8 @@ import * as React from "react";
 
 import HeaderAdmin from "./SideBar";
 import { Box } from "@mui/system";
-import { HeaderDesktop } from "./HeaderDesktop";
+import { HeaderDesktop1 } from "./HeaderDesktop";
+
 // import HeaderMobi from "./HeaderMobi";
 
 export interface IHeaderProps {}
@@ -11,7 +12,7 @@ export function Header() {
     return (
         <>
             {/* <HeaderMobi /> */}
-            <HeaderDesktop />
+            <HeaderDesktop1 />
         </>
     );
 }
