@@ -1,176 +1,150 @@
 import { Box } from "@mui/system";
-import React from "react";
-import { useForm, useFieldArray, useWatch } from "react-hook-form";
-import { InputField, SelectField, SelectFieldNormal } from "../form";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import {
-    Button,
-    Divider,
-    // FilledInput,
-    Grid,
-    IconButton,
-
-    // TextField,
-    Typography,
-} from "@mui/material";
+    DatePickerField,
+    InputField,
+    InputMoneyField,
+    SelectFieldNormal,
+} from "../form";
+import { Button, Divider, Grid, TextField, Typography } from "@mui/material";
 // import { locationApi } from "@/api-client";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ITripForm } from "@/models/Trips/trip-form";
+import { IBookingUpdateForm, ICustomer } from "@/models";
 import { NameValue } from "@/models";
+
 // import { carsApi } from "@/api-client";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+// import AddCircleIcon from "@mui/icons-material/AddCircle";
+// import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+// import useSWR, { SWRConfiguration } from "swr";
+import { TYPE_PAYMENT } from "@/config/type-sell";
+
+import PhoneNumberField from "../form/phonenumber-field";
+
 import useSWR, { SWRConfiguration } from "swr";
-import { TYPE_SELL } from "@/config/type-sell";
+import IBookingTrip, { ISeatDetail } from "@/models/Book/book-trip";
+import { PureLightTheme } from "@/utils";
 // type configData = {
 //     toLocations: Array<NameValue>;
 //     fromLocations: Array<NameValue>;
 // };
-export interface TripFormUpdateProps {
+
+export interface BookUpdateFormProps {
     configProvince: Array<NameValue> | [];
-    // configCar: Array<ICarDetail> | [];
     // eslint-disable-next-line no-unused-vars
-    onUpdate?: (data: ITripForm) => void;
+    updateBooking?: (data: IBookingUpdateForm) => void;
     onCancel: () => void;
-    data: ITripForm;
+    tripDetail: IBookingTrip;
+    selectedSeats: string;
+    s_journey_date: string;
+    book_detail: ISeatDetail;
+    list_id: string;
+    alertText?: string;
+    visiblealertText?: boolean;
 }
 
-let count = 0;
-export function BookFormUpdate({
-    onUpdate,
+// let count = 0;
+
+function getName(list: Array<NameValue>, value: String): string {
+    for (let i = 0; i < list.length; i++) {
+        if (list[i].value === value) {
+            return list[i].name;
+        }
+    }
+    return "";
+}
+export function BookUpdateForm({
+    updateBooking,
     onCancel,
     configProvince,
-    data,
+    tripDetail,
+    s_journey_date,
+    selectedSeats,
+    book_detail,
+    list_id,
+    alertText,
+    visiblealertText,
 }: // configCar,
-TripFormUpdateProps) {
+BookUpdateFormProps) {
     const schema = yup.object().shape({
-        to_id: yup.string().required("Please enter to"),
-
-        from_id: yup.string().required("Please enter from"),
-        car_id: yup.string().required("Vui lòng chọn xe"),
-        departure_time: yup
+        customer: yup.object().required("Xin chọn khách hàng"),
+        selected_seats: yup
             .string()
-            .required("Vui lòng nhập thời gian khởi hành")
+            .required("Xin nhập số ghế đã cập nhật")
             .matches(
-                /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/,
-                "Giờ khởi hành có định dạng mm:hh"
+                /^(?!.*(\b\d{1,2}\b).*\b\1\b)\b\d{1,2}\b(?:-\b\d{1,2}\b)*$/,
+                "Ghế đã chọn phải có dạng nối bởi dấu '-' và không được lặp"
             ),
-        destination_time: yup
-            .string()
-            .required("Vui lòng nhập thời gian dự kiến")
-            .matches(
-                /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/,
-                "Giờ dự kiến có định dạng mm:hh"
-            ),
-        fare: yup
-            .string()
-            .required("Vui lòng nhập giá vé")
-            .matches(/^[0-9]+$/, "Giá tiền chỉ có thể là số"),
     });
+
     const {
         // register,
         control,
-        watch,
         handleSubmit,
         // getValues,
-        // setValue,
-        formState: { errors },
-    } = useForm<ITripForm>({
-        defaultValues: data,
+        setValue,
+        watch,
+        // formState: { errors },
+    } = useForm<IBookingUpdateForm>({
+        defaultValues: {
+            list_id: list_id,
+            customer: book_detail!.customer,
+            pickup_point: book_detail!.booking.pickup_point,
+            dropoff_point: book_detail!.booking.dropoff_point,
+            note: book_detail!.booking.note,
+            journey_date: s_journey_date,
+            trip_id: tripDetail._id,
+            selected_seats: selectedSeats,
+            fare: selectedSeats.split("-").length * Number(tripDetail.fare),
+            status_payment: book_detail!.booking.status_payment,
+        },
         resolver: yupResolver(schema),
     });
 
-    // const [toId, setToId] = useState("");
-    // const [fromId, setFromId] = useState("");
-    // const [listDistrictPK, setListDistrictPK] = useState(
-    //     [] as Array<Array<NameValue>>
-    // );
-    // const [listDistrictDO, setListDistrictDO] = useState(
-    //     [] as Array<Array<NameValue>>
-    // );
-    // const [listPointPK, setListPointPK] = useState(
-    //     [] as Array<Array<NameValue>>
-    // );
-    // const [listPointDO, setListPointPK] = useState(
-    //     [] as Array<Array<NameValue>>
-    // );
-    // const [districtId, setDistrict] = useState("");
-
-    // const watchAllfield = watch();
-    const watchFrom = watch("from_id", "");
-    const watchTo = watch("to_id", "");
-    // const watchCar = watch("car_id", "");
-    const formValuesPK = useWatch({
-        name: "pickup_point",
-        control,
-    });
-
-    const formValuesDO = useWatch({
-        name: "dropoff_point",
-        control,
-    });
-    const useFieldArray1 = useFieldArray({
-        name: "pickup_point",
-        control,
-    });
-
-    const useFieldArray2 = useFieldArray({
-        name: "dropoff_point",
-        control,
-    });
-    // const useFieldArray2 = useFieldArray({
-    //     name: "dropoff_point",
-    //     control,
-    // });
-
-    function handleUpdateSubmit(data: ITripForm) {
+    // const customer = watch("customer");
+    console.log(book_detail);
+    function handleBookUpdateSubmit(data: IBookingUpdateForm) {
         console.log(data);
-        onUpdate?.(data);
+        updateBooking?.(data);
     }
     function handleOnCancel() {
         onCancel();
     }
-    const config: SWRConfiguration = {
-        dedupingInterval: 60 * 60 * 1000,
-        revalidateOnMount: false,
-        revalidateOnFocus: false,
-    };
-    const config2: SWRConfiguration = {
-        dedupingInterval: 60 * 60 * 1000,
+    let watchSeats = watch("selected_seats");
+
+    // const [optionDropoff, setOptionDropoff] = useState([] as Array<NameValue>);
+    // const [optionPickup, setOptionPickup] = useState([] as Array<NameValue>);
+    const configPoint: SWRConfiguration = {
+        dedupingInterval: 60 * 1000,
         revalidateOnMount: true,
         revalidateOnFocus: false,
+        shouldRetryOnError: true,
     };
-    const listDistrictFrom = useSWR<Array<NameValue> | [], Error>(
-        `/admin/locations/options/${watchFrom}`,
+    const customerGetOption: SWRConfiguration = {
+        dedupingInterval: 60 * 1000,
+        revalidateOnMount: true,
+        revalidateOnFocus: false,
+        shouldRetryOnError: true,
+    };
+
+    const dataRes = useSWR<
+        { dropoff: Array<NameValue>; pickup: Array<NameValue> },
+        Error
+    >(`/admin/trips/option/${tripDetail._id}`, null, configPoint);
+    const dataCustomer = useSWR<Array<ICustomer>, Error>(
+        `/admin/customer`,
         null,
-        config
+        customerGetOption
     );
 
-    const listDistrictTo = useSWR<Array<NameValue> | [], Error>(
-        `/admin/locations/options/${watchTo}`,
-        null,
-        config
-    );
+    useEffect(() => {
+        setValue(
+            "fare",
+            watchSeats.split("-").length * Number(tripDetail.fare)
+        );
+    }, [watchSeats, tripDetail, setValue]);
 
-    const listDetailPK = useSWR<Array<Array<NameValue>> | [], Error>(
-        `/admin/locations/detail/${watchFrom}`,
-        null,
-        config
-    );
-
-    const listDetailDO = useSWR<Array<Array<NameValue>> | [], Error>(
-        `/admin/locations/detail/${watchTo}`,
-        null,
-        config
-    );
-    const listMenuCar = useSWR<Array<NameValue> | [], Error>(
-        `/admin/cars/carsyettostart`,
-        null,
-        config2
-    );
-
-    count++;
-    console.log(count);
     return (
         <Box
             component="form"
@@ -184,324 +158,211 @@ TripFormUpdateProps) {
                 flexGrow: 1,
             }}
             p={4}
-            onSubmit={handleSubmit(handleUpdateSubmit)}
-            //onSubmit={() => console.log("submit")}
+            onSubmit={handleSubmit(handleBookUpdateSubmit)}
         >
-            <Grid container spacing={1}>
-                <Grid item xs={12} md={12}>
-                    <Typography gutterBottom variant="h5" component="div">
-                        Lập lịch chạy
-                    </Typography>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                    <SelectFieldNormal
-                        allOptions={configProvince}
-                        control={control}
-                        label="Từ"
-                        // {...register("from_id")}
-                        name="from_id"
-                    />
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                    <SelectFieldNormal
-                        allOptions={configProvince}
-                        control={control}
-                        label="Đến"
-                        // {...register("to_id")}
-                        name="to_id"
-                    />
-                </Grid>
+            <Grid container>
                 <Grid
                     item
                     xs={12}
                     md={12}
-                    sx={{ display: "flex", justifyContent: "center" }}
+                    display="flex"
+                    sx={{ justifyContent: "center" }}
                 >
-                    <Typography
-                        gutterBottom
-                        variant="h6"
-                        component="div"
-                        justifySelf="center"
-                    >
-                        Thời gian
+                    <Typography gutterBottom variant="h3" component="div">
+                        Thông tin đặt vé
                     </Typography>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <InputField
-                        type="text"
-                        label="Khởi hành"
-                        name="departure_time"
-                        control={control}
-                    />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <InputField
-                        type="text"
-                        label="Dự kiến"
-                        name="destination_time"
-                        control={control}
-                    />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <InputField
-                        type="text"
-                        label="Giá"
-                        name="fare"
-                        control={control}
-                    />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <SelectFieldNormal
-                        allOptions={TYPE_SELL}
-                        control={control}
-                        label="Kiểu bán vé"
-                        // {...register("to_id")}
-                        name="sell_type"
-                    />
-                </Grid>
-                <Grid
-                    item
-                    xs={12}
-                    md={12}
-                    sx={{ display: "flex", justifyContent: "center" }}
-                >
-                    <Typography
-                        gutterBottom
-                        variant="h6"
-                        component="div"
-                        justifySelf="center"
-                    >
-                        Chọn xe
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <SelectField
-                        allOptions={
-                            listMenuCar.data === undefined
-                                ? []
-                                : listMenuCar.data
-                        }
-                        control={control}
-                        label="Xe"
-                        // {...register("to_id")}
-                        //onChange={(e) => setCarId(e.target?.value.toString())}
-                        name="car_id"
-                    />
                 </Grid>
 
-                <Grid
-                    item
-                    xs={12}
-                    md={12}
-                    sx={{ display: "flex", justifyContent: "center" }}
-                >
-                    <Typography
-                        gutterBottom
-                        variant="h6"
-                        component="div"
-                        justifySelf="center"
-                    >
-                        Điểm đón trả khách
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} md={6} sx={{ display: "flex" }}>
-                    <Typography
-                        gutterBottom
-                        component="p"
-                        sx={{ alignSelf: "end" }}
-                    >
-                        Đón khách
-                    </Typography>
-
-                    <IconButton
-                        aria-label="Edit"
-                        onClick={() =>
-                            useFieldArray1.append({
-                                point_id: "",
-                                district_id: "",
-                            })
-                        }
-                    >
-                        <AddCircleIcon />
-                    </IconButton>
-                    <Divider />
-                </Grid>
-                <Grid item xs={12} md={6}></Grid>
-                {useFieldArray1.fields.map((field, index1) => {
-                    return (
-                        <Grid container spacing={1} key={field.id}>
-                            <Grid
-                                item
-                                xs={12}
-                                md={12}
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "flex-end",
-                                }}
+                <Grid item xs={12} md={5}>
+                    <Grid container>
+                        <Grid item xs={12} md={12}>
+                            <Typography
+                                gutterBottom
+                                variant="h3"
+                                component="div"
                             >
-                                <IconButton
-                                    aria-label="Remove"
-                                    onClick={() =>
-                                        useFieldArray1.remove(index1)
-                                    }
-                                >
-                                    <RemoveCircleIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <SelectFieldNormal
-                                    allOptions={
-                                        listDistrictFrom.data === undefined
-                                            ? []
-                                            : listDistrictFrom.data
-                                    }
-                                    control={control}
-                                    label="Quận"
-                                    className={
-                                        errors?.pickup_point?.[index1]
-                                            ?.district_id
-                                            ? "error"
-                                            : ""
-                                    }
-                                    defaultValue={field.district_id}
-                                    name={`pickup_point.${index1}.district_id`}
-                                />
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <SelectFieldNormal
-                                    allOptions={
-                                        listDetailPK.data === undefined ||
-                                        !formValuesPK[index1]
-                                            ? []
-                                            : listDetailPK.data[
-                                                  Number(
-                                                      formValuesPK[index1]
-                                                          .district_id
-                                                  )
-                                              ]
-                                    }
-                                    control={control}
-                                    label="Tên địa điểm"
-                                    className={
-                                        errors?.pickup_point?.[index1]?.point_id
-                                            ? "error"
-                                            : ""
-                                    }
-                                    defaultValue={field.point_id}
-                                    name={`pickup_point.${index1}.point_id`}
-                                />
-                            </Grid>
+                                Thông tin vé
+                            </Typography>
+                            <Divider sx={{ marginTop: 1 }} />
+                            <Typography variant="h5">
+                                {`${getName(
+                                    configProvince,
+                                    tripDetail.from_id!
+                                )} 
+                                 - 
+                                ${getName(
+                                    configProvince,
+                                    tripDetail.to_id!
+                                )} : ${tripDetail.departure_time}`}
+                            </Typography>
                         </Grid>
-                    );
-                })}
 
-                <Grid item xs={12} md={6} sx={{ display: "flex" }}>
-                    <Typography
-                        gutterBottom
-                        component="p"
-                        sx={{ alignSelf: "end" }}
-                    >
-                        Trả khách
-                    </Typography>
-
-                    <IconButton
-                        aria-label="Edit"
-                        onClick={() =>
-                            useFieldArray2.append({
-                                point_id: "",
-                                district_id: "",
-                            })
-                        }
-                    >
-                        <AddCircleIcon />
-                    </IconButton>
-                    <Divider />
-                </Grid>
-                <Grid item xs={12} md={6}></Grid>
-                {useFieldArray2.fields.map((field, index) => {
-                    return (
-                        <Grid container spacing={1} key={field.id}>
-                            <Grid
-                                item
-                                xs={12}
-                                md={12}
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "flex-end",
-                                }}
-                            >
-                                <IconButton
-                                    aria-label="Remove"
-                                    onClick={() => useFieldArray2.remove(index)}
-                                >
-                                    <RemoveCircleIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <SelectFieldNormal
-                                    allOptions={
-                                        listDistrictTo.data === undefined
-                                            ? []
-                                            : listDistrictTo.data
-                                    }
-                                    control={control}
-                                    label="Quận"
-                                    className={
-                                        errors?.dropoff_point?.[index]
-                                            ?.district_id
-                                            ? "error"
-                                            : ""
-                                    }
-                                    defaultValue={field.district_id}
-                                    name={`dropoff_point.${index}.district_id`}
-                                />
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <SelectFieldNormal
-                                    allOptions={
-                                        listDetailDO.data === undefined ||
-                                        !formValuesDO[index]
-                                            ? []
-                                            : listDetailDO.data[
-                                                  Number(
-                                                      formValuesDO[index]
-                                                          .district_id
-                                                  )
-                                              ]
-                                    }
-                                    control={control}
-                                    label="Tên địa điểm"
-                                    className={
-                                        errors?.dropoff_point?.[index]?.point_id
-                                            ? "error"
-                                            : ""
-                                    }
-                                    defaultValue={field.point_id}
-                                    name={`dropoff_point.${index}.point_id`}
-                                />
-                            </Grid>
+                        <Grid item xs={12} md={12} sx={{ marginTop: 2 }}>
+                            <SelectFieldNormal
+                                allOptions={
+                                    dataRes.isLoading || !dataRes.data
+                                        ? []
+                                        : (dataRes.data
+                                              ?.pickup as Array<NameValue>)
+                                }
+                                control={control}
+                                label="Điểm đón"
+                                name="pickup_point"
+                            />
                         </Grid>
-                    );
-                })}
-
-                <Grid item xs={12} md={9}></Grid>
-
-                <Grid item xs={12} md={1}>
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        sx={{
-                            margin: "normal",
-                        }}
-                    >
-                        Cập nhật
-                    </Button>
+                        <Grid item xs={12} md={12}>
+                            <SelectFieldNormal
+                                allOptions={
+                                    dataRes.isLoading || !dataRes.data
+                                        ? []
+                                        : (dataRes.data
+                                              ?.dropoff as Array<NameValue>)
+                                }
+                                control={control}
+                                label="Điểm trả"
+                                name="dropoff_point"
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={5}>
+                            <TextField
+                                disabled
+                                sx={{ m: 1 }}
+                                size="small"
+                                fullWidth
+                                label="Khởi hành"
+                                defaultValue={tripDetail.departure_time}
+                            />
+                        </Grid>
+                        <Grid item xs={0} md={2}></Grid>
+                        <Grid item xs={12} md={5}>
+                            <TextField
+                                disabled
+                                size="small"
+                                fullWidth
+                                label="Dự kiến "
+                                defaultValue={tripDetail.destination_time}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={12}>
+                            <DatePickerField
+                                disabled
+                                label="Ngày khởi hành"
+                                name="journey_date"
+                                control={control}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={12}>
+                            <InputField
+                                type="text"
+                                label="Chỗ ngồi đã chọn"
+                                name="selected_seats"
+                                control={control}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={12}>
+                            <InputMoneyField
+                                disabled
+                                type="text"
+                                label="Giá"
+                                name="fare"
+                                control={control}
+                            />
+                        </Grid>
+                    </Grid>
                 </Grid>
+                <Grid item xs={0} md={2}></Grid>
+                <Grid item xs={12} md={5}>
+                    <Grid item xs={12} md={12}>
+                        <Typography gutterBottom variant="h3" component="div">
+                            Thông tin khách hàng
+                        </Typography>
+                        <Divider sx={{ marginTop: 1 }} />
+                        <Typography variant="h5">
+                            {` Tài xế: ${tripDetail.car.driver_name} 
+                                 - ${tripDetail.car.phonenumber}`}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={12} sx={{ marginTop: 2 }}>
+                        <PhoneNumberField
+                            optionsData={dataCustomer}
+                            disabled
+                            type="text"
+                            label="Số điện thoại"
+                            name="customer.phonenumber"
+                            control={control}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                        <InputField
+                            disabled
+                            type="text"
+                            label="Khách hàng"
+                            name="customer.name"
+                            control={control}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                        <InputField
+                            disabled
+                            type="text"
+                            label="Email"
+                            name="customer.email"
+                            control={control}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                        <SelectFieldNormal
+                            allOptions={TYPE_PAYMENT}
+                            control={control}
+                            label="Trạng thái"
+                            name="status_payment"
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                        <InputField
+                            multiline
+                            rows={4}
+                            type="text"
+                            label="Ghi chú"
+                            name="note"
+                            control={control}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid
+                    item
+                    xs={12}
+                    md={12}
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                    {visiblealertText && (
+                        <Typography
+                            sx={{
+                                color: PureLightTheme.colors.error.main,
+                                marginRight: 6,
+                                marginTop: 3,
+                            }}
+                            component="h4"
+                            variant="h4"
+                        >
+                            {" "}
+                            {alertText}
+                        </Typography>
+                    )}
+                    <Box sx={{ marginTop: 2 }}>
+                        <Button type="submit" variant="contained">
+                            Cập nhật
+                        </Button>
 
-                <Grid item xs={12} md={1} ml={1}>
-                    <Button onClick={handleOnCancel}>Huỷ</Button>
+                        <Button
+                            onClick={handleOnCancel}
+                            sx={{
+                                ml: 1,
+                            }}
+                        >
+                            Huỷ
+                        </Button>
+                    </Box>
                 </Grid>
             </Grid>
         </Box>

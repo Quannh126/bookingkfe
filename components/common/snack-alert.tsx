@@ -31,7 +31,7 @@ export function SnackAlert({ content, typeAlert, openInit }: AlertContentProp) {
 
     return (
         <Stack spacing={2} sx={{ width: "100%" }}>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
                 <Alert
                     onClose={handleClose}
                     severity={!typeAlert ? "info" : typeAlert}

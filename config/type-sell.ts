@@ -11,15 +11,11 @@ export const TYPE_SELL = [
 
 export const TYPE_PAYMENT = [
     {
-        value: "direct_payment",
-        name: "Thanh toán tại quầy",
-    },
-    {
-        value: "online_direct_payment",
-        name: "Thanh toán online",
-    },
-    {
         value: "not_yet_payment",
         name: "Chưa thanh toán",
+    },
+    {
+        value: "paid",
+        name: "Đã thanh toán",
     },
 ];

@@ -1,12 +1,9 @@
 import { ICustomer } from "../Customer";
 
-export interface IBookingForm {
+export interface IBookingUpdateForm {
+    list_id: string;
     trip_id: string;
     customer: ICustomer;
-    // phonenumber: string;
-    // name: string;
-    // email: string;
-    // customer_id: string;
     selected_seats: string;
     fare: Number;
     note: string;

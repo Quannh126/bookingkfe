@@ -7,7 +7,7 @@ export interface IBooking {
     selected_seats: string;
     fare: Number;
     note: string;
-    status: string;
+    status_payment: string;
     pickup_point: string;
     dropoff_point: string;
 }

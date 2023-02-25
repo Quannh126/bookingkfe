@@ -42,6 +42,7 @@
     "react-hook-form": "^7.41.0",
     "react-mui-fileuploader": "^0.5.2",
     "react-select": "^5.7.0",
+    "react-spinners": "^0.13.8",
     "swr": "^2.0.0",
     "typescript": "4.9.3",
     "yup": "^0.32.11"

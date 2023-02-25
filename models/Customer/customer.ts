@@ -1,8 +1,8 @@
 export interface ICustomer {
     _id: string;
     name: string;
-    phonenumber: Number;
+    phonenumber: string;
     email: string;
     address?: string;
-    times_booking: Number;
+    times_booking?: Number;
 }

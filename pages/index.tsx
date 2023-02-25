@@ -1,23 +1,16 @@
 import MainLayout from "@/components/layout/main";
-import { SearchCarForm } from "@/components/search";
-import { useSearchTrip } from "@/hooks";
+
 import { Box } from "@mui/system";
 // import { Stack } from "@mui/material";
 // import { useRouter } from 'next/router'
-import { NextpageWithLayout, SearchTrip } from "../models";
+import { NextpageWithLayout } from "../models";
 import { Popular } from "@/components/home";
 
 const Home: NextpageWithLayout = () => {
-    const { searchTrip } = useSearchTrip({
-        revalidateOnMount: false,
-    });
-    async function handelSearchTrip(searchTripData: SearchTrip) {
-        try {
-            await searchTrip(searchTripData);
-        } catch (error) {
-            console.log("failed to search");
-        }
-    }
+    // const { searchTrip } = useSearchTrip({
+    //     revalidateOnMount: false,
+    // });
+
     return (
         <Box component="section">
             <Box
@@ -48,7 +41,7 @@ const Home: NextpageWithLayout = () => {
             >
                 Online Booking. Save Time and Money!
             </Box>
-            <SearchCarForm onSearch={handelSearchTrip} />
+            {/* <SearchCarForm onSearch={handelSearchTrip} /> */}
             <Popular />
         </Box>
     );

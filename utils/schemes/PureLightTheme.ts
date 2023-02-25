@@ -501,10 +501,18 @@ export const PureLightTheme = createTheme({
                 root: {
                     "&.selected": {
                         backgroundColor: colors.alpha.black[30],
-                        border: `2px solid ${colors.error.light}`,
+                        // border: `1px solid ${colors.primary.light}`,
+                        boxShadow: `0 0 0 2px ${colors.primary.light}`,
                     },
                     "&.booked": {
                         backgroundColor: colors.alpha.black[10],
+                    },
+                    "&.booked.selected": {
+                        backgroundColor: colors.alpha.black[30],
+                    },
+                    "&.focus": {
+                        backgroundColor: colors.alpha.black[10],
+                        boxShadow: `0 0 0 2px ${colors.error.light}`,
                     },
                 },
             },

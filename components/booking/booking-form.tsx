@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
     DatePickerField,
@@ -8,38 +8,28 @@ import {
     SelectFieldNormal,
 } from "../form";
 import { Button, Divider, Grid, TextField, Typography } from "@mui/material";
-// import { locationApi } from "@/api-client";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { IBookingForm } from "@/models";
+import { IBookingForm, ICustomer } from "@/models";
 import { NameValue } from "@/models";
-
-// import { carsApi } from "@/api-client";
-// import AddCircleIcon from "@mui/icons-material/AddCircle";
-// import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
-// import useSWR, { SWRConfiguration } from "swr";
 import { TYPE_PAYMENT } from "@/config/type-sell";
-
 import PhoneNumberField from "../form/phonenumber-field";
-
 import useSWR, { SWRConfiguration } from "swr";
 import IBookingTrip from "@/models/Book/book-trip";
-// type configData = {
-//     toLocations: Array<NameValue>;
-//     fromLocations: Array<NameValue>;
-// };
+import { PureLightTheme } from "@/utils";
 export interface BookFormProps {
     configProvince: Array<NameValue> | [];
-    // configCar: Array<ICarDetail> | [];
     // eslint-disable-next-line no-unused-vars
     onBook?: (data: IBookingForm) => void;
     onCancel: () => void;
     tripDetail: IBookingTrip;
     selectedSeats: string;
     s_journey_date: string;
+    visiblealertText?: boolean;
+    alertText?: string;
 }
 
-// let count = 0;
+let count = 0;
 
 function getName(list: Array<NameValue>, value: String): string {
     for (let i = 0; i < list.length; i++) {
@@ -56,22 +46,46 @@ export function BookForm({
     tripDetail,
     selectedSeats,
     s_journey_date,
-}: // configCar,
-BookFormProps) {
+    alertText,
+    visiblealertText,
+}: BookFormProps) {
     const schema = yup.object().shape({
-        customer: yup.object().required("Xin chọn khách hàng"),
+        customer: yup.object().shape({
+            name: yup.string().required("Xin hãy nhập tên khách hàng"),
+            phonenumber: yup.string().required("Xin hãy nhập số điện thoại"),
+            email: yup
+                .string()
+                .matches(
+                    /^[^\s@]+@[^\s@]+\.[^\s@]+$/g,
+                    "Email không đúng định dạng"
+                ),
+        }),
+        selected_seats: yup
+            .string()
+            .required("Xin nhập số ghế đã cập nhật")
+            .matches(
+                /^\d+(?:-\d+)*$/,
+                "Ghế đã chọn phải có dạng nối bởi dấu '-'"
+            ),
+        pickup_point: yup.string().required("Xin hãy chọn nơi đón"),
+        dropoff_point: yup.string().required("Xin hãy chọn nơi đến"),
     });
     const {
-        // register,
+        register,
         control,
         handleSubmit,
         // getValues,
-        // setValue,\
+        setValue,
         // watch,
         // formState: { errors },
     } = useForm<IBookingForm>({
         defaultValues: {
-            customer: {},
+            customer: {
+                _id: "",
+                phonenumber: "",
+                name: "",
+                email: "",
+            },
             pickup_point: "",
             dropoff_point: "",
             note: "",
@@ -79,10 +93,14 @@ BookFormProps) {
             trip_id: tripDetail._id,
             selected_seats: selectedSeats,
             fare: selectedSeats.split("-").length * Number(tripDetail.fare),
-            status_payment: "direct_payment",
+            status_payment: "not_yet_payment",
         },
         resolver: yupResolver(schema),
+        reValidateMode: "onSubmit",
     });
+    const [isDisable, setIsDisable] = useState(false);
+
+    // let phonenumber = watch("customer.phonenumber");
 
     // const customer = watch("customer");
     // console.log(customer);
@@ -101,12 +119,41 @@ BookFormProps) {
         revalidateOnFocus: false,
         shouldRetryOnError: true,
     };
-
+    const customerGetOption: SWRConfiguration = {
+        dedupingInterval: 60 * 1000,
+        revalidateOnMount: true,
+        revalidateOnFocus: false,
+        shouldRetryOnError: true,
+    };
     const dataRes = useSWR<
         { dropoff: Array<NameValue>; pickup: Array<NameValue> },
         Error
     >(`/admin/trips/option/${tripDetail._id}`, null, configPoint);
+    const dataCustomer = useSWR<Array<ICustomer>, Error>(
+        `/admin/customer`,
+        null,
+        customerGetOption
+    );
+    // const phonenumber = watch('customer.phonenumber',"");
 
+    const handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        //  console.log(event)
+        const customer = dataCustomer.data!.find(
+            (item) => item.phonenumber === event.target.value
+        );
+        if (customer) {
+            setValue("customer._id", customer._id);
+            setValue("customer.name", customer.name);
+            setValue("customer.email", customer.email);
+            setIsDisable(true);
+        } else {
+            setValue("customer.name", "khách hàng mới");
+            setValue("customer.email", "");
+            setValue("customer._id", "");
+            setIsDisable(false);
+        }
+    };
+    console.log(count++);
     return (
         <Box
             component="form"
@@ -217,7 +264,7 @@ BookFormProps) {
                             <InputField
                                 disabled
                                 type="text"
-                                label="Chỗc ngồi đã chọn"
+                                label="Chỗ ngồi đã chọn"
                                 name="selected_seats"
                                 control={control}
                             />
@@ -242,14 +289,37 @@ BookFormProps) {
                         <Divider sx={{ marginTop: 1 }} />
                         <Typography variant="h5">
                             {` Tài xế: ${tripDetail.car.driver_name} 
-                                 - Số điện thoại: ${tripDetail.car.phonenumber}`}
+                                 - ${tripDetail.car.phonenumber}`}
                         </Typography>
                     </Grid>
                     <Grid item xs={12} md={12} sx={{ marginTop: 2 }}>
                         <PhoneNumberField
+                            optionsData={dataCustomer}
+                            type="text"
+                            label="Số điện thoại"
+                            // name="customer.phonenumber"
+                            control={control}
+                            {...register("customer.phonenumber", {
+                                onChange: (e) => handlePhoneChange(e),
+                            })}
+                            ref={null}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                        <InputField
+                            disabled={isDisable}
                             type="text"
                             label="Khách hàng"
-                            name="customer"
+                            name="customer.name"
+                            control={control}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                        <InputField
+                            disabled={isDisable}
+                            type="text"
+                            label="Email"
+                            name="customer.email"
                             control={control}
                         />
                     </Grid>
@@ -278,6 +348,20 @@ BookFormProps) {
                     md={12}
                     sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
+                    {visiblealertText && (
+                        <Typography
+                            sx={{
+                                color: PureLightTheme.colors.error.main,
+                                marginRight: 6,
+                                marginTop: 3,
+                            }}
+                            component="h4"
+                            variant="h4"
+                        >
+                            {" "}
+                            {alertText}
+                        </Typography>
+                    )}
                     <Box sx={{ marginTop: 2 }}>
                         <Button type="submit" variant="contained">
                             Đặt vé

@@ -1,7 +1,7 @@
 // import { authApi } from "@/api";
 import { bookingApi } from "@/api";
 
-import { IBookingForm } from "@/models";
+import { IBookingForm, IBookingUpdateForm } from "@/models";
 import IBookingTrip from "@/models/Book/book-trip";
 // import { IBooking } from "@/models/Book/booking";
 import { convertDateToString } from "@/utils";
@@ -22,15 +22,16 @@ export function useBooking(
     }
     const config: SWRConfiguration = {
         dedupingInterval: 60 * 60 * 1000,
-        revalidateOnFocus: false,
+        revalidateOnFocus: true,
         revalidateOnMount: true,
         ...options,
     };
     const {
         data: listBooking,
+        isLoading,
         error,
         mutate,
-    } = useSWR<Array<IBookingTrip> | [], Error>(
+    } = useSWR<Array<IBookingTrip>, Error>(
         `/admin/booking${queryParams}`,
         null,
         config
@@ -46,14 +47,19 @@ export function useBooking(
         mutate();
     }
 
-    async function updateBooking(data: IBookingForm) {
+    async function updateBooking(data: IBookingUpdateForm) {
         await bookingApi.updateBooking(data);
         mutate();
     }
-
+    async function updateSeat(seat: number, booking_id: string) {
+        await bookingApi.updateSeat(seat, booking_id);
+        mutate();
+    }
     return {
         listBooking,
         error,
+        isLoading,
+        updateSeat,
         addBooking,
         removeBooking,
         updateBooking,

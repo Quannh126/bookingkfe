@@ -7,8 +7,13 @@ import {
 } from "@mui/material";
 // import { TransitionProps } from "@mui/material/transitions";
 // import { useTrip } from "@/hooks";
-import { IBookingForm, NameValue, NextpageWithLayout } from "@/models";
-import React, { useState } from "react";
+import {
+    IBookingForm,
+    IBookingUpdateForm,
+    NameValue,
+    NextpageWithLayout,
+} from "@/models";
+import React, { useEffect, useState } from "react";
 
 // import { locationApi } from "@/api-client";
 import useSWR, { SWRConfiguration } from "swr";
@@ -19,9 +24,11 @@ import { IFilterTrip } from "@/models/Trips/trip-filter";
 import { useForm } from "react-hook-form";
 import { convertDateToString } from "@/utils";
 import TripDetail from "@/components/booking/trip-detail";
-import { BookForm } from "@/components/booking";
+import { BookForm, BookUpdateForm } from "@/components/booking";
 import { useBooking } from "@/hooks/useBooking";
-import IBookingTrip from "@/models/Book/book-trip";
+import IBookingTrip, { ISeatDetail } from "@/models/Book/book-trip";
+import LoadingPage from "@/components/common/loading";
+import { AlertContentProp, SnackAlert } from "@/components/common";
 
 let countRender = 0;
 const AdminTrips: NextpageWithLayout = () => {
@@ -29,18 +36,34 @@ const AdminTrips: NextpageWithLayout = () => {
     const [selectedTrip, setSelectedTrip] = useState<IBookingTrip>(
         {} as IBookingTrip
     );
-    const [showCarUpdateForm, setShowTripUpdateForm] = useState(false);
+    const [isPageLoading, setPageLoading] = useState(false);
+    const [listIdBooking, setListIdBooking] = useState("");
+    const [selectedTripId, setSelectedTripID] = useState("");
+    const [showBookingUpdateForm, setShowBookingUpdateForm] = useState(false);
     const [queryParams, setQueryParams] = useState("");
     const [journeyDate, setJourneyDate] = useState(
         convertDateToString(new Date())
     );
+    const [openSnack, setOpenSnack] = useState(false);
+    const [snackData, setSnackData] = useState({
+        content: "",
+        typeAlert: "info",
+        openInit: false,
+    } as AlertContentProp);
+    const [swapId, setSwapId] = useState("");
+    const [alertText, setAlertText] = useState("");
+    const [visiblealertText, setVisibleAlertText] = useState(false);
+    const [bookingData, setBookingData] = useState({} as ISeatDetail);
     const [showListTrip, setShowListTrip] = useState(true);
     const [selectedSeats, setSelectedSeats] = useState([] as Array<number>);
     const [selectedSeatsBooked, setSelectedSeatsBooked] = useState(
         [] as Array<number>
     );
+    const [swapSeat, setSwapSeat] = useState(-1);
+    const [singleSelectMode, setSingleSelectMode] = useState(false);
     // const { listTrips } = useTrip(queryParams);
-    const { listBooking, addBooking } = useBooking(queryParams);
+    const { listBooking, addBooking, updateBooking, updateSeat, isLoading } =
+        useBooking(queryParams);
     const {
         // register,
         control,
@@ -60,42 +83,138 @@ const AdminTrips: NextpageWithLayout = () => {
     const handleClose = (event: Object, reason: string) => {
         if (reason && reason == "backdropClick") return;
         setShowBookingForm(false);
+        setVisibleAlertText(false);
+        setAlertText("");
     };
     const handleClose2 = (event: Object, reason: string) => {
         if (reason && reason == "backdropClick") return;
-        setShowTripUpdateForm(false);
+        setShowBookingUpdateForm(false);
+        setVisibleAlertText(false);
+        setAlertText("");
     };
     const handleClickToTrip = (data: IBookingTrip) => {
         setSelectedTrip(data);
+        setSelectedTripID(data._id);
         setShowListTrip(false);
     };
 
     const handleSearchSubmit = (data: IFilterTrip) => {
+        setSelectedTrip({} as IBookingTrip);
         console.log(data);
         let params = `/search?route=${data.route}&journey_date=${data.s_journey_date}&pickup_point=${data.from_point}&dropoff_point=${data.to_point}`;
 
         setQueryParams(params);
         setJourneyDate(data.s_journey_date);
         setShowListTrip(true);
+        setSelectedTrip({} as IBookingTrip);
+        setSelectedTripID("");
     };
 
     const handleAddClick = () => {
+        setOpenSnack(false);
         setShowBookingForm(true);
     };
+    const handleUpdateClick = async () => {
+        setOpenSnack(false);
+        const seat_number = selectedSeatsBooked[0];
 
+        const book_detail = await selectedTrip.seat_detail.find(
+            (item) => Number(item.seat) === seat_number
+        );
+
+        const listId = await selectedSeatsBooked
+            .reduce(
+                (init, seat) =>
+                    init +
+                    "-" +
+                    selectedTrip.seat_detail.find(
+                        (item) => Number(item.seat) === seat
+                    )?.booking._id,
+                ""
+            )
+            .substring(1);
+
+        console.log(seat_number);
+        if (book_detail) {
+            setBookingData(book_detail);
+            setListIdBooking(listId);
+            setShowBookingUpdateForm(true);
+        }
+    };
+    const handleSwapClick = () => {
+        setSingleSelectMode(true);
+        setSnackData({
+            content: "Vui lòng chọn chỗ muốn đổi",
+            typeAlert: "info",
+            openInit: true,
+        });
+        setOpenSnack(true);
+    };
+    const handleChooseSwapSeat = async (seat: number) => {
+        try {
+            setOpenSnack(false);
+            setSelectedSeatsBooked([]);
+            setPageLoading(true);
+            await updateSeat(seat, swapId);
+            setPageLoading(false);
+            setSwapId("");
+            setSingleSelectMode(false);
+            setSwapSeat(-1);
+            setSnackData({
+                content: "Đổi chỗ thành công",
+                typeAlert: "success",
+                openInit: true,
+            });
+            setOpenSnack(true);
+        } catch (error: any) {
+            setPageLoading(false);
+            setSnackData({
+                content: error?.response.data.message ?? "Có lỗi xảy ra",
+                typeAlert: "error",
+                openInit: true,
+            });
+            setOpenSnack(true);
+        }
+    };
     async function handleBookSubmit(data: IBookingForm) {
         try {
+            setPageLoading(true);
             await addBooking(data);
+
+            setPageLoading(false);
             setShowBookingForm(false);
             setSelectedSeats([]);
-            setShowListTrip(true);
-            // setSelectedTrip(
-            //     listBooking?.find((booking) => {
-            //         booking._id === selectedTrip._id;
-            //     })!
-            // );
-        } catch (error) {
-            console.log("Add error", error);
+            setSnackData({
+                content: "Đặt thành công",
+                typeAlert: "success",
+                openInit: true,
+            });
+            setOpenSnack(true);
+        } catch (error: any) {
+            setPageLoading(false);
+            setVisibleAlertText(true);
+            setAlertText(error?.response.data.message ?? "Có lỗi xảy ra");
+        }
+    }
+    async function handleBookUpdateSubmit(data: IBookingUpdateForm) {
+        try {
+            setPageLoading(true);
+            await updateBooking(data);
+            setPageLoading(false);
+            setShowBookingUpdateForm(false);
+            setSelectedSeatsBooked([]);
+            setSnackData({
+                content: "Cập nhật thành công",
+                typeAlert: "success",
+                openInit: true,
+            });
+            setOpenSnack(true);
+        } catch (error: any) {
+            console.log("update error", error);
+
+            setPageLoading(false);
+            setVisibleAlertText(true);
+            setAlertText(error?.response.data.message ?? "Có lỗi xảy ra");
         }
     }
     const config: SWRConfiguration = {
@@ -121,8 +240,33 @@ const AdminTrips: NextpageWithLayout = () => {
 
     console.log("Render count: ", countRender++);
 
+    useEffect(() => {
+        if (selectedTripId && listBooking) {
+            setSelectedTrip(
+                listBooking!.find((item) => item._id === selectedTripId)!
+            );
+        }
+    }, [selectedTripId, listBooking]);
+
+    if (
+        isLoading ||
+        !listDropoffAndPickUp.data ||
+        !listProvince.data ||
+        !listBooking
+    ) {
+        return <LoadingPage />;
+    }
     return (
         <Box p={2}>
+            {isPageLoading && <LoadingPage />}
+
+            {openSnack && (
+                <SnackAlert
+                    openInit={true}
+                    content={snackData.content}
+                    typeAlert={snackData.typeAlert}
+                />
+            )}
             <Box
                 component="form"
                 onSubmit={handleSubmit(handleSearchSubmit)}
@@ -133,7 +277,7 @@ const AdminTrips: NextpageWithLayout = () => {
             >
                 <Box
                     sx={{
-                        margin: "10px",
+                        paddingLeft: "20px",
                         width: "100%",
                     }}
                 >
@@ -156,7 +300,7 @@ const AdminTrips: NextpageWithLayout = () => {
                 </Box>
                 <Box
                     sx={{
-                        margin: "10px",
+                        paddingLeft: "20px",
                         width: "100%",
                     }}
                 >
@@ -170,7 +314,7 @@ const AdminTrips: NextpageWithLayout = () => {
                 </Box>
                 <Box
                     sx={{
-                        margin: "10px",
+                        paddingLeft: "20px",
                         width: "100%",
                     }}
                 >
@@ -188,7 +332,7 @@ const AdminTrips: NextpageWithLayout = () => {
                 </Box>
                 <Box
                     sx={{
-                        margin: "10px",
+                        paddingLeft: "20px",
                         width: "100%",
                     }}
                 >
@@ -207,7 +351,7 @@ const AdminTrips: NextpageWithLayout = () => {
 
                 <Box
                     sx={{
-                        margin: "10px",
+                        paddingLeft: "20px",
                         width: "100%",
                         alignSelf: "center",
                     }}
@@ -216,7 +360,7 @@ const AdminTrips: NextpageWithLayout = () => {
                         type="submit"
                         variant="contained"
                         sx={{
-                            margin: "normal",
+                            padding: "normal",
                         }}
                     >
                         Tìm kiếm
@@ -229,12 +373,18 @@ const AdminTrips: NextpageWithLayout = () => {
                 // TransitionComponent={Transition}
                 keepMounted={false}
                 onClose={handleClose}
-                aria-labelledby="add-trip"
-                aria-describedby="add-trip"
+                aria-labelledby="add-booking"
+                aria-describedby="add-booking"
             >
                 <BookForm
+                    visiblealertText={visiblealertText}
+                    alertText={alertText}
                     onBook={handleBookSubmit}
-                    onCancel={() => setShowBookingForm(false)}
+                    onCancel={() => {
+                        setShowBookingForm(false);
+                        setVisibleAlertText(false);
+                        setAlertText("");
+                    }}
                     configProvince={listProvince.data!}
                     tripDetail={selectedTrip}
                     selectedSeats={selectedSeats.join("-")}
@@ -242,13 +392,30 @@ const AdminTrips: NextpageWithLayout = () => {
                 />
             </Dialog>
             <Dialog
-                open={showCarUpdateForm}
+                open={showBookingUpdateForm}
                 // TransitionComponent={Transition}
                 keepMounted={false}
                 onClose={handleClose2}
-                aria-labelledby="update-trip"
-                aria-describedby="update-trip"
-            ></Dialog>
+                aria-labelledby="update-booked-seats"
+                aria-describedby="update-booked-seats"
+            >
+                <BookUpdateForm
+                    visiblealertText={visiblealertText}
+                    alertText={alertText}
+                    list_id={listIdBooking}
+                    book_detail={bookingData}
+                    updateBooking={handleBookUpdateSubmit}
+                    onCancel={() => {
+                        setShowBookingUpdateForm(false);
+                        setVisibleAlertText(false);
+                        setAlertText("");
+                    }}
+                    configProvince={listProvince.data!}
+                    tripDetail={selectedTrip}
+                    selectedSeats={selectedSeatsBooked.join("-")}
+                    s_journey_date={journeyDate}
+                />
+            </Dialog>
 
             {showListTrip && (
                 <TableListBooking
@@ -260,6 +427,11 @@ const AdminTrips: NextpageWithLayout = () => {
             )}
             {!showListTrip && (
                 <TripDetail
+                    setSwapSeat={setSwapSeat}
+                    swapSeat={swapSeat}
+                    setSwapId={setSwapId}
+                    handleChooseSwapSeat={handleChooseSwapSeat}
+                    handleSwapClick={handleSwapClick}
                     journeyDate={journeyDate}
                     listProvince={!listProvince.data ? [] : listProvince.data}
                     tripDetail={selectedTrip}
@@ -274,6 +446,9 @@ const AdminTrips: NextpageWithLayout = () => {
                             ? { pickup: [], dropoff: [] }
                             : listDropoffAndPickUp.data
                     }
+                    handleUpdateClick={handleUpdateClick}
+                    setSingleSelectMode={setSingleSelectMode}
+                    singleSelectMode={singleSelectMode}
                 />
             )}
         </Box>

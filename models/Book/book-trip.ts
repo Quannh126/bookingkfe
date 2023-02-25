@@ -3,7 +3,7 @@ import { ICustomer } from "../Customer";
 import { IPointDetail } from "../Trips/trip-form";
 import { IBooking } from "./booking";
 
-type ISeatDetail = {
+export type ISeatDetail = {
     seat: string;
     customer: ICustomer;
     booking: IBooking;
