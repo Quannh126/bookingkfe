@@ -4,7 +4,7 @@ import Auth from "../common/auth";
 import { Stack } from "@mui/material";
 import { Box } from "@mui/system";
 
-import SideBar from "../common/header/SideBar";
+import SideBar from "../header/SideBar";
 
 import { Footer } from "../common";
 import Header from "./SidebarLayout/Header";

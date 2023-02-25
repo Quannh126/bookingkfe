@@ -19,13 +19,14 @@
             "@/*": ["./*"],
             "@/api": ["./api-client/index.ts"],
             "@/api/*": ["./api-client/*"]
+            // "@/layout": ["./components/header/*"]
         }
     },
     "include": [
         "next-env.d.ts",
         "**/*.ts",
-        "**/*.tsx",
-        "components/form/select-field2tsx"
+        "**/*.tsx"
+        // "components/form/select-field.tsx"
     ],
     "exclude": ["node_modules"]
 }

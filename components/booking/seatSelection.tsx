@@ -416,7 +416,10 @@ export default function SeatSelection({
                                                                     height: "100%",
                                                                     width: "auto",
                                                                     backgroundColor:
-                                                                        "black",
+                                                                        PureLightTheme
+                                                                            .colors
+                                                                            .primary
+                                                                            .main,
                                                                 }}
                                                             >
                                                                 <ArrowDropUpIcon
@@ -461,7 +464,10 @@ export default function SeatSelection({
                                                                     height: "100%",
                                                                     width: "auto",
                                                                     backgroundColor:
-                                                                        "black",
+                                                                        PureLightTheme
+                                                                            .colors
+                                                                            .primary
+                                                                            .main,
                                                                 }}
                                                             >
                                                                 <ArrowDropDownIcon

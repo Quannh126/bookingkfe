@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Box } from "@mui/system";
 import { Divider, Stack, Link, alpha } from "@mui/material";
-import { ROUTE_HEADER_ADMIN } from "../../../config/routes";
+import { ROUTE_HEADER_ADMIN } from "../../config/routes";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 

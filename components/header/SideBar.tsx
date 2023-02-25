@@ -1,7 +1,7 @@
 import React from "react";
 import { Box } from "@mui/system";
 import { List, ListItem, Button } from "@mui/material";
-import { ROUTE_ADMIN } from "../../../config/routes";
+import { ROUTE_ADMIN } from "../../config/routes";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 import { useAuth } from "@/hooks";
