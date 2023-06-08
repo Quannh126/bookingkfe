@@ -6,6 +6,7 @@ import { Button, Grid, Typography } from "@mui/material";
 import { ICarForm } from "@/models";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { UploadFileBox } from "../form/upload-file";
 // import FileUpload from "react-mui-fileuploader";
 // import { UploadFileBox } from "../form/upload-file";
 
@@ -43,11 +44,12 @@ export function CarForm({ onAdd, onCancel }: CarFormProps) {
             capacity: "",
             license_plate: "",
             description: "",
+            attachment: [] as Array<File>,
         },
         resolver: yupResolver(schema),
     });
     function handleAddSubmit(data: ICarForm) {
-        console.log(data);
+        // //console.log(data);
         onAdd?.(data);
     }
     function handleOnCancel() {
@@ -131,9 +133,13 @@ export function CarForm({ onAdd, onCancel }: CarFormProps) {
                         control={control}
                     />
                 </Grid> */}
-                {/* <Grid item xs={12} md={12}>
-                    <UploadFileBox name="attachment" control={control} />
-                </Grid> */}
+                <Grid item xs={12} md={12}>
+                    <UploadFileBox
+                        name="attachment"
+                        control={control}
+                        ref={null}
+                    />
+                </Grid>
 
                 <Grid item xs={12} md={12}>
                     <InputField

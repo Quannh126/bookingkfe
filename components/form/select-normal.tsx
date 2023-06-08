@@ -9,6 +9,7 @@ import {
     FormHelperText,
     SxProps,
     Theme,
+    // CircularProgress,
 } from "@mui/material";
 import { Control, useController } from "react-hook-form";
 import { NameValue } from "@/models";
@@ -17,6 +18,7 @@ type SelectFieldProps = SelectProps & {
     control: Control<any>;
     allOptions: Array<NameValue> | [];
     cssFormControll?: SxProps<Theme>;
+    // isLoading?: boolean;
 };
 
 export function SelectFieldNormal({
@@ -25,6 +27,7 @@ export function SelectFieldNormal({
     control,
     allOptions,
     cssFormControll,
+    // isLoading,
     ...rest
 }: SelectFieldProps) {
     const {
@@ -37,6 +40,9 @@ export function SelectFieldNormal({
     const [selectedOption, setSelectedOption] = useState(value);
     // function getKey(value: string, allOptions: Array<NameValue>) {
     //     return allOptions.find((item) => item.value === value)?.key;
+    // }
+    // if (isLoading) {
+    //     return <CircularProgress />;
     // }
     return (
         <FormControl fullWidth sx={cssFormControll}>

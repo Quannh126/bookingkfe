@@ -32,7 +32,7 @@ export interface TripFormUpdateProps {
     data: ITripForm;
 }
 
-let count = 0;
+// let count = 0;
 export function TripFormUpdate({
     onUpdate,
     onCancel,
@@ -93,7 +93,7 @@ TripFormUpdateProps) {
     });
 
     function handleUpdateSubmit(data: ITripForm) {
-        console.log(data);
+        //console.log(data);
         onUpdate?.(data);
     }
     function handleOnCancel() {
@@ -138,8 +138,8 @@ TripFormUpdateProps) {
         config2
     );
 
-    count++;
-    console.log(count);
+    // count++;
+    //console.log(count);
 
     return (
         <Box
@@ -155,7 +155,7 @@ TripFormUpdateProps) {
             }}
             p={4}
             onSubmit={handleSubmit(handleUpdateSubmit)}
-            //onSubmit={() => console.log("submit")}
+            //onSubmit={() => //console.log("submit")}
         >
             <Grid container spacing={1}>
                 <Grid item xs={12} md={12}>
@@ -428,12 +428,12 @@ TripFormUpdateProps) {
                                     name={`dropoff_point.${index}.district_id`}
                                 />
                             </Grid>
-                            {/* {console.log("listDetailDO", listDetailDO)}
-                            {console.log(
+                            {/* {//console.log("listDetailDO", listDetailDO)}
+                            {//console.log(
                                 "Number(field.district_id)",
                                 Number(field.district_id)
                             )}
-                            {console.log("formValuesDO", formValuesDO)} */}
+                            {//console.log("formValuesDO", formValuesDO)} */}
                             <Grid item xs={12} md={6}>
                                 <SelectFieldNormal
                                     allOptions={
@@ -478,7 +478,7 @@ TripFormUpdateProps) {
                             variant="contained"
                             sx={{ ml: 1 }}
                         >
-                            Huỷ
+                            Đóng
                         </Button>
                     </Box>
                 </Grid>

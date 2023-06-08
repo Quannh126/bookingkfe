@@ -7,7 +7,14 @@ import {
     InputMoneyField,
     SelectFieldNormal,
 } from "../form";
-import { Button, Divider, Grid, TextField, Typography } from "@mui/material";
+import {
+    Button,
+    ButtonProps,
+    Divider,
+    Grid,
+    TextField,
+    Typography,
+} from "@mui/material";
 // import { locationApi } from "@/api-client";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -19,7 +26,7 @@ import { NameValue } from "@/models";
 // import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 // import useSWR, { SWRConfiguration } from "swr";
 import { TYPE_PAYMENT } from "@/config/type-sell";
-
+import { styled } from "@mui/material/styles";
 import PhoneNumberField from "../form/phonenumber-field";
 
 import useSWR, { SWRConfiguration } from "swr";
@@ -35,6 +42,7 @@ export interface BookUpdateFormProps {
     // eslint-disable-next-line no-unused-vars
     updateBooking?: (data: IBookingUpdateForm) => void;
     onCancel: () => void;
+    handleClickDelete: () => void;
     tripDetail: IBookingTrip;
     selectedSeats: string;
     s_journey_date: string;
@@ -45,7 +53,14 @@ export interface BookUpdateFormProps {
 }
 
 // let count = 0;
-
+const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
+    color: theme.palette.getContrastText(theme.colors.error.main),
+    backgroundColor: theme.colors.error.main,
+    "&:hover": {
+        backgroundColor: theme.colors.error.dark,
+    },
+    marginRight: "10px",
+}));
 function getName(list: Array<NameValue>, value: String): string {
     for (let i = 0; i < list.length; i++) {
         if (list[i].value === value) {
@@ -65,6 +80,7 @@ export function BookUpdateForm({
     list_id,
     alertText,
     visiblealertText,
+    handleClickDelete,
 }: // configCar,
 BookUpdateFormProps) {
     const schema = yup.object().shape({
@@ -77,7 +93,7 @@ BookUpdateFormProps) {
                 "Ghế đã chọn phải có dạng nối bởi dấu '-' và không được lặp"
             ),
     });
-
+    const isPaid = book_detail!.booking.status_payment === "paid";
     const {
         // register,
         control,
@@ -103,9 +119,9 @@ BookUpdateFormProps) {
     });
 
     // const customer = watch("customer");
-    console.log(book_detail);
+    // //console.log(book_detail);
     function handleBookUpdateSubmit(data: IBookingUpdateForm) {
-        console.log(data);
+        // //console.log(data);
         updateBooking?.(data);
     }
     function handleOnCancel() {
@@ -113,8 +129,6 @@ BookUpdateFormProps) {
     }
     let watchSeats = watch("selected_seats");
 
-    // const [optionDropoff, setOptionDropoff] = useState([] as Array<NameValue>);
-    // const [optionPickup, setOptionPickup] = useState([] as Array<NameValue>);
     const configPoint: SWRConfiguration = {
         dedupingInterval: 60 * 1000,
         revalidateOnMount: true,
@@ -199,6 +213,7 @@ BookUpdateFormProps) {
 
                         <Grid item xs={12} md={12} sx={{ marginTop: 2 }}>
                             <SelectFieldNormal
+                                disabled={isPaid}
                                 allOptions={
                                     dataRes.isLoading || !dataRes.data
                                         ? []
@@ -212,6 +227,7 @@ BookUpdateFormProps) {
                         </Grid>
                         <Grid item xs={12} md={12}>
                             <SelectFieldNormal
+                                disabled={isPaid}
                                 allOptions={
                                     dataRes.isLoading || !dataRes.data
                                         ? []
@@ -253,6 +269,7 @@ BookUpdateFormProps) {
                         </Grid>
                         <Grid item xs={12} md={12}>
                             <InputField
+                                disabled={isPaid}
                                 type="text"
                                 label="Chỗ ngồi đã chọn"
                                 name="selected_seats"
@@ -312,6 +329,7 @@ BookUpdateFormProps) {
                     </Grid>
                     <Grid item xs={12} md={12}>
                         <SelectFieldNormal
+                            disabled={isPaid}
                             allOptions={TYPE_PAYMENT}
                             control={control}
                             label="Trạng thái"
@@ -350,6 +368,14 @@ BookUpdateFormProps) {
                         </Typography>
                     )}
                     <Box sx={{ marginTop: 2 }}>
+                        <ColorButton
+                            variant="contained"
+                            onClick={handleClickDelete}
+                        >
+                            Huỷ vé
+                        </ColorButton>
+                    </Box>
+                    <Box sx={{ marginTop: 2 }}>
                         <Button type="submit" variant="contained">
                             Cập nhật
                         </Button>
@@ -360,7 +386,7 @@ BookUpdateFormProps) {
                                 ml: 1,
                             }}
                         >
-                            Huỷ
+                            Đóng
                         </Button>
                     </Box>
                 </Grid>

@@ -75,7 +75,7 @@ export default function SeatSelection({
 
     function handleClickToSeat(seatNumber: number) {
         if (selectedSeats.includes(seatNumber)) {
-            console.log(selectedSeats + "---" + seatNumber);
+            // //console.log(selectedSeats + "---" + seatNumber);
             const listSelected = selectedSeats.filter(
                 (seat: number) => seat !== seatNumber
             );
@@ -98,7 +98,7 @@ export default function SeatSelection({
         });
 
         if (selectedSeatsBooked.includes(seatNumber)) {
-            // console.log(selectedSeatsBooked + "---" + seatNumber);
+            // //console.log(selectedSeatsBooked + "---" + seatNumber);
             const listSelected = selectedSeats.filter(
                 (seat: number) => seat !== seatNumber
             );
@@ -123,7 +123,7 @@ export default function SeatSelection({
 
     useEffect(() => {
         setSeatDetail(tripDetail);
-        console.log(tripDetail);
+        // //console.log(tripDetail);
     }, [tripDetail]);
 
     return (
@@ -161,6 +161,10 @@ export default function SeatSelection({
                             (seat) => seat.seat === `${index + 1}`
                         );
                         let isSelected = false;
+                        let isPaid =
+                            seatDetail.seat_detail.find(
+                                (item) => item.seat === `${index + 1}`
+                            )?.booking.status_payment === "paid";
                         if (selectedSeats.includes(seat + 1)) {
                             isSelected = true;
                         }
@@ -222,7 +226,7 @@ export default function SeatSelection({
                                         >
                                             <Box
                                                 sx={{
-                                                    height: "200px",
+                                                    height: "230px",
                                                 }}
                                             >
                                                 <Box
@@ -263,6 +267,47 @@ export default function SeatSelection({
                                                             ).toString()}
                                                         </Typography>
                                                     </Box>
+                                                    {isBooked && (
+                                                        <Box
+                                                            sx={{
+                                                                backgroundColor:
+                                                                    isPaid
+                                                                        ? PureLightTheme
+                                                                              .colors
+                                                                              .success
+                                                                              .light
+                                                                        : "white",
+                                                                borderRadius:
+                                                                    "5px",
+                                                                padding:
+                                                                    "5px 6px",
+                                                                border: `2px solid ${
+                                                                    !isPaid
+                                                                        ? PureLightTheme
+                                                                              .colors
+                                                                              .warning
+                                                                              .light
+                                                                        : PureLightTheme
+                                                                              .colors
+                                                                              .success
+                                                                              .light
+                                                                }`,
+                                                            }}
+                                                        >
+                                                            <Typography
+                                                                color={
+                                                                    !isPaid
+                                                                        ? "black"
+                                                                        : "white"
+                                                                }
+                                                                variant="h6"
+                                                            >
+                                                                {isPaid
+                                                                    ? "Đã thanh toán"
+                                                                    : "Chưa thanh toán"}
+                                                            </Typography>
+                                                        </Box>
+                                                    )}
                                                 </Box>
 
                                                 {isBooked && (
@@ -499,7 +544,7 @@ export default function SeatSelection({
                                                     <IconButton
                                                         aria-label="Print"
                                                         onClick={(e) => {
-                                                            // console.log(
+                                                            // //console.log(
                                                             //     "click"
                                                             // );
                                                             if (
@@ -538,7 +583,7 @@ export default function SeatSelection({
                                                     <IconButton
                                                         aria-label="Edit"
                                                         onClick={(e) => {
-                                                            // console.log(
+                                                            // //console.log(
                                                             //     "click"
                                                             // );
                                                             if (

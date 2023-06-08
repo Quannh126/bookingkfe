@@ -16,9 +16,10 @@ export function useCar(options?: Partial<PublicConfiguration>) {
         mutate,
     } = useSWR<[ICarDetail], Error>("/admin/cars", null, config);
 
-    async function addCars(date: ICarForm) {
-        await carsApi.addCars(date);
+    async function addCars(date: ICarForm): Promise<any> {
+        const result = await carsApi.addCars(date);
         await mutate();
+        return result;
     }
     // async function (date: ICarForm) {
     //     await carsApi.addCars(date);

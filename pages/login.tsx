@@ -39,6 +39,10 @@ export default function LoginPage() {
             setErrorMsg("Tên đăng nhập hoặc mật khẩu không đúng");
         }
     }
+    if (profile?.username === "Admin") {
+        router.replace("/admin");
+    }
+
     return (
         <Box>
             <Paper

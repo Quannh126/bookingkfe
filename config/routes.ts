@@ -18,10 +18,10 @@ export const ROUTE_LIST = [
 ];
 
 export const ROUTE_ADMIN = [
-    {
-        label: "Dashboard",
-        path: "/admin",
-    },
+    // {
+    //     label: "Dashboard",
+    //     path: "/admin",
+    // },
 
     {
         label: "Bán vé",
@@ -48,10 +48,10 @@ export const ROUTE_ADMIN = [
         path: "/admin/customer",
     },
 
-    {
-        label: "Báo cáo",
-        path: "/admin/report",
-    },
+    // {
+    //     label: "Báo cáo",
+    //     path: "/admin/report",
+    // },
 ];
 
 export const ROUTE_HEADER_ADMIN = [

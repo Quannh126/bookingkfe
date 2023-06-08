@@ -63,7 +63,7 @@ export function SelectField({
     );
     // function handleOnChangeSelect(e: any) {
     //     setSelectedOption(e.target.value);
-    //     console.log(e.target);
+    //     //console.log(e.target);
     //     onChange(e.target.value);
     // }
 
@@ -86,7 +86,7 @@ export function SelectField({
                     setSelectedOption(e.target.value!.toString());
                     field.onChange(e.target.value!.toString());
 
-                    //console.log(e);
+                    ////console.log(e);
                     // handleOnChange;
                     // field.onChange(
                     //     //getKey(e.target.value!.toString(), allOptions)

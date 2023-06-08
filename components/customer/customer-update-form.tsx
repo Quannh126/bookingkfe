@@ -115,7 +115,7 @@ export function CustomerUpdateForm({
                 </Grid>
                 <Grid item xs={12} md={1}></Grid>
                 <Grid item xs={2} md={1}>
-                    <Button onClick={handleOnCancel}>Huỷ</Button>
+                    <Button onClick={handleOnCancel}>Đóng</Button>
                 </Grid>
             </Grid>
         </Box>

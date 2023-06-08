@@ -2,6 +2,7 @@ import * as React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import createEmotionServer from "@emotion/server/create-instance";
 import { createEmotionCache, roboto, PureLightTheme } from "@/utils/index";
+
 export default class MyDocument extends Document {
     render() {
         return (
@@ -14,10 +15,10 @@ export default class MyDocument extends Document {
                     />
                     <link rel="shortcut icon" href="/favicon.ico" />
                     <link
-                        href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;700&display=swap"
+                        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
                         rel="stylesheet"
                     ></link>
-                    <meta name="emotion-insertion-point" content="" />
+                    {/* <meta name="emotion-insertion-point" content="" /> */}
                     {(this.props as any).emotionStyleTags}
                 </Head>
                 <body>

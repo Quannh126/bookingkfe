@@ -11,6 +11,7 @@ export default interface ICar {
     phonenumber: string;
     driver_name: string;
     license_plate: string;
+    imgPath: string;
     capacity: string;
     description: string;
     comment: Array<IComment>;

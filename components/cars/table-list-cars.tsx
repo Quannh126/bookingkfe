@@ -59,11 +59,34 @@ export function TableListCar({
             align: "center",
         },
         {
+            field: "imgPath",
+            // type: "string",
+            headerName: "Ảnh",
+            width: 200,
+            headerAlign: "center",
+            renderCell: (cellValue: GridRenderCellParams<Row>) => {
+                if (!cellValue.value || cellValue.value.toString() == "") {
+                    return <Box></Box>;
+                }
+                return (
+                    <Box
+                        component="img"
+                        sx={{
+                            height: 120,
+                            width: 200,
+                        }}
+                        src={cellValue.value.toString()}
+                    />
+                );
+            },
+        },
+        {
             field: "capacity",
             type: "number",
-            width: 150,
+            width: 100,
             headerName: "Số ghế",
             headerAlign: "center",
+            align: "center",
         },
         {
             field: "license_plate",
@@ -71,6 +94,7 @@ export function TableListCar({
             width: 150,
             headerName: "Biển số xe",
             headerAlign: "center",
+            align: "center",
         },
         {
             field: "driver_name",
@@ -78,6 +102,7 @@ export function TableListCar({
             width: 200,
             headerName: "Tên tài xế",
             headerAlign: "center",
+            align: "center",
         },
         {
             field: "phonenumber",
@@ -85,6 +110,7 @@ export function TableListCar({
             width: 150,
             headerName: "Số điện thoại",
             headerAlign: "center",
+            align: "center",
         },
         {
             field: "status",
@@ -142,6 +168,7 @@ export function TableListCar({
                             backgroundColor: "rgb(141 147 225 / 87%)",
                         },
                     }}
+                    rowHeight={120}
                     columns={columns}
                     rows={listCar}
                     getRowId={(row) => row._id}

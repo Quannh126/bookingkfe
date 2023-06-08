@@ -14,6 +14,7 @@ export function useAuth(options?: Partial<PublicConfiguration>) {
     const config: SWRConfiguration = {
         dedupingInterval: 60 * 60 * 1000,
         revalidateOnFocus: false,
+        shouldRetryOnError: true,
         ...options,
     };
     //const router = useRouter();
@@ -25,7 +26,7 @@ export function useAuth(options?: Partial<PublicConfiguration>) {
     const firstLoading = profile === undefined && error === undefined;
     async function login(payload: LoginPayload) {
         await authApi.login(payload);
-        await mutate();
+        mutate();
     }
 
     async function logout() {

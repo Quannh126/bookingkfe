@@ -3,6 +3,7 @@ import { Control, Controller } from "react-hook-form";
 import FileUpload from "react-mui-fileuploader";
 import { FileUploadProps } from "react-mui-fileuploader/dist/types/index.types";
 export type UploadProps = FileUploadProps & {
+    imgSrc?: string;
     name: string;
     control: Control<any>;
 };
@@ -13,7 +14,7 @@ export type UploadProps = FileUploadProps & {
 //     setFilesToUpload([...files]);
 // };
 
-export function UploadFileBox({ name, control, ...rest }: UploadProps) {
+export function UploadFileBox({ name, control, imgSrc, ...rest }: UploadProps) {
     // const {
     //     field,
     //     fieldState: { error },
@@ -22,7 +23,6 @@ export function UploadFileBox({ name, control, ...rest }: UploadProps) {
     //     control,
     // });
 
-    console.log(control);
     return (
         <Controller
             name={name}
@@ -38,15 +38,15 @@ export function UploadFileBox({ name, control, ...rest }: UploadProps) {
                     // value={value}
                     // onChange={(e) => {
                     //     field.onChange(e);
-                    //     console.log(control);
+                    //     //console.log(control);
                     // }}
                     onFilesChange={(e) => {
                         field.onChange(e);
                     }}
                     onBlur={field.onBlur}
-                    ref={field.ref}
+                    // ref={field.ref}
                     getBase64={false}
-                    multiFile={true}
+                    multiFile={false}
                     disabled={false}
                     title=""
                     header="Upload ảnh xe"
@@ -64,30 +64,26 @@ export function UploadFileBox({ name, control, ...rest }: UploadProps) {
                     allowedExtensions={["jpg", "jpeg", "png"]}
                     // onFilesChange={handleFilesChange}
                     // onError={handleFileUploadError}
-                    // imageSrc={"path/to/custom/image"}
+                    imageSrc={imgSrc ?? ""}
+                    showPlaceholderImage={!imgSrc ? false : true}
                     BannerProps={{ elevation: 0, variant: "outlined" }}
-                    showPlaceholderImage={false}
-                    PlaceholderGridProps={{ sm: 12, md: 12 }}
-                    LabelsGridProps={{ sm: 12, md: 12 }}
+                    PlaceholderGridProps={{ md: 4 }}
+                    LabelsGridProps={{ md: 8 }}
                     // onContextReady={(context) => {
                     //     // access to component context here
                     // }}
                     ContainerProps={{
                         elevation: 0,
                         variant: "outlined",
-                        sx: { ml: 1, p: 2 },
+                        sx: { p: 1 },
                     }}
-                    // PlaceholderImageDimension={{
-                    //     xs: { width: 128, height: 128 },
-                    //     sm: { width: 128, height: 128 },
-                    //     md: { width: 164, height: 164 },
-                    //     lg: { width: 256, height: 256 },
-                    // }}
+                    PlaceholderImageDimension={{
+                        xs: { width: 128, height: 128 },
+                        sm: { width: 128, height: 128 },
+                        md: { width: 164, height: 164 },
+                        lg: { width: 256, height: 256 },
+                    }}
                 />
-                //     {error && (
-                //         <FormHelperText error>{error?.message}</FormHelperText>
-                //     )}
-                // </FormControl>
             )}
         />
     );

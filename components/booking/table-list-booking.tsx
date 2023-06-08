@@ -5,9 +5,6 @@ import { Grid, Typography, Card, CardActionArea, Tooltip } from "@mui/material";
 import { NameValue } from "@/models";
 import IBookingTrip from "@/models/Book/book-trip";
 
-// import TablePaginationActions from "./table-with-paging";
-
-// import { Identifier } from "typescript";
 export interface ITableListCarProps {
     // listTrips?: Array<ITrip> | [];
     listProvince: Array<NameValue> | [];
@@ -32,7 +29,6 @@ export function TableListBooking({
     listBooking,
     handleClickToTrip,
 }: ITableListCarProps) {
-    console.log(listBooking);
     return (
         <Box sx={{}}>
             <Grid container>
@@ -46,7 +42,7 @@ export function TableListBooking({
                             md={4}
                             lg={3}
                             xl={2}
-                            sx={{ paddingLeft: 2, paddingTop: 2 }}
+                            sx={{ paddingLeft: 1, paddingTop: 1 }}
                         >
                             <Card
                                 elevation={2}
@@ -110,7 +106,10 @@ export function TableListBooking({
                                                 sx={{ alignItems: "flex-end" }}
                                             >
                                                 <Typography> Từ: </Typography>
-                                                <Typography variant="h6" ml={1}>
+                                                <Typography
+                                                    variant="body1"
+                                                    ml={1}
+                                                >
                                                     {getName(
                                                         listProvince,
                                                         trip.from_id
@@ -123,7 +122,10 @@ export function TableListBooking({
                                                 sx={{ alignItems: "flex-end" }}
                                             >
                                                 <Typography> Đến: </Typography>
-                                                <Typography variant="h6" ml={1}>
+                                                <Typography
+                                                    variant="body1"
+                                                    ml={1}
+                                                >
                                                     {getName(
                                                         listProvince,
                                                         trip.to_id
@@ -137,7 +139,16 @@ export function TableListBooking({
                                             sx={{ alignItems: "flex-end" }}
                                         >
                                             <Typography> Xe: </Typography>
-                                            <Typography variant="h6" ml={1}>
+                                            <Typography
+                                                variant="body1"
+                                                ml={1}
+                                                sx={{
+                                                    textOverflow: "ellipsis",
+
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                }}
+                                            >
                                                 {`${trip.car.name}`}
                                             </Typography>
                                         </Box>
@@ -146,7 +157,7 @@ export function TableListBooking({
                                             sx={{ alignItems: "flex-end" }}
                                         >
                                             <Typography> Biển số: </Typography>
-                                            <Typography variant="h6" ml={1}>
+                                            <Typography variant="body1" ml={1}>
                                                 {`${trip.car.license_plate}`}
                                             </Typography>
                                         </Box>
@@ -158,7 +169,7 @@ export function TableListBooking({
                                                 {" "}
                                                 Tên tài xế:{" "}
                                             </Typography>
-                                            <Typography variant="h6" ml={1}>
+                                            <Typography variant="body1" ml={1}>
                                                 {`${trip.car.driver_name}`}
                                             </Typography>
                                         </Box>
@@ -169,7 +180,7 @@ export function TableListBooking({
                                             <Typography>
                                                 Số điện thoại:{" "}
                                             </Typography>
-                                            <Typography variant="h6" ml={1}>
+                                            <Typography variant="body1" ml={1}>
                                                 {`${trip.car.phonenumber}`}
                                             </Typography>
                                         </Box>

@@ -102,7 +102,7 @@ export function LineUpdateForm({
                     >
                         Cập nhật
                     </Button>
-                    <Button onClick={handleOnCancel}>Huỷ</Button>
+                    <Button onClick={handleOnCancel}>Đóng</Button>
                 </Grid>
             </Grid>
         </Box>

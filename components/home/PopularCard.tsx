@@ -15,7 +15,7 @@ export interface IPopularCardProps {
 export default function PopularCard({ card }: IPopularCardProps) {
     if (!card) return null;
     return (
-        <Card sx={{ position: "relative" }}>
+        <Card sx={{ position: "relative", width: "250px" }}>
             <CardActionArea sx={{ position: "relative" }}>
                 <CardMedia
                     component="img"
@@ -30,7 +30,7 @@ export default function PopularCard({ card }: IPopularCardProps) {
                 />
                 <CardContent
                     sx={{
-                        height: "160px",
+                        height: "200px",
                         position: "relative",
                         // backgroundColor: "transparent",
                         color: "#ffffff",

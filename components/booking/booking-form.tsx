@@ -29,7 +29,7 @@ export interface BookFormProps {
     alertText?: string;
 }
 
-let count = 0;
+// let count = 0;
 
 function getName(list: Array<NameValue>, value: String): string {
     for (let i = 0; i < list.length; i++) {
@@ -103,9 +103,9 @@ export function BookForm({
     // let phonenumber = watch("customer.phonenumber");
 
     // const customer = watch("customer");
-    // console.log(customer);
+    // //console.log(customer);
     function handleBookSubmit(data: IBookingForm) {
-        console.log(data);
+        // //console.log(data);
         onBook?.(data);
     }
     function handleOnCancel() {
@@ -137,7 +137,7 @@ export function BookForm({
     // const phonenumber = watch('customer.phonenumber',"");
 
     const handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        //  console.log(event)
+        //  //console.log(event)
         const customer = dataCustomer.data!.find(
             (item) => item.phonenumber === event.target.value
         );
@@ -153,7 +153,7 @@ export function BookForm({
             setIsDisable(false);
         }
     };
-    console.log(count++);
+    //console.log(count++);
     return (
         <Box
             component="form"
@@ -373,7 +373,7 @@ export function BookForm({
                                 ml: 1,
                             }}
                         >
-                            Huỷ
+                            Đóng
                         </Button>
                     </Box>
                 </Grid>

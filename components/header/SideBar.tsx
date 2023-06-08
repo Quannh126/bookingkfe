@@ -14,18 +14,18 @@ export default function SideBar() {
     });
     async function handelLogoutClick() {
         try {
-            //console.log("Logout");
+            ////console.log("Logout");
             await logout();
             router.push("/login");
         } catch (err) {
-            console.log("failed to logut");
+            //console.log("failed to logut");
         }
     }
     async function handelRoute(path: string) {
         try {
             router.push(path);
         } catch (error) {
-            console.log("failed router");
+            //console.log("failed router");
         }
     }
     return (

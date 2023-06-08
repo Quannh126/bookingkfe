@@ -2,7 +2,7 @@ export interface ICarForm {
     name: string;
     type_car: string;
 
-    // attachment: Array<File>;
+    attachment?: Array<File>;
     license_plate: string;
     capacity: string;
     description: string;

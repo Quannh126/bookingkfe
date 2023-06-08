@@ -27,7 +27,7 @@ export function LoginForm({ onSubmit, errorMsg }: LoginFormProps) {
         resolver: yupResolver(schema),
     });
     function handleLoginSubmit(payload: LoginPayload) {
-        //console.log(payload);
+        ////console.log(payload);
         onSubmit?.(payload);
     }
     return (

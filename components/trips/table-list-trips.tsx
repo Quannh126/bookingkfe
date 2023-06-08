@@ -54,10 +54,11 @@ export function TableListTrips({
                             key={index}
                             item
                             xs={12}
-                            sm={4}
-                            md={3}
-                            lg={2}
-                            sx={{ margin: 1 }}
+                            sm={6}
+                            md={4}
+                            lg={3}
+                            xl={2}
+                            sx={{ paddingLeft: 1, paddingTop: 1 }}
                         >
                             <Card elevation={2} sx={{ height: "100%" }}>
                                 <CardActions disableSpacing>
@@ -119,10 +120,10 @@ export function TableListTrips({
                                             display="flex"
                                             sx={{ alignItems: "flex-start" }}
                                         >
-                                            <Typography>Tuyến:</Typography>
+                                            {/* <Typography>Tuyến:</Typography> */}
                                             <Typography
                                                 variant="h6"
-                                                ml={1}
+                                                // ml={1}
                                                 alignSelf="flex-start"
                                             >
                                                 {`${getName(
@@ -139,7 +140,16 @@ export function TableListTrips({
                                             sx={{ alignItems: "flex-end" }}
                                         >
                                             <Typography> Xe: </Typography>
-                                            <Typography variant="h6" ml={1}>
+                                            <Typography
+                                                variant="body1"
+                                                ml={1}
+                                                sx={{
+                                                    textOverflow: "ellipsis",
+                                                    maxWidth: "198px",
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                }}
+                                            >
                                                 {`${trip.car.name}`}
                                             </Typography>
                                         </Box>
@@ -156,7 +166,7 @@ export function TableListTrips({
                                             display="flex"
                                             sx={{ alignItems: "flex-start" }}
                                         >
-                                            <Typography>Tên tài xế:</Typography>
+                                            <Typography>Tài xế:</Typography>
                                             <Typography variant="h6" ml={1}>
                                                 {`${trip.car.driver_name}`}
                                             </Typography>
@@ -175,16 +185,24 @@ export function TableListTrips({
                             </Card>
                         </Grid>
                     ))}
-                <Grid item xs={12} sm={4} md={3} lg={2} sx={{ margin: 1 }}>
+                <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    md={4}
+                    lg={3}
+                    xl={2}
+                    sx={{ paddingLeft: 1, paddingTop: 1 }}
+                >
                     <Card sx={{ height: "100%" }}>
                         <Tooltip title="Thêm" arrow>
                             <CardActionArea
                                 onClick={() => {
-                                    console.log("add");
+                                    //console.log("add");
                                     setShowTripForm(true);
                                 }}
                                 sx={{
-                                    height: "100%",
+                                    height: "198px",
                                     width: "100%",
                                     display: "flex",
                                     justifyItems: "center",

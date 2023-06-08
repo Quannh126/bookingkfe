@@ -121,7 +121,7 @@ TripFormProps) {
     // });
 
     function handleAddSubmit(data: ITripForm) {
-        console.log(data);
+        //console.log(data);
         onAdd?.(data);
     }
     function handleOnCancel() {
@@ -133,7 +133,6 @@ TripFormProps) {
         revalidateOnFocus: false,
     };
     const config2: SWRConfiguration = {
-        dedupingInterval: 60 * 1000,
         revalidateOnMount: true,
         revalidateOnFocus: true,
         refreshWhenHidden: true,
@@ -492,7 +491,7 @@ TripFormProps) {
                                 ml: 1,
                             }}
                         >
-                            Huỷ
+                            Đóng
                         </Button>
                     </Box>
                 </Grid>

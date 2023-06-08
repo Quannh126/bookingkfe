@@ -6,9 +6,13 @@ import { Button, Grid, Typography } from "@mui/material";
 import { ICarDetail } from "@/models";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { UploadFileBox } from "../form/upload-file";
+
+// import { PureLightTheme } from "@/utils";
 
 export interface CarUpdateFormProps {
     initData?: ICarDetail;
+    imgSrc?: string;
     // eslint-disable-next-line no-unused-vars
     onUpdate?: (data: ICarDetail) => void;
     onCancel: () => void;
@@ -40,6 +44,7 @@ export function CarUpdateForm({
             .required("Vui lòng nhập số điện thoại")
             .matches(/^[0-9]+$/, "số điện thoại phải là chữ số"),
     });
+
     const { control, handleSubmit } = useForm<ICarDetail>({
         defaultValues: {
             _id: !initData ? "" : initData._id,
@@ -50,7 +55,8 @@ export function CarUpdateForm({
             phonenumber: !initData ? "" : initData.phonenumber,
             capacity: !initData ? "" : initData.capacity,
             description: !initData ? "" : initData.description,
-            //status: activity,
+            attachment: [] as Array<File>,
+            imgPath: !initData ? "" : initData.imgPath,
         },
         resolver: yupResolver(schema),
     });
@@ -60,6 +66,7 @@ export function CarUpdateForm({
     function handleOnCancel() {
         onCancel();
     }
+
     return (
         <Box
             component="form"
@@ -74,12 +81,26 @@ export function CarUpdateForm({
             p={4}
             onSubmit={handleSubmit(handleUpdateSubmit)}
         >
+            <Box
+                display="flex"
+                sx={{
+                    justifyContent: "center",
+                    mb: 1,
+                    // backgroundColor: PureLightTheme.colors.alpha.black[10],
+                    width: "100%",
+                }}
+            >
+                <Typography gutterBottom variant="h4" component="div">
+                    Thêm mới xe
+                </Typography>
+            </Box>
+
             <Grid container spacing={1}>
-                <Grid item xs={12} md={12}>
-                    <Typography gutterBottom variant="h5" component="div">
+                {/* <Grid item xs={12} md={12}>
+                    <Typography gutterBottom variant="h4" component="div">
                         Thêm mới xe
                     </Typography>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} md={6}>
                     <InputField
                         type="text"
@@ -138,10 +159,15 @@ export function CarUpdateForm({
                         control={control}
                     />
                 </Grid> */}
-                {/* <Grid item xs={12} md={12}>
-                    <UploadFileBox name="attachment" control={control} />
-                </Grid> */}
-
+                <Grid item xs={12} md={12}>
+                    <UploadFileBox
+                        imgSrc={initData?.imgPath}
+                        name="attachment"
+                        control={control}
+                        ref={null}
+                    />
+                </Grid>
+                <Grid item xs={12} md={12}></Grid>
                 <Grid item xs={12} md={12}>
                     <InputField
                         label="Mô tả"

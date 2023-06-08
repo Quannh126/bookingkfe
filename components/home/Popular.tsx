@@ -39,7 +39,7 @@ export function Popular() {
         <Box component="section" bgcolor="light" pt={2} pb={4}>
             <Container>
                 <Stack pb={2}>
-                    <Typography variant="h6" fontWeight="bold">
+                    <Typography variant="h4" fontWeight="bold">
                         Địa điểm nổi bật
                     </Typography>
                 </Stack>
@@ -49,14 +49,9 @@ export function Popular() {
                         xs: "column",
                         md: "row",
                     }}
-                    spacing={4}
+                    spacing={2}
                     sx={{
-                        "& > div": {
-                            width: {
-                                xs: "100%",
-                                md: "50%",
-                            },
-                        },
+                        overflowX: "auto",
                     }}
                 >
                     {listCard.map((card: IPopularCard) => (

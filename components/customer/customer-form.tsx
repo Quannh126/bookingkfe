@@ -43,7 +43,7 @@ export function CustomerForm({ onAdd, onCancel, errorMsg }: CustomerFormProps) {
         resolver: yupResolver(schema),
     });
     function handleAddSubmit(data: ICustomerForm) {
-        console.log(data);
+        //console.log(data);
         onAdd?.(data);
     }
     function handleOnCancel() {
@@ -131,7 +131,7 @@ export function CustomerForm({ onAdd, onCancel, errorMsg }: CustomerFormProps) {
                             marginLeft: 2,
                         }}
                     >
-                        Huỷ
+                        Đóng
                     </Button>
                 </Grid>
             </Grid>

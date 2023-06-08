@@ -168,7 +168,7 @@ function SidebarMenu() {
         try {
             router.push(path);
         } catch (error) {
-            console.log("failed router");
+            //console.log("failed router");
         }
     }
     return (

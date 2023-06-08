@@ -1,12 +1,12 @@
 import React from "react";
 import { Box } from "@mui/system";
 import { Container, Stack, Link } from "@mui/material";
-import { ROUTE_LIST } from "../../config/routes";
-import { useRouter } from "next/router";
-import clsx from "clsx";
+// import { ROUTE_LIST } from "../../config/routes";
+// import { useRouter } from "next/router";
+// import clsx from "clsx";
 
 export function HeaderDesktop() {
-    const router = useRouter();
+    // const router = useRouter();
     return (
         <Box
             display={{ xs: "none", lg: "block" }}
@@ -38,7 +38,7 @@ export function HeaderDesktop() {
                     </Link>
                 </Stack>
                 <Stack direction="row" justifyContent="flex-end">
-                    {ROUTE_LIST.map((route) => (
+                    {/* {ROUTE_LIST.map((route) => (
                         <Link
                             sx={{
                                 height: "70px",
@@ -56,7 +56,7 @@ export function HeaderDesktop() {
                         >
                             {route?.label}
                         </Link>
-                    ))}
+                    ))} */}
                 </Stack>
             </Container>
         </Box>

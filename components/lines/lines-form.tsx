@@ -92,7 +92,7 @@ export function LineForm({ onAdd, onCancel }: LineFormProps) {
                     >
                         Thêm
                     </Button>
-                    <Button onClick={handleOnCancel}>Huỷ</Button>
+                    <Button onClick={handleOnCancel}>Đóng</Button>
                 </Grid>
             </Grid>
         </Box>

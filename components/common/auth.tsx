@@ -12,9 +12,9 @@ export default function Auth({ children }: AuthProp) {
     const { profile, firstLoading } = useAuth();
 
     useEffect(() => {
-        console.log(!firstLoading && !profile?.username);
-        console.log(firstLoading);
-        console.log(profile);
+        //console.log(!firstLoading && !profile?.username);
+        //console.log(firstLoading);
+        //console.log(profile);
 
         if (
             !firstLoading &&

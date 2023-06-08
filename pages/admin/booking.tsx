@@ -4,6 +4,11 @@ import {
     Button,
     // Typography,
     Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Typography,
 } from "@mui/material";
 // import { TransitionProps } from "@mui/material/transitions";
 // import { useTrip } from "@/hooks";
@@ -44,6 +49,7 @@ const AdminTrips: NextpageWithLayout = () => {
     const [journeyDate, setJourneyDate] = useState(
         convertDateToString(new Date())
     );
+    const [openWarning, setOpenWarning] = useState(false);
     const [openSnack, setOpenSnack] = useState(false);
     const [snackData, setSnackData] = useState({
         content: "",
@@ -62,8 +68,14 @@ const AdminTrips: NextpageWithLayout = () => {
     const [swapSeat, setSwapSeat] = useState(-1);
     const [singleSelectMode, setSingleSelectMode] = useState(false);
     // const { listTrips } = useTrip(queryParams);
-    const { listBooking, addBooking, updateBooking, updateSeat, isLoading } =
-        useBooking(queryParams);
+    const {
+        listBooking,
+        addBooking,
+        updateBooking,
+        updateSeat,
+        removeBooking,
+        isLoading,
+    } = useBooking(queryParams);
     const {
         // register,
         control,
@@ -149,6 +161,26 @@ const AdminTrips: NextpageWithLayout = () => {
             openInit: true,
         });
         setOpenSnack(true);
+    };
+    const handleClickDelete = () => {
+        setOpenWarning(true);
+    };
+    const handleDelelteSubmit = async (trip_id: string, list_seat: string) => {
+        try {
+            console.log("log", trip_id, list_seat);
+            setOpenWarning(false);
+            setPageLoading(true);
+            await removeBooking(trip_id, list_seat);
+            setPageLoading(false);
+        } catch (error: any) {
+            setPageLoading(false);
+            setSnackData({
+                content: error?.response.data.message ?? "Có lỗi xảy ra",
+                typeAlert: "error",
+                openInit: true,
+            });
+            setOpenSnack(true);
+        }
     };
     const handleChooseSwapSeat = async (seat: number) => {
         try {
@@ -391,6 +423,7 @@ const AdminTrips: NextpageWithLayout = () => {
                     s_journey_date={journeyDate}
                 />
             </Dialog>
+
             <Dialog
                 open={showBookingUpdateForm}
                 // TransitionComponent={Transition}
@@ -398,6 +431,7 @@ const AdminTrips: NextpageWithLayout = () => {
                 onClose={handleClose2}
                 aria-labelledby="update-booked-seats"
                 aria-describedby="update-booked-seats"
+                sx={{ zIndex: 100 }}
             >
                 <BookUpdateForm
                     visiblealertText={visiblealertText}
@@ -414,9 +448,42 @@ const AdminTrips: NextpageWithLayout = () => {
                     tripDetail={selectedTrip}
                     selectedSeats={selectedSeatsBooked.join("-")}
                     s_journey_date={journeyDate}
+                    handleClickDelete={handleClickDelete}
                 />
             </Dialog>
-
+            <Dialog open={openWarning} keepMounted sx={{ zIndex: 200 }}>
+                <DialogTitle id="alert-dialog-title">
+                    <Typography variant="h4">Thông báo</Typography>
+                </DialogTitle>
+                <DialogContent sx={{ height: "60px", width: "400px" }}>
+                    <DialogContentText id="alert-dialog-description">
+                        <Typography variant="h5">
+                            Có chắc muốn huỷ vé không?
+                        </Typography>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={() => {
+                            handleDelelteSubmit(
+                                selectedTrip.trip_id,
+                                selectedSeatsBooked.join("-")
+                            );
+                        }}
+                        autoFocus
+                        variant="contained"
+                    >
+                        Đồng ý
+                    </Button>
+                    <Button
+                        onClick={() => setOpenWarning(false)}
+                        variant="outlined"
+                        color="warning"
+                    >
+                        Huỷ
+                    </Button>
+                </DialogActions>
+            </Dialog>
             {showListTrip && (
                 <TableListBooking
                     listProvince={!listProvince.data ? [] : listProvince.data}

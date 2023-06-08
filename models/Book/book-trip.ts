@@ -10,9 +10,10 @@ export type ISeatDetail = {
 };
 export default interface IBookingTrip {
     _id: string;
-    pickup_point: IPointDetail;
-    dropoff_point: IPointDetail;
+    pickup_point: Array<IPointDetail>;
+    dropoff_point: Array<IPointDetail>;
     trip_id: string;
+    journey_date: string;
     car: ICar;
     from_id: string;
     to_id: string;

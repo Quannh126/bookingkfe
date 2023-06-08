@@ -13,7 +13,7 @@ import { PureLightTheme } from "@/utils";
 export default function AdminLayout({ children }: LayoutProps) {
     return (
         <Auth>
-            <Stack minHeight="100vh" sx={{}}>
+            <Stack minHeight="100vh">
                 <Header />
                 <SideBar />
                 <Box

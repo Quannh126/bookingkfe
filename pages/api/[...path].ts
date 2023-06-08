@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import httpProxy from "http-proxy";
 import Cookies from "cookies";
+
 const proxy = httpProxy.createProxyServer();
 export const config = {
     api: {

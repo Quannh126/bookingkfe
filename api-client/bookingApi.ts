@@ -8,8 +8,11 @@ export const bookingApi = {
     updateBooking(data: IBookingUpdateForm) {
         return axiosClient.put(`/admin/booking`, data);
     },
-    removeBooking(booking_id: string) {
-        return axiosClient.delete(`/admin/booking/${booking_id}`);
+    removeBooking(trip_id: string, list_seat: string) {
+        return axiosClient.put(`/admin/booking/remove`, {
+            trip_id,
+            list_seat: list_seat,
+        });
     },
     getDetailTrip(tripId: string) {
         return axiosClient.get(`/admin/booking/${tripId}`);

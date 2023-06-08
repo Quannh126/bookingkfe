@@ -1,7 +1,7 @@
 import { ICarDetail, ICarForm, NameValue } from "@/models";
 import { axiosClient } from "./axiosClient";
 export const carsApi = {
-    addCars(data: ICarForm) {
+    addCars(data: ICarForm): Promise<any> {
         return axiosClient.post("/admin/cars", data);
     },
     getAllCars() {

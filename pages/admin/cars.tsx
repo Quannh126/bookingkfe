@@ -2,7 +2,7 @@ import AdminLayout from "@/components/layout/admin";
 import { Box } from "@mui/system";
 import {
     Button,
-    Typography,
+    // Typography,
     Dialog,
     DialogTitle,
     DialogActions,
@@ -17,12 +17,16 @@ import { CarForm, TableListCar, CarUpdateForm } from "@/components/cars";
 import { ICarDetail } from "@/models";
 import { CSVLink } from "react-csv";
 import GetAppIcon from "@mui/icons-material/GetApp";
+// import useMutation from "@/hooks/useUpload";
+import { axiosClient } from "@/api-client";
+import axios from "axios";
 // import TableListCar from "@/components/cars/table-list-cars";
 const AdminCars: NextpageWithLayout = () => {
     const [showCarForm, setShowCarForm] = useState(false);
     const [selected, setSelected] = useState({});
     const [showCarUpdateForm, setShowCarUpdateForm] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
+
     const handleClose = (event: Object, reason: string) => {
         if (reason && reason == "backdropClick") return;
         setShowCarForm(false);
@@ -47,10 +51,73 @@ const AdminCars: NextpageWithLayout = () => {
 
     async function handleAddCar(data: ICarForm) {
         try {
-            await addCars(data);
+            if (data.attachment && data.attachment.length > 0) {
+                const imgAmount = data.attachment?.length;
+                const fileName = data.attachment[0].name;
+                const result = await addCars(data);
+                console.log(result);
+                const urlUpload: any = await axiosClient.get(
+                    `/upload/${result._id}/${fileName}`
+                );
+                //console.log(urlUpload.data.url);
+                for (let i = 0; i < imgAmount!; i++) {
+                    // const formData = new FormData();
+                    // formData.append("file", data.attachment![i]);
+                    // const file = data.attachment![i];
+                    await axios({
+                        method: "PUT",
+                        url: urlUpload.url,
+                        data: data.attachment![i],
+                        headers: { "Content-Type": data.attachment![i].type },
+                    });
+                    await updateCar({
+                        ...data,
+                        _id: result._id,
+                        imgPath: urlUpload.url.split("?")[0],
+                    } as ICarDetail);
+                }
+            } else {
+                await addCars(data);
+            }
+
             setShowCarForm(false);
         } catch (error) {
             console.log("failed to login");
+        }
+    }
+
+    async function handleUpdateSubmit(data: ICarDetail) {
+        try {
+            if (data.attachment && data.attachment.length > 0) {
+                const imgAmount = data.attachment?.length;
+                const fileName = data.attachment[0].name;
+                const urlUpload: any = await axiosClient.get(
+                    `/upload/${data._id}/${fileName}`
+                );
+
+                for (let i = 0; i < imgAmount!; i++) {
+                    // const formData = new FormData();
+                    // formData.append("file", data.attachment![i]);
+                    await axios({
+                        method: "PUT",
+                        url: urlUpload.url,
+                        data: data.attachment![i],
+                        headers: { "Content-Type": data.attachment![i].type },
+                    });
+                    await updateCar({
+                        ...data,
+                        imgPath: urlUpload.url.split("?")[0],
+                    });
+                }
+            } else {
+                await updateCar({
+                    ...data,
+                });
+            }
+
+            setShowCarUpdateForm(false);
+        } catch (error) {
+            console.log("Update failse with error: ", error);
         }
     }
     async function handleDelelteSubmit(data: ICarDetail) {
@@ -62,14 +129,6 @@ const AdminCars: NextpageWithLayout = () => {
         }
     }
 
-    async function handleUpdateSubmit(data: ICarDetail) {
-        try {
-            setShowCarUpdateForm(false);
-            await updateCar(data);
-        } catch (error) {
-            console.log("Update failse with error: ", error);
-        }
-    }
     const csvLinkRef = useRef<
         CSVLink & HTMLAnchorElement & { link: HTMLAnchorElement }
     >(null); // setup the ref that we'll use for the hidden CsvLink click once we've updated the data
@@ -107,11 +166,12 @@ const AdminCars: NextpageWithLayout = () => {
         setData(data);
         csvLinkRef?.current?.link.click();
     };
+
     return (
         <Box>
-            <Typography component="h1" variant="h4" p={2}>
+            {/* <Typography component="h1" variant="h4" p={2}>
                 Quản lý xe
-            </Typography>
+            </Typography> */}
 
             <Button
                 sx={{ ml: 2 }}
@@ -163,6 +223,7 @@ const AdminCars: NextpageWithLayout = () => {
                     onUpdate={handleUpdateSubmit}
                     activity="Update"
                     onCancel={() => setShowCarUpdateForm(false)}
+                    // setFilesToUpload={setFilesToUpload}
                 />
             </Dialog>
             <Dialog open={showAlert} keepMounted>

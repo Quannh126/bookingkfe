@@ -22,18 +22,3 @@ export const converFormatDate = (date: string): string => {
     if (!date) return "";
     return `${date.split("-")[2]}/${date.split("-")[1]}/${date.split("-")[0]}`;
 };
-// const converMoneyToWords = (): String => {
-//     let t = [
-//         "không",
-//         "một",
-//         "hai",
-//         "ba",
-//         "bốn",
-//         "năm",
-//         "sáu",
-//         "bảy",
-//         "tám",
-//         "chín",
-//     ];
-//     return "";
-// };

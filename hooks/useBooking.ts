@@ -21,8 +21,8 @@ export function useBooking(
         )}`;
     }
     const config: SWRConfiguration = {
-        dedupingInterval: 60 * 60 * 1000,
-        revalidateOnFocus: true,
+        dedupingInterval: 20 * 1000,
+        revalidateOnFocus: false,
         revalidateOnMount: true,
         ...options,
     };
@@ -42,8 +42,8 @@ export function useBooking(
         await mutate();
     }
 
-    async function removeBooking(booking_id: string) {
-        await bookingApi.removeBooking(booking_id);
+    async function removeBooking(trip_id: string, list_seat: string) {
+        await bookingApi.removeBooking(trip_id, list_seat);
         mutate();
     }
 
@@ -55,6 +55,7 @@ export function useBooking(
         await bookingApi.updateSeat(seat, booking_id);
         mutate();
     }
+
     return {
         listBooking,
         error,
