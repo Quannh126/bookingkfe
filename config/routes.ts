@@ -18,40 +18,35 @@ export const ROUTE_LIST = [
 ];
 
 export const ROUTE_ADMIN = [
-    // {
-    //     label: "Dashboard",
-    //     path: "/admin",
-    // },
+    {
+        label: "Dashboard",
+        path: "/admin/dashboard",
+        title: "Dashboard",
+    },
 
     {
         label: "Bán vé",
         path: "/admin/booking",
+        title: "Ticketing",
     },
 
     {
         label: "Lập lịch chạy",
         path: "/admin/trips",
+        title: "Trip Management",
     },
 
     {
         label: "Quản lý xe",
         path: "/admin/cars",
+        title: "Car Management",
     },
-
-    // {
-    //     label: "Quản lý tuyến",
-    //     path: "/admin/lines",
-    // },
 
     {
         label: "Quản lý khách hàng",
         path: "/admin/customer",
+        title: "Customer Management",
     },
-
-    // {
-    //     label: "Báo cáo",
-    //     path: "/admin/report",
-    // },
 ];
 
 export const ROUTE_HEADER_ADMIN = [
@@ -70,5 +65,36 @@ export const ROUTE_HEADER_ADMIN = [
     {
         label: "Logout",
         path: "/logout",
+    },
+];
+
+export const ROUTE_MANAGER = [
+    {
+        label: "Dashboard",
+        path: "/admin/dashboard",
+        title: "Dashboard",
+    },
+    {
+        label: "Quản lý xe",
+        path: "/admin/cars",
+        title: "Car Management",
+    },
+    {
+        label: "Lập lịch chạy",
+        path: "/admin/trips",
+        title: "Trip Management",
+    },
+];
+
+export const ROUTE_TICKETING = [
+    {
+        label: "Bán vé",
+        path: "/admin/booking",
+        title: "Ticketing",
+    },
+    {
+        label: "Quản lý khách hàng",
+        path: "/admin/customer",
+        title: "Customer Management",
     },
 ];

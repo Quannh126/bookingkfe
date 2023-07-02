@@ -25,3 +25,12 @@ export type KeyNameValue = {
     key: string;
     listOption: Array<NameValue>;
 };
+
+export interface ILocationGrouped {
+    header: string;
+    point: Location2[];
+}
+export type Location2 = {
+    name: string;
+    code_group: string;
+};

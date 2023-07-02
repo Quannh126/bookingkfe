@@ -69,15 +69,15 @@ export function SelectField({
 
     return (
         <FormControl fullWidth>
-            <InputLabel id="search-select-label" size="small">
+            <InputLabel id={`select-labe${name}`} size="small">
                 {label}
             </InputLabel>
             <Select
                 fullWidth
                 size="small"
                 MenuProps={{ autoFocus: false }}
-                labelId="search-select-label"
-                id="search-select"
+                labelId={`select-labe${name}`}
+                id={`select-labe${name}`}
                 defaultValue={selectedOption}
                 value={selectedOption}
                 label={label}

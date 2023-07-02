@@ -21,6 +21,7 @@ export default function Auth({ children }: AuthProp) {
             !profile?.username
             //&& profile?.username === "adminBooking"
         ) {
+            console.log(router.asPath);
             router.push(`/login?from=${encodeURIComponent(router.asPath)}`);
             //router.push("/login");
         }

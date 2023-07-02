@@ -15,7 +15,7 @@ export function useLines(options?: Partial<PublicConfiguration>) {
         data: listLine,
         error,
         mutate,
-    } = useSWR<[ILineDetail], Error>("/admin/lines", config);
+    } = useSWR<[ILineDetail], Error>("/lines", config);
 
     async function addLines(date: ILineForm) {
         await LineApi.addLines(date);

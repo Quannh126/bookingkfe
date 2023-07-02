@@ -9,25 +9,35 @@ import {
     FormHelperText,
     SxProps,
     Theme,
+    CircularProgress,
+    ListSubheader,
+    ListSubheaderProps,
     // CircularProgress,
 } from "@mui/material";
 import { Control, useController } from "react-hook-form";
-import { NameValue } from "@/models";
+import { ILocationGrouped } from "@/models";
 type SelectFieldProps = SelectProps & {
     name: string;
     control: Control<any>;
-    allOptions: Array<NameValue> | [];
+    allOptions: Array<ILocationGrouped> | [];
     cssFormControll?: SxProps<Theme>;
-    // isLoading?: boolean;
+    isLoading?: boolean;
 };
 
-export function SelectFieldNormal({
+function MyListSubheader(props: ListSubheaderProps) {
+    return <ListSubheader {...props} />;
+}
+
+MyListSubheader.muiSkipListHighlight = true;
+export default MyListSubheader;
+
+export function SelectFieldGroup({
     name,
     label,
     control,
     allOptions,
     cssFormControll,
-    // isLoading,
+    isLoading,
     ...rest
 }: SelectFieldProps) {
     const {
@@ -38,12 +48,10 @@ export function SelectFieldNormal({
         control,
     });
     const [selectedOption, setSelectedOption] = useState(value);
-    // function getKey(value: string, allOptions: Array<NameValue>) {
-    //     return allOptions.find((item) => item.value === value)?.key;
-    // }
-    // if (isLoading) {
-    //     return <CircularProgress />;
-    // }
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
     return (
         <FormControl fullWidth sx={cssFormControll}>
             <InputLabel id={`select-labe${name}`} size="small">
@@ -66,9 +74,14 @@ export function SelectFieldNormal({
                 {...rest}
             >
                 {allOptions.map((item, index) => (
-                    <MenuItem key={index} value={item.value}>
-                        {item.name}
-                    </MenuItem>
+                    <React.Fragment key={index}>
+                        <MyListSubheader>{item.header}</MyListSubheader>
+                        {item.point.map((item, itemIndex) => (
+                            <MenuItem key={itemIndex} value={item.code_group}>
+                                {item.name}
+                            </MenuItem>
+                        ))}
+                    </React.Fragment>
                 ))}
             </Select>
             {error && <FormHelperText error>{error?.message}</FormHelperText>}

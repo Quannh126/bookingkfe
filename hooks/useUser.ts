@@ -14,7 +14,7 @@ export function useCar(options?: Partial<PublicConfiguration>) {
         data: listCar,
         error,
         mutate,
-    } = useSWR<[ICarDetail], Error>("/admin/cars", null, config);
+    } = useSWR<[ICarDetail], Error>("/cars", null, config);
 
     async function addCars(date: ICarForm) {
         await carsApi.addCars(date);

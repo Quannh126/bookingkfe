@@ -260,7 +260,7 @@ const AdminTrips: NextpageWithLayout = () => {
         revalidateOnFocus: false,
     };
     const listProvince = useSWR<Array<NameValue> | [], Error>(
-        `/admin/locations/options`,
+        `/locations/options`,
         null,
         config
     );
@@ -268,7 +268,7 @@ const AdminTrips: NextpageWithLayout = () => {
     const listDropoffAndPickUp = useSWR<
         { pickup: Array<NameValue>; dropoff: Array<NameValue> },
         Error
-    >([`/admin/locations/points/${watchRoute}`], null, configPoint);
+    >([`/locations/points/${watchRoute}`], null, configPoint);
 
     console.log("Render count: ", countRender++);
 

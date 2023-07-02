@@ -16,11 +16,11 @@ export default function handler(
     return new Promise((resolve) => {
         const cookies = new Cookies(req, res);
         const accessToken = cookies.get("accessToken");
-
+        console.log(accessToken);
         if (accessToken) {
             req.headers.authorization = `Bearer ${accessToken}`;
         }
-        req.headers.cookie = "";
+        // req.headers.cookie = "";
 
         proxy.web(req, res, {
             target: process.env.API_URL,

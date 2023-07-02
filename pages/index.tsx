@@ -3,261 +3,100 @@ import MainLayout from "@/components/layout/main";
 import { Box } from "@mui/system";
 // import { Stack } from "@mui/material";
 // import { useRouter } from 'next/router'
-import { IBookingForm, NameValue, NextpageWithLayout } from "../models";
+import { ILocationGrouped, NextpageWithLayout } from "../models";
 import { Popular } from "@/components/home";
-import { useBooking } from "@/hooks/useBooking";
-import React, { createContext, useState } from "react";
-import { convertDateToString } from "@/utils";
-import IBookingTrip from "@/models/Book/book-trip";
-import { IFilterTrip } from "@/models/Trips/trip-filter";
-import { useForm } from "react-hook-form";
-import LoadingPage from "@/components/common/loading";
+
+import React, { useEffect, useState } from "react";
+
+import Router from "next/router";
 import {
     Button,
+    CircularProgress,
     Container,
-    Grid,
+    FormControl,
+    // Grid,
+    InputLabel,
     Paper,
     PaperProps,
-    Typography,
+    Select,
+    // Typography,
 } from "@mui/material";
-import { InputField, SelectFieldNormal } from "@/components/form";
 import { styled } from "@mui/material/styles";
-import useSWR, { SWRConfiguration } from "swr";
 
-import ListBooking from "@/components/home/list_trip_booking";
-import { useDispatch } from "react-redux";
-import { resetSeletedTrip, setSelectedTrip } from "@/redux/selectedTrip";
+import { locationApi } from "@/api";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+// import useSWR, { SWRConfiguration } from "swr";
+
 const SearchWrapper = styled(Paper)<PaperProps>(
     ({ theme }) => `
     background-color: ${theme.colors.primary.lighter};
   `
 );
-// eslint-disable-next-line no-unused-vars
-type FunctionType = (data: IBookingForm) => void;
-interface BookContextType {
-    addBooking: FunctionType;
-}
-export const MyContext = createContext<BookContextType>({
-    addBooking: () => {},
-});
+
+const today = dayjs();
+// const threeLengthArray: Array<string> = [];
 const Home: NextpageWithLayout = () => {
-    const [queryParams, setQueryParams] = useState("");
-    //const [route, setRoute] = useState("1-2");
-    const dispatch = useDispatch();
-    const { listBooking, addBooking, isLoading } = useBooking(queryParams);
-
-    const {
-        // register,
-        control,
-        watch,
-        handleSubmit,
-        // getValues,
-        // setValue,
-    } = useForm<IFilterTrip>({
-        defaultValues: {
-            s_journey_date: convertDateToString(new Date()),
-            route: "1-2",
-            from_point: "",
-            to_point: "",
-        },
-        reValidateMode: "onSubmit",
+    const [locations, setLocations] = useState<ILocationGrouped[]>([]);
+    const [formData, setFormData] = useState({
+        startLocation: "",
+        endLocation: "",
+        journeyDate: today.format("YYYY-MM-DD"),
     });
-    const route = watch("route", "1-2");
-    const handleSearchSubmit = (data: IFilterTrip) => {
-        setSelectedTrip({} as IBookingTrip);
-
-        //setRoute(watchRoute);
-        let params = `/search?route=${data.route}&journey_date=${data.s_journey_date}&pickup_point=${data.from_point}&dropoff_point=${data.to_point}`;
-        setQueryParams(params);
-        dispatch(resetSeletedTrip());
-    };
-    const config: SWRConfiguration = {
-        dedupingInterval: 60 * 60 * 1000,
-        revalidateOnMount: true,
-        revalidateOnFocus: false,
-    };
-
-    // const fetcherlistProvince = async (url: string): Promise<NameValue[]> => {
-    //     // const response = await fetch(url);
-    //     // const data = await response.json();
-    //     // const weatherData: WeatherData[] = data.map((item: any) => ({
-    //     //     date: item.date,
-    //     //     temperature: item.main.temp,
-    //     //     description: item.weather[0].description,
-    //     // }));
-    //     // return weatherData;
-    //     const res = await fetch(url);
-    //     const data = await res.json();
-    //     console.log("data: ", data);
-    //     return data;
+    const [isLoading, setIsLoading] = useState(true);
+    // const [disabled, setDisabled] = useState(true);
+    // const config: SWRConfiguration = {
+    //     dedupingInterval: 60 * 60 * 1000,
+    //     revalidateOnMount: false,
     // };
-    const listProvince = useSWR<Array<NameValue> | [], Error>(
-        `/admin/locations/options`,
-        null,
-        config
-    );
 
-    // const listDropoffAndPickUp = useSWR<
-    //     { pickup: Array<NameValue>; dropoff: Array<NameValue> },
-    //     Error
-    // >([`/admin/locations/points/${route}`], null, configPoint);
+    // const {
+    //     data: locations,
+    //     error,
+    //     isLoading,
+    // } = useSWR<Array<ILocationGrouped>, Error>(
+    //     "/locations/group-options",
+    //     null,
+    //     config
+    // );
 
-    let listDropoffAndPickUp = {};
-    if (route === "1-2") {
-        listDropoffAndPickUp = {
-            "dropoff": [
-                {
-                    "name": "-Tất cả-",
-                    "value": "",
-                },
-                {
-                    "value": "1-1",
-                    "name": "Hàm Yên-Bến xe Tuyên Quang",
-                },
-                {
-                    "value": "1-2",
-                    "name": "Hàm Yên-Tràng Đà",
-                },
-                {
-                    "value": "1-3",
-                    "name": "Hàm Yên-Xuân Vân",
-                },
-                {
-                    "value": "2-1",
-                    "name": "Tuyên Quang-Bến xe Tuyên Quang",
-                },
-                {
-                    "value": "3-1",
-                    "name": "Na Hang-Na Hang",
-                },
-                {
-                    "value": "4-1",
-                    "name": "Chiêm Hóa-Chiêm Hoá",
-                },
-            ],
-            "pickup": [
-                {
-                    "name": "-Tất cả-",
-                    "value": "",
-                },
-                {
-                    "value": "1-1",
-                    "name": "Cầu giấy-BigC Thăng Long",
-                },
-                {
-                    "value": "1-2",
-                    "name": "Cầu giấy-Đại học Ngoại Ngữ",
-                },
-                {
-                    "value": "2-1",
-                    "name": "Thanh Xuân-Số 35 Nguyễn Tuân",
-                },
-                {
-                    "value": "2-2",
-                    "name": "Thanh Xuân-Khu đô thị Royal City",
-                },
-                {
-                    "value": "2-3",
-                    "name": "Thanh Xuân-Ngõ 90 Nguyễn Tuân",
-                },
-                {
-                    "value": "2-4",
-                    "name": "Thanh Xuân-Số 378 đường Nguyễn Trãi",
-                },
-                {
-                    "value": "3-1",
-                    "name": "Nam Từ Liêm-Bến xe Mỹ Đình",
-                },
-            ],
-        };
-    } else {
-        listDropoffAndPickUp = {
-            "dropoff": [
-                {
-                    "name": "-Tất cả-",
-                    "value": "",
-                },
-                {
-                    "value": "1-1",
-                    "name": "Cầu giấy-BigC Thăng Long",
-                },
-                {
-                    "value": "1-2",
-                    "name": "Cầu giấy-Đại học Ngoại Ngữ",
-                },
-                {
-                    "value": "2-1",
-                    "name": "Thanh Xuân-Số 35 Nguyễn Tuân",
-                },
-                {
-                    "value": "2-2",
-                    "name": "Thanh Xuân-Khu đô thị Royal City",
-                },
-                {
-                    "value": "2-3",
-                    "name": "Thanh Xuân-Ngõ 90 Nguyễn Tuân",
-                },
-                {
-                    "value": "2-4",
-                    "name": "Thanh Xuân-Số 378 đường Nguyễn Trãi",
-                },
-                {
-                    "value": "3-1",
-                    "name": "Nam Từ Liêm-Bến xe Mỹ Đình",
-                },
-            ],
-            "pickup": [
-                {
-                    "name": "-Tất cả-",
-                    "value": "",
-                },
-                {
-                    "value": "1-1",
-                    "name": "Hàm Yên-Bến xe Tuyên Quang",
-                },
-                {
-                    "value": "1-2",
-                    "name": "Hàm Yên-Tràng Đà",
-                },
-                {
-                    "value": "1-3",
-                    "name": "Hàm Yên-Xuân Vân",
-                },
-                {
-                    "value": "2-1",
-                    "name": "Tuyên Quang-Bến xe Tuyên Quang",
-                },
-                {
-                    "value": "3-1",
-                    "name": "Na Hang-Na Hang",
-                },
-                {
-                    "value": "4-1",
-                    "name": "Chiêm Hóa-Chiêm Hoá",
-                },
-            ],
-        };
-    }
+    const onClickSearch = () => {
+        console.log("Click search", formData);
+        Router.push({
+            pathname: "/coaches",
+            query: formData,
+        });
+    };
+    const onChangeFrom = (val: any) => {
+        console.log(val.target.value);
+        setFormData({ ...formData, ...{ startLocation: val.target.value } });
+        // checkButtonDisabled();
+    };
+    const onChangeTo = (val: any) => {
+        console.log(val.target.value);
+        setFormData({ ...formData, ...{ endLocation: val.target.value } });
+        // checkButtonDisabled();
+    };
 
-    if (isLoading || !listProvince.data || !listBooking) {
-        return <LoadingPage />;
-    } else {
-        const listCapacity = listBooking
-            .map((item) => item.car.capacity)
-            .filter((value, index, self) => {
-                return self.indexOf(value) === index;
-            });
-        localStorage.setItem("listCapacity", JSON.stringify(listCapacity));
-
-        localStorage.setItem(
-            "listDropoffAndPickUp",
-            JSON.stringify(listDropoffAndPickUp)
-        );
-    }
+    const onChangeDate = (val: any) => {
+        const journeyDate = val.$d;
+        console.log(journeyDate);
+        setFormData({ ...formData, ...{ journeyDate } });
+        // checkButtonDisabled();
+    };
+    const fetchAllLocations = async () => {
+        setIsLoading(true);
+        const locations = await locationApi.getLocationGrouped();
+        setLocations(locations);
+        setIsLoading(false);
+    };
+    useEffect(() => {
+        fetchAllLocations();
+    }, []);
     return (
         <Box component="section">
-            {/* {isPageLoading && <LoadingPage />} */}
-
             <Box
                 sx={{
                     alignItems: "center",
@@ -295,138 +134,131 @@ const Home: NextpageWithLayout = () => {
                         textAlign: "center",
                     }}
                 >
-                    <Box
-                        component="form"
-                        onSubmit={handleSubmit(handleSearchSubmit)}
-                        sx={{
-                            display: "flex",
-                            justifyItems: "center",
-                        }}
-                    >
+                    {isLoading || !locations ? (
+                        <CircularProgress />
+                    ) : (
                         <Box
+                            component="section"
                             sx={{
-                                paddingLeft: "20px",
-                                width: "100%",
-                            }}
-                        >
-                            <SelectFieldNormal
-                                allOptions={[
-                                    {
-                                        name: "Hà Nội - Tuyên Quang",
-                                        value: "1-2",
-                                    },
-                                    {
-                                        name: "Tuyên Quang - Hà Nội",
-                                        value: "2-1",
-                                    },
-                                ]}
-                                control={control}
-                                label="Tuyến đường"
-                                // {...register("from_id")}
-                                name="route"
-                            />
-                        </Box>
-                        <Box
-                            sx={{
-                                paddingLeft: "20px",
-                                width: "100%",
-                            }}
-                        >
-                            <InputField
-                                type="date"
-                                control={control}
-                                label="Ngày"
-                                // {...register("from_id")}
-                                name="s_journey_date"
-                            />
-                        </Box>
-                        {/* <Box
-                            sx={{
-                                paddingLeft: "20px",
-                                width: "100%",
-                            }}
-                        >
-                            <SelectFieldNormal
-                                // isLoading={!listDropoffAndPickUp.data}
-                                allOptions={
-                                    listDropoffAndPickUp.data === undefined
-                                        ? []
-                                        : listDropoffAndPickUp.data.pickup
-                                }
-                                control={control}
-                                label="Điểm đón"
-                                // {...register("from_id")}
-                                name="from_point"
-                            />
-                        </Box>
-                        <Box
-                            sx={{
-                                paddingLeft: "20px",
-                                width: "100%",
-                            }}
-                        >
-                            <SelectFieldNormal
-                                // isLoading={!listDropoffAndPickUp.data}
-                                allOptions={
-                                    listDropoffAndPickUp.data === undefined
-                                        ? []
-                                        : listDropoffAndPickUp.data.dropoff
-                                }
-                                control={control}
-                                label="Điểm trả"
-                                // {...register("from_id")}
-                                name="to_point"
-                            />
-                        </Box> */}
+                                mx: "auto",
 
-                        <Box
-                            sx={{
-                                paddingLeft: "20px",
-                                width: "100%",
-                                alignSelf: "center",
+                                textAlign: "center",
+                                display: "flex",
                             }}
                         >
-                            <Button
-                                type="submit"
-                                variant="contained"
+                            <FormControl>
+                                <InputLabel htmlFor="select_from">
+                                    Điểm đi
+                                </InputLabel>
+                                <Select
+                                    native
+                                    defaultValue=""
+                                    id="select_from"
+                                    label="from"
+                                    // size="small"
+                                    onChange={onChangeFrom}
+                                    // onFocus={onFocus}
+                                    // onBlur={onBlur}
+                                >
+                                    <option aria-label="None" value="" />
+                                    {locations!.map((item, index) => {
+                                        return (
+                                            <optgroup
+                                                label={item.header}
+                                                key={index}
+                                            >
+                                                {item.point.map(
+                                                    (item, itemIndex) => (
+                                                        <option
+                                                            key={itemIndex}
+                                                            value={
+                                                                item.code_group
+                                                            }
+                                                        >
+                                                            {item.name}
+                                                        </option>
+                                                    )
+                                                )}
+                                            </optgroup>
+                                        );
+                                    })}
+                                </Select>
+                            </FormControl>
+                            <FormControl>
+                                <InputLabel htmlFor="select_to">
+                                    Điểm đến
+                                </InputLabel>
+                                <Select
+                                    native
+                                    defaultValue=""
+                                    id="select_to"
+                                    label="from"
+                                    // size="small"
+                                    onChange={onChangeTo}
+                                    // onFocus={onFocus}
+                                    // onBlur={onBlur}
+                                >
+                                    <option aria-label="None" value="" />
+                                    {locations!.map((item, index) => {
+                                        return (
+                                            <optgroup
+                                                label={item.header}
+                                                key={index}
+                                            >
+                                                {item.point.map(
+                                                    (item, itemIndex) => (
+                                                        <option
+                                                            key={itemIndex}
+                                                            value={
+                                                                item.code_group
+                                                            }
+                                                        >
+                                                            {item.name}
+                                                        </option>
+                                                    )
+                                                )}
+                                            </optgroup>
+                                        );
+                                    })}
+                                </Select>
+                            </FormControl>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <Box>
+                                    <DatePicker
+                                        defaultValue={today}
+                                        disablePast
+                                        onChange={onChangeDate}
+                                        // slotProps={{
+                                        //     textField: { size: "small" },
+                                        //     iconButton: { size: "small" },
+                                        // }}
+                                        format="DD/MM/YYYY"
+                                        views={["day", "month", "year"]}
+                                    />
+                                </Box>
+                            </LocalizationProvider>
+
+                            <Box
                                 sx={{
-                                    padding: "normal",
+                                    alignSelf: "center",
+                                    height: "100%",
                                 }}
                             >
-                                Tìm kiếm
-                            </Button>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    onClick={onClickSearch}
+                                    // disabled={disabled}
+                                >
+                                    Tìm kiếm
+                                </Button>
+                            </Box>
                         </Box>
-                    </Box>
+                    )}
                 </SearchWrapper>
             </Container>
 
             <Popular />
-            <Container>
-                <Grid container spacing={2}>
-                    <Typography variant="h3">Danh cho quang cao</Typography>
-                </Grid>
-            </Container>
-            <Container>
-                <Grid container>
-                    <Grid xs={12} md={3} item sx={{ paddingRight: "12px" }}>
-                        <Paper sx={{ height: "500px" }}></Paper>
-                    </Grid>
-                    <Grid xs={12} md={9} item>
-                        <MyContext.Provider value={{ addBooking }}>
-                            <ListBooking
-                                listData={listBooking}
-                                listDropoffAndPickUp={
-                                    listDropoffAndPickUp as {
-                                        pickup: NameValue[];
-                                        dropoff: NameValue[];
-                                    }
-                                }
-                                addBooking={addBooking}
-                            />
-                        </MyContext.Provider>
-                    </Grid>
-                </Grid>
-            </Container>
         </Box>
     );
 };

@@ -85,7 +85,7 @@ const AdminTrips: NextpageWithLayout = () => {
     };
 
     const listProvince = useSWR<Array<NameValue> | [], Error>(
-        `/admin/locations/options`,
+        `/locations/options`,
         null,
         config
     );

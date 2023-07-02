@@ -5,3 +5,4 @@ export * from "../header";
 export * from "./alert-dialog";
 export * from "./snack-alert";
 export * from "../header";
+export * from "./404";

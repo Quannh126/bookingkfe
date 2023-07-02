@@ -24,11 +24,7 @@ export function useTrip(
         data: listTrips,
         error,
         mutate,
-    } = useSWR<Array<ITrip> | [], Error>(
-        `/admin/trips${queryParams}`,
-        null,
-        config
-    );
+    } = useSWR<Array<ITrip> | [], Error>(`/trips${queryParams}`, null, config);
 
     async function addTrip(data: ITripForm) {
         await tripApi.addTrip(data);

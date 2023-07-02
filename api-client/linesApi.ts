@@ -2,21 +2,21 @@ import { ILineDetail, ILineForm, NameValue } from "@/models";
 import { axiosClient } from "./axiosClient";
 export const LineApi = {
     addLines(data: ILineForm) {
-        return axiosClient.post("/admin/Lines", data);
+        return axiosClient.post("/Lines", data);
     },
     getAllLines() {
-        return axiosClient.get("/admin/Lines");
+        return axiosClient.get("/Lines");
     },
 
     removeLine(id: String) {
-        return axiosClient.delete(`/admin/Lines/${id}`);
+        return axiosClient.delete(`/Lines/${id}`);
     },
 
     updateLine(data: ILineDetail) {
-        return axiosClient.put("/admin/Lines", data);
+        return axiosClient.put("/Lines", data);
     },
 
     getListNameLines(): Promise<Array<NameValue>> {
-        return axiosClient.get("/admin/Lines/listNameLines");
+        return axiosClient.get("/Lines/listNameLines");
     },
 };

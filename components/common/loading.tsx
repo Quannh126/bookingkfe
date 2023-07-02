@@ -4,7 +4,10 @@ import { Backdrop } from "@mui/material";
 export default function LoadingPage() {
     return (
         <Box>
-            <Backdrop open={true} sx={{ zIndex: 124124 }}>
+            <Backdrop
+                open={true}
+                // sx={{ zIndex: 124124 }}
+            >
                 {/* <Box
                     style={{
                         display: "flex",

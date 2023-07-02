@@ -15,7 +15,7 @@ export function useLocation(options?: Partial<PublicConfiguration>) {
         error,
         mutate,
     } = useSWR<[ILocation], Error>(
-        "/admin/locations/detail/${province_id}",
+        "/locations/detail/${province_id}",
         null,
         config
     );

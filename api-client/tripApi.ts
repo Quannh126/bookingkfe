@@ -3,20 +3,20 @@ import { ITripForm } from "@/models/Trips/trip-form";
 import { axiosClient } from "./axiosClient";
 export const tripApi = {
     addTrip(data: ITripForm) {
-        return axiosClient.post(`/admin/trips`, data);
+        return axiosClient.post(`/trips`, data);
     },
     updateTrip(data: ITripForm) {
-        return axiosClient.put(`/admin/trips`, data);
+        return axiosClient.put(`/trips`, data);
     },
     removeTrip(tripid: string) {
-        return axiosClient.delete(`/admin/trips/${tripid}`);
+        return axiosClient.delete(`/trips/${tripid}`);
     },
     getDetailTrip(tripId: string) {
-        return axiosClient.get(`/admin/trips/${tripId}`);
+        return axiosClient.get(`/trips/${tripId}`);
     },
     getOptionDropoffAndPickup(
         trip_id: string
     ): Promise<{ dropoff: Array<NameValue>; pickup: Array<NameValue> }> {
-        return axiosClient.get(`/admin/trips/option/${trip_id}`);
+        return axiosClient.get(`/trips/option/${trip_id}`);
     },
 };

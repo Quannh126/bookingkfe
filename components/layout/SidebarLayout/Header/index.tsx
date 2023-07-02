@@ -20,6 +20,8 @@ import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
 // import HeaderMenu from "./Menu";
 import { SidebarContext } from "@/components/contexts/SidebarContext";
 import { PureLightTheme } from "@/utils";
+import HeaderUserbox from "./Userbox";
+import HeaderButtons from "./Buttons";
 
 const HeaderWrapper = styled(Box)(
     ({ theme }) => `
@@ -73,9 +75,9 @@ export default function Header() {
                 {/* <HeaderMenu /> */}
             </Stack>
             <Box display="flex" alignItems="center">
-                {/* <HeaderButtons /> */}
+                <HeaderButtons />
 
-                {/* <HeaderUserbox /> */}
+                <HeaderUserbox />
                 <Box
                     component="span"
                     sx={{

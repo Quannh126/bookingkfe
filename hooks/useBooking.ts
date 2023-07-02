@@ -16,7 +16,7 @@ export function useBooking(
     //index.ts const fetcher: Fetcher<ICarDetail> = () => carsApi.getAllCars()
 
     if (!queryParams) {
-        queryParams = `/search?route=1-2&journey_date=${convertDateToString(
+        queryParams = `/coaches?route=1-2&journey_date=${convertDateToString(
             new Date()
         )}`;
     }
@@ -32,7 +32,7 @@ export function useBooking(
         error,
         mutate,
     } = useSWR<Array<IBookingTrip>, Error>(
-        `/admin/booking${queryParams}`,
+        `/booking${queryParams}`,
         null,
         config
     );

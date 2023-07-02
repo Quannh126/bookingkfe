@@ -4,9 +4,11 @@ import { tripSlice } from "./selectedTrip";
 import { createWrapper } from "next-redux-wrapper";
 import { formStepSlice } from "./stepForm";
 import { seatSlice } from "./selectedSeat";
+import { authSlice } from "./selectedAuth";
 const makeStore = () =>
     configureStore({
         reducer: {
+            [authSlice.name]: authSlice.reducer,
             [tripSlice.name]: tripSlice.reducer,
             [formStepSlice.name]: formStepSlice.reducer,
             [seatSlice.name]: seatSlice.reducer,

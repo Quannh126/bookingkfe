@@ -1,17 +1,39 @@
 import React from "react";
 import { Box } from "@mui/system";
 import { List, ListItem, Button } from "@mui/material";
-import { ROUTE_ADMIN } from "../../config/routes";
+import {
+    ROUTE_ADMIN,
+    ROUTE_MANAGER,
+    ROUTE_TICKETING,
+} from "../../config/routes";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 import { useAuth } from "@/hooks";
 import { PureLightTheme } from "@/utils";
-
+import NotFoundPage from "../common/404";
+interface RouteType {
+    label: string;
+    path: string;
+    title: string;
+}
 export default function SideBar() {
     const router = useRouter();
-    const { logout } = useAuth({
+    const { logout, profile } = useAuth({
         revalidateOnMount: false,
     });
+
+    let menu: RouteType[] = [];
+    if (!profile) {
+        return <NotFoundPage></NotFoundPage>;
+    } else {
+        if (profile.role == "ADMIN") {
+            menu = ROUTE_ADMIN;
+        } else if (profile.role == "MANAGER") {
+            menu = ROUTE_MANAGER;
+        } else if (profile.role == "TICKETING_STAFF") {
+            menu = ROUTE_TICKETING;
+        }
+    }
     async function handelLogoutClick() {
         try {
             ////console.log("Logout");
@@ -52,14 +74,14 @@ export default function SideBar() {
                         position: "relative",
                     }}
                 >
-                    {ROUTE_ADMIN.map((route) => (
+                    {menu.map((route, index) => (
                         <ListItem
                             sx={{
                                 width: "100%",
                                 textAlign: "left",
                             }}
                             component="div"
-                            key={route?.path}
+                            key={index}
                         >
                             <Button
                                 component="a"

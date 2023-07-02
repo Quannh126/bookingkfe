@@ -15,7 +15,7 @@ export function useCustomer(options?: Partial<PublicConfiguration>) {
         data: listCustomer,
         error,
         mutate,
-    } = useSWR<[ICustomerDetail], Error>("/admin/customer", null, config);
+    } = useSWR<[ICustomerDetail], Error>("/customer", null, config);
 
     async function addCustomer(data: ICustomerForm) {
         await customersApi.addCustomer(data);

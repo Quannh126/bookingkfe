@@ -7,7 +7,17 @@ export type InputFieldProps = TextFieldProps & {
     control: Control<any>;
 };
 
-export function InputField({ name, control, ...rest }: InputFieldProps) {
+export function InputField({
+    name,
+    control,
+    onChange: externalOnChange,
+    // eslint-disable-next-line no-unused-vars
+    onBlur: externalOnBlur,
+    // ref: externalRef,
+
+    // value: externalValue,
+    ...rest
+}: InputFieldProps) {
     const {
         field: { onChange, onBlur, value, ref },
         fieldState: { error },
@@ -22,7 +32,10 @@ export function InputField({ name, control, ...rest }: InputFieldProps) {
             fullWidth
             name={name}
             value={value}
-            onChange={onChange}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                onChange(event);
+                externalOnChange?.(event);
+            }}
             onBlur={onBlur}
             error={!!error}
             inputRef={ref}
