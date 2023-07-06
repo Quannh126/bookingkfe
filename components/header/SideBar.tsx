@@ -26,11 +26,11 @@ export default function SideBar() {
     if (!profile) {
         return <NotFoundPage></NotFoundPage>;
     } else {
-        if (profile.role == "ADMIN") {
+        if (profile.role == "Admin") {
             menu = ROUTE_ADMIN;
-        } else if (profile.role == "MANAGER") {
+        } else if (profile.role == "Manager") {
             menu = ROUTE_MANAGER;
-        } else if (profile.role == "TICKETING_STAFF") {
+        } else if (profile.role == "Employee") {
             menu = ROUTE_TICKETING;
         }
     }

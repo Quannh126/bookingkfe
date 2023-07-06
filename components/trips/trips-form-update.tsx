@@ -4,6 +4,9 @@ import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { InputField, SelectField, SelectFieldNormal } from "../form";
 import {
     Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
     Divider,
     // FilledInput,
     Grid,
@@ -11,6 +14,7 @@ import {
 
     // TextField,
     Typography,
+    DialogActions,
 } from "@mui/material";
 // import { locationApi } from "@/api-client";
 import * as yup from "yup";
@@ -24,6 +28,9 @@ import useSWR, { SWRConfiguration } from "swr";
 import { TYPE_SELL } from "@/config/type-sell";
 
 export interface TripFormUpdateProps {
+    showCarUpdateForm: boolean;
+    // eslint-disable-next-line no-unused-vars
+    handleClose2: (event: Object, reason: string) => void;
     configProvince: Array<NameValue> | [];
 
     // eslint-disable-next-line no-unused-vars
@@ -34,6 +41,8 @@ export interface TripFormUpdateProps {
 
 // let count = 0;
 export function TripFormUpdate({
+    showCarUpdateForm,
+    handleClose2,
     onUpdate,
     onCancel,
     configProvince,
@@ -110,30 +119,30 @@ TripFormUpdateProps) {
         revalidateOnFocus: false,
     };
     const listDistrictFrom = useSWR<Array<NameValue> | [], Error>(
-        `/admin/locations/options/${watchFrom}`,
+        `/locations/options/${watchFrom}`,
         null,
         config
     );
 
     const listDistrictTo = useSWR<Array<NameValue> | [], Error>(
-        `/admin/locations/options/${watchTo}`,
+        `/locations/options/${watchTo}`,
         null,
         config
     );
 
     const listDetailPK = useSWR<Array<Array<NameValue>> | [], Error>(
-        `/admin/locations/detail/${watchFrom}`,
+        `/locations/detail/${watchFrom}`,
         null,
         config
     );
 
     const listDetailDO = useSWR<Array<Array<NameValue>> | [], Error>(
-        `/admin/locations/detail/${watchTo}`,
+        `/locations/detail/${watchTo}`,
         null,
         config
     );
     const listMenuCar = useSWR<Array<NameValue> | [], Error>(
-        `/admin/cars/carsyettostart`,
+        `/cars/carsyettostart`,
         null,
         config2
     );
@@ -144,8 +153,6 @@ TripFormUpdateProps) {
     return (
         <Box
             component="form"
-            // onSubmit={}
-
             sx={{
                 display: "flex",
                 alignItems: "flex-start",
@@ -157,312 +164,336 @@ TripFormUpdateProps) {
             onSubmit={handleSubmit(handleUpdateSubmit)}
             //onSubmit={() => //console.log("submit")}
         >
-            <Grid container spacing={1}>
-                <Grid item xs={12} md={12}>
+            <Dialog
+                open={showCarUpdateForm}
+                // TransitionComponent={Transition}
+                keepMounted={false}
+                onClose={handleClose2}
+                aria-labelledby="update-trip"
+                aria-describedby="update-trip"
+                scroll={"body"}
+            >
+                <DialogTitle
+                    id="update-trip"
+                    display="flex"
+                    sx={{ justifyContent: "center" }}
+                >
                     <Typography gutterBottom variant="h4" component="div">
-                        Lập lịch chạy
+                        Cập nhật lịch chạy
                     </Typography>
-                </Grid>
-                <Grid
-                    item
-                    xs={12}
-                    md={12}
-                    sx={{ display: "flex", justifyContent: "center" }}
-                >
-                    <Typography
-                        gutterBottom
-                        variant="h6"
-                        component="div"
-                        justifySelf="center"
-                    >
-                        Tuyến
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <SelectFieldNormal
-                        allOptions={configProvince}
-                        control={control}
-                        label="Từ"
-                        // {...register("from_id")}
-                        name="from_id"
-                    />
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                    <SelectFieldNormal
-                        allOptions={configProvince}
-                        control={control}
-                        label="Đến"
-                        // {...register("to_id")}
-                        name="to_id"
-                    />
-                </Grid>
-                <Grid
-                    item
-                    xs={12}
-                    md={12}
-                    sx={{ display: "flex", justifyContent: "center" }}
-                >
-                    <Typography
-                        gutterBottom
-                        variant="h6"
-                        component="div"
-                        justifySelf="center"
-                    >
-                        Chi tiết
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <InputField
-                        type="text"
-                        label="Thời gian khởi hành"
-                        name="departure_time"
-                        control={control}
-                    />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <InputField
-                        type="text"
-                        label="Thời gian dự kiến"
-                        name="destination_time"
-                        control={control}
-                    />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <InputField
-                        type="text"
-                        label="Giá"
-                        name="fare"
-                        control={control}
-                    />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <SelectFieldNormal
-                        allOptions={TYPE_SELL}
-                        control={control}
-                        label="Kiểu bán vé"
-                        // {...register("to_id")}
-                        name="sell_type"
-                    />
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                    <SelectField
-                        allOptions={
-                            listMenuCar.data === undefined
-                                ? []
-                                : listMenuCar.data
-                        }
-                        control={control}
-                        label="Tên phương tiện"
-                        // {...register("to_id")}
-                        //onChange={(e) => setCarId(e.target?.value.toString())}
-                        name="car_id"
-                    />
-                </Grid>
-
-                <Grid
-                    item
-                    xs={12}
-                    md={12}
-                    sx={{ display: "flex", justifyContent: "center" }}
-                >
-                    <Typography
-                        gutterBottom
-                        variant="h6"
-                        component="div"
-                        justifySelf="center"
-                    >
-                        Điểm đón trả khách
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} md={6} sx={{ display: "flex" }}>
-                    <Typography
-                        gutterBottom
-                        component="p"
-                        sx={{ alignSelf: "center" }}
-                    >
-                        Đón khách
-                    </Typography>
-
-                    <IconButton
-                        aria-label="Edit"
-                        onClick={() =>
-                            useFieldArray1.append({
-                                point_id: "",
-                                district_id: "",
-                            })
-                        }
-                    >
-                        <AddCircleIcon />
-                    </IconButton>
-                    <Divider />
-                </Grid>
-                <Grid item xs={12} md={6}></Grid>
-                {useFieldArray1.fields.map((field, index1) => {
-                    return (
-                        <Grid container spacing={1} key={field.id}>
-                            <Grid
-                                item
-                                xs={12}
-                                md={12}
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "flex-end",
-                                }}
+                </DialogTitle>
+                <DialogContent dividers={false}>
+                    <Grid container spacing={1}>
+                        <Grid
+                            item
+                            xs={12}
+                            md={12}
+                            sx={{ display: "flex", justifyContent: "center" }}
+                        >
+                            <Typography
+                                gutterBottom
+                                variant="h6"
+                                component="div"
+                                justifySelf="center"
                             >
-                                <IconButton
-                                    aria-label="Remove"
-                                    onClick={() =>
-                                        useFieldArray1.remove(index1)
-                                    }
-                                >
-                                    <RemoveCircleIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <SelectFieldNormal
-                                    allOptions={
-                                        listDistrictFrom.data === undefined
-                                            ? []
-                                            : listDistrictFrom.data
-                                    }
-                                    control={control}
-                                    label="Quận"
-                                    className={
-                                        errors?.pickup_point?.[index1]
-                                            ?.district_id
-                                            ? "error"
-                                            : ""
-                                    }
-                                    defaultValue={field.district_id}
-                                    name={`pickup_point.${index1}.district_id`}
-                                />
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <SelectFieldNormal
-                                    allOptions={
-                                        listDetailPK.data === undefined ||
-                                        !formValuesPK[index1]
-                                            ? []
-                                            : listDetailPK.data[
-                                                  Number(
-                                                      formValuesPK[index1]
-                                                          .district_id
-                                                  )
-                                              ]
-                                    }
-                                    control={control}
-                                    label="Tên địa điểm"
-                                    className={
-                                        errors?.pickup_point?.[index1]?.point_id
-                                            ? "error"
-                                            : ""
-                                    }
-                                    defaultValue={field.point_id}
-                                    name={`pickup_point.${index1}.point_id`}
-                                />
-                            </Grid>
+                                Tuyến
+                            </Typography>
                         </Grid>
-                    );
-                })}
+                        <Grid item xs={12} md={6}>
+                            <SelectFieldNormal
+                                allOptions={configProvince}
+                                control={control}
+                                label="Từ"
+                                // {...register("from_id")}
+                                name="from_id"
+                            />
+                        </Grid>
 
-                <Grid item xs={12} md={6} sx={{ display: "flex" }}>
-                    <Typography
-                        gutterBottom
-                        component="p"
-                        sx={{ alignSelf: "center" }}
-                    >
-                        Trả khách
-                    </Typography>
-
-                    <IconButton
-                        aria-label="Edit"
-                        onClick={() =>
-                            useFieldArray2.append({
-                                point_id: "",
-                                district_id: "",
-                            })
-                        }
-                    >
-                        <AddCircleIcon />
-                    </IconButton>
-                    <Divider />
-                </Grid>
-                <Grid item xs={12} md={6}></Grid>
-                {useFieldArray2.fields.map((field, index) => {
-                    return (
-                        <Grid container spacing={1} key={field.id}>
-                            <Grid
-                                item
-                                xs={12}
-                                md={12}
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "flex-end",
-                                }}
+                        <Grid item xs={12} md={6}>
+                            <SelectFieldNormal
+                                allOptions={configProvince}
+                                control={control}
+                                label="Đến"
+                                // {...register("to_id")}
+                                name="to_id"
+                            />
+                        </Grid>
+                        <Grid
+                            item
+                            xs={12}
+                            md={12}
+                            sx={{ display: "flex", justifyContent: "center" }}
+                        >
+                            <Typography
+                                gutterBottom
+                                variant="h6"
+                                component="div"
+                                justifySelf="center"
                             >
-                                <IconButton
-                                    aria-label="Remove"
-                                    onClick={() => useFieldArray2.remove(index)}
-                                >
-                                    <RemoveCircleIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <SelectFieldNormal
-                                    allOptions={
-                                        listDistrictTo.data === undefined
-                                            ? []
-                                            : listDistrictTo.data
-                                    }
-                                    control={control}
-                                    label="Quận"
-                                    className={
-                                        errors?.dropoff_point?.[index]
-                                            ?.district_id
-                                            ? "error"
-                                            : ""
-                                    }
-                                    defaultValue={field.district_id}
-                                    name={`dropoff_point.${index}.district_id`}
-                                />
-                            </Grid>
-                            {/* {//console.log("listDetailDO", listDetailDO)}
+                                Chi tiết
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InputField
+                                type="text"
+                                label="Thời gian khởi hành"
+                                name="departure_time"
+                                control={control}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InputField
+                                type="text"
+                                label="Thời gian dự kiến"
+                                name="destination_time"
+                                control={control}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InputField
+                                type="text"
+                                label="Giá"
+                                name="fare"
+                                control={control}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <SelectFieldNormal
+                                allOptions={TYPE_SELL}
+                                control={control}
+                                label="Kiểu bán vé"
+                                // {...register("to_id")}
+                                name="sell_type"
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} md={6}>
+                            <SelectField
+                                allOptions={
+                                    listMenuCar.data === undefined
+                                        ? []
+                                        : listMenuCar.data
+                                }
+                                control={control}
+                                label="Tên phương tiện"
+                                // {...register("to_id")}
+                                //onChange={(e) => setCarId(e.target?.value.toString())}
+                                name="car_id"
+                            />
+                        </Grid>
+
+                        <Grid
+                            item
+                            xs={12}
+                            md={12}
+                            sx={{ display: "flex", justifyContent: "center" }}
+                        >
+                            <Typography
+                                gutterBottom
+                                variant="h6"
+                                component="div"
+                                justifySelf="center"
+                            >
+                                Điểm đón trả khách
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={6} sx={{ display: "flex" }}>
+                            <Typography
+                                gutterBottom
+                                component="p"
+                                sx={{ alignSelf: "center" }}
+                            >
+                                Đón khách
+                            </Typography>
+
+                            <IconButton
+                                aria-label="Edit"
+                                onClick={() =>
+                                    useFieldArray1.append({
+                                        point_id: "",
+                                        district_id: "",
+                                    })
+                                }
+                            >
+                                <AddCircleIcon />
+                            </IconButton>
+                            <Divider />
+                        </Grid>
+                        <Grid item xs={12} md={6}></Grid>
+                        {useFieldArray1.fields.map((field, index1) => {
+                            return (
+                                <Grid container spacing={1} key={field.id}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        md={12}
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "flex-end",
+                                        }}
+                                    >
+                                        <IconButton
+                                            aria-label="Remove"
+                                            onClick={() =>
+                                                useFieldArray1.remove(index1)
+                                            }
+                                        >
+                                            <RemoveCircleIcon />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={12} md={6}>
+                                        <SelectFieldNormal
+                                            allOptions={
+                                                listDistrictFrom.data ===
+                                                undefined
+                                                    ? []
+                                                    : listDistrictFrom.data
+                                            }
+                                            control={control}
+                                            label="Quận"
+                                            className={
+                                                errors?.pickup_point?.[index1]
+                                                    ?.district_id
+                                                    ? "error"
+                                                    : ""
+                                            }
+                                            defaultValue={field.district_id}
+                                            name={`pickup_point.${index1}.district_id`}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={6}>
+                                        <SelectFieldNormal
+                                            allOptions={
+                                                listDetailPK.data ===
+                                                    undefined ||
+                                                !formValuesPK[index1]
+                                                    ? []
+                                                    : listDetailPK.data[
+                                                          Number(
+                                                              formValuesPK[
+                                                                  index1
+                                                              ].district_id
+                                                          )
+                                                      ]
+                                            }
+                                            control={control}
+                                            label="Tên địa điểm"
+                                            className={
+                                                errors?.pickup_point?.[index1]
+                                                    ?.point_id
+                                                    ? "error"
+                                                    : ""
+                                            }
+                                            defaultValue={field.point_id}
+                                            name={`pickup_point.${index1}.point_id`}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            );
+                        })}
+
+                        <Grid item xs={12} md={6} sx={{ display: "flex" }}>
+                            <Typography
+                                gutterBottom
+                                component="p"
+                                sx={{ alignSelf: "center" }}
+                            >
+                                Trả khách
+                            </Typography>
+
+                            <IconButton
+                                aria-label="Edit"
+                                onClick={() =>
+                                    useFieldArray2.append({
+                                        point_id: "",
+                                        district_id: "",
+                                    })
+                                }
+                            >
+                                <AddCircleIcon />
+                            </IconButton>
+                            <Divider />
+                        </Grid>
+                        <Grid item xs={12} md={6}></Grid>
+                        {useFieldArray2.fields.map((field, index) => {
+                            return (
+                                <Grid container spacing={1} key={field.id}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        md={12}
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "flex-end",
+                                        }}
+                                    >
+                                        <IconButton
+                                            aria-label="Remove"
+                                            onClick={() =>
+                                                useFieldArray2.remove(index)
+                                            }
+                                        >
+                                            <RemoveCircleIcon />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={12} md={6}>
+                                        <SelectFieldNormal
+                                            allOptions={
+                                                listDistrictTo.data ===
+                                                undefined
+                                                    ? []
+                                                    : listDistrictTo.data
+                                            }
+                                            control={control}
+                                            label="Quận"
+                                            className={
+                                                errors?.dropoff_point?.[index]
+                                                    ?.district_id
+                                                    ? "error"
+                                                    : ""
+                                            }
+                                            defaultValue={field.district_id}
+                                            name={`dropoff_point.${index}.district_id`}
+                                        />
+                                    </Grid>
+                                    {/* {//console.log("listDetailDO", listDetailDO)}
                             {//console.log(
                                 "Number(field.district_id)",
                                 Number(field.district_id)
                             )}
                             {//console.log("formValuesDO", formValuesDO)} */}
-                            <Grid item xs={12} md={6}>
-                                <SelectFieldNormal
-                                    allOptions={
-                                        listDetailDO.data === undefined ||
-                                        !formValuesDO[index]
-                                            ? []
-                                            : listDetailDO.data[
-                                                  Number(
-                                                      formValuesDO[index]
-                                                          .district_id
-                                                  )
-                                              ]
-                                    }
-                                    control={control}
-                                    label="Tên địa điểm"
-                                    className={
-                                        errors?.dropoff_point?.[index]?.point_id
-                                            ? "error"
-                                            : ""
-                                    }
-                                    defaultValue={field.point_id}
-                                    name={`dropoff_point.${index}.point_id`}
-                                />
-                            </Grid>
-                        </Grid>
-                    );
-                })}
+                                    <Grid item xs={12} md={6}>
+                                        <SelectFieldNormal
+                                            allOptions={
+                                                listDetailDO.data ===
+                                                    undefined ||
+                                                !formValuesDO[index]
+                                                    ? []
+                                                    : listDetailDO.data[
+                                                          Number(
+                                                              formValuesDO[
+                                                                  index
+                                                              ].district_id
+                                                          )
+                                                      ]
+                                            }
+                                            control={control}
+                                            label="Tên địa điểm"
+                                            className={
+                                                errors?.dropoff_point?.[index]
+                                                    ?.point_id
+                                                    ? "error"
+                                                    : ""
+                                            }
+                                            defaultValue={field.point_id}
+                                            name={`dropoff_point.${index}.point_id`}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            );
+                        })}
 
-                <Grid
+                        {/* <Grid
                     item
                     xs={12}
                     md={12}
@@ -481,8 +512,22 @@ TripFormUpdateProps) {
                             Đóng
                         </Button>
                     </Box>
-                </Grid>
-            </Grid>
+                </Grid> */}
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button type="submit" variant="contained">
+                        Cập nhật
+                    </Button>
+                    <Button
+                        onClick={handleOnCancel}
+                        variant="contained"
+                        sx={{ ml: 1 }}
+                    >
+                        Đóng
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 }

@@ -5,6 +5,7 @@ import { createWrapper } from "next-redux-wrapper";
 import { formStepSlice } from "./stepForm";
 import { seatSlice } from "./selectedSeat";
 import { authSlice } from "./selectedAuth";
+import { menuSlice } from "./selectedMenu";
 const makeStore = () =>
     configureStore({
         reducer: {
@@ -12,7 +13,9 @@ const makeStore = () =>
             [tripSlice.name]: tripSlice.reducer,
             [formStepSlice.name]: formStepSlice.reducer,
             [seatSlice.name]: seatSlice.reducer,
+            [menuSlice.name]: menuSlice.reducer,
         },
+        devTools: true,
     });
 
 export type AppStore = ReturnType<typeof makeStore>;

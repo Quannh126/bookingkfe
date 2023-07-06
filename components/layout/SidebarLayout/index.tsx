@@ -15,6 +15,7 @@ export default function SidebarLayout({ children }: LayoutProps) {
                     sx={{
                         flex: 1,
                         height: "100%",
+
                         ".MuiPageTitle-wrapper": {
                             background:
                                 theme.palette.mode === "dark"

@@ -22,9 +22,9 @@ import React, { useEffect, useState } from "react";
 
 // import { locationApi } from "@/api-client";
 import useSWR, { SWRConfiguration } from "swr";
-import AdminLayout from "@/components/layout/admin";
+// import AdminLayout from "@/components/layout/admin";
 import { TableListBooking } from "@/components/booking/table-list-booking";
-import { InputField, SelectFieldNormal } from "@/components/form";
+import { DatePickerField, SelectFieldNormal } from "@/components/form";
 import { IFilterTrip } from "@/models/Trips/trip-filter";
 import { useForm } from "react-hook-form";
 import { convertDateToString } from "@/utils";
@@ -34,9 +34,10 @@ import { useBooking } from "@/hooks/useBooking";
 import IBookingTrip, { ISeatDetail } from "@/models/Book/book-trip";
 import LoadingPage from "@/components/common/loading";
 import { AlertContentProp, SnackAlert } from "@/components/common";
+import SidebarLayout from "@/components/layout/SidebarLayout";
+import { Route12, Route21 } from "@/config/routes";
 
-let countRender = 0;
-const AdminTrips: NextpageWithLayout = () => {
+const AdminBooking: NextpageWithLayout = () => {
     const [showBookingForm, setShowBookingForm] = useState(false);
     const [selectedTrip, setSelectedTrip] = useState<IBookingTrip>(
         {} as IBookingTrip
@@ -58,7 +59,7 @@ const AdminTrips: NextpageWithLayout = () => {
     } as AlertContentProp);
     const [swapId, setSwapId] = useState("");
     const [alertText, setAlertText] = useState("");
-    const [visiblealertText, setVisibleAlertText] = useState(false);
+    const [visibleAlertText, setVisibleAlertText] = useState(false);
     const [bookingData, setBookingData] = useState({} as ISeatDetail);
     const [showListTrip, setShowListTrip] = useState(true);
     const [selectedSeats, setSelectedSeats] = useState([] as Array<number>);
@@ -112,7 +113,7 @@ const AdminTrips: NextpageWithLayout = () => {
 
     const handleSearchSubmit = (data: IFilterTrip) => {
         setSelectedTrip({} as IBookingTrip);
-        console.log(data);
+        // console.log(data);
         let params = `/search?route=${data.route}&journey_date=${data.s_journey_date}&pickup_point=${data.from_point}&dropoff_point=${data.to_point}`;
 
         setQueryParams(params);
@@ -254,23 +255,28 @@ const AdminTrips: NextpageWithLayout = () => {
         revalidateOnMount: true,
         revalidateOnFocus: false,
     };
-    const configPoint: SWRConfiguration = {
-        dedupingInterval: 60 * 60 * 1000,
-        revalidateOnMount: true,
-        revalidateOnFocus: false,
-    };
+    // const configPoint: SWRConfiguration = {
+    //     dedupingInterval: 60 * 60 * 1000,
+    //     revalidateOnMount: true,
+    //     revalidateOnFocus: false,
+    // };
     const listProvince = useSWR<Array<NameValue> | [], Error>(
         `/locations/options`,
         null,
         config
     );
     const watchRoute = watch("route", "1-2");
-    const listDropoffAndPickUp = useSWR<
-        { pickup: Array<NameValue>; dropoff: Array<NameValue> },
-        Error
-    >([`/locations/points/${watchRoute}`], null, configPoint);
-
-    console.log("Render count: ", countRender++);
+    // const listDropoffAndPickUp = useSWR<
+    //     { pickup: Array<NameValue>; dropoff: Array<NameValue> },
+    //     Error
+    // >([`/locations/points/${watchRoute}`], null, configPoint);
+    let listDropoffAndPickUp;
+    if (watchRoute == "1-2") {
+        listDropoffAndPickUp = Route12;
+    } else {
+        listDropoffAndPickUp = Route21;
+    }
+    //console.log("Render count: ", countRender++);
 
     useEffect(() => {
         if (selectedTripId && listBooking) {
@@ -280,12 +286,16 @@ const AdminTrips: NextpageWithLayout = () => {
         }
     }, [selectedTripId, listBooking]);
 
-    if (
-        isLoading ||
-        !listDropoffAndPickUp.data ||
-        !listProvince.data ||
-        !listBooking
-    ) {
+    if (isLoading || !listProvince.data || !listBooking) {
+        console.log(
+            isLoading,
+            "||",
+
+            "||",
+            !listProvince.data,
+            "||",
+            !listBooking
+        );
         return <LoadingPage />;
     }
     return (
@@ -336,8 +346,8 @@ const AdminTrips: NextpageWithLayout = () => {
                         width: "100%",
                     }}
                 >
-                    <InputField
-                        type="date"
+                    <DatePickerField
+                        disablePast={true}
                         control={control}
                         label="Ngày"
                         // {...register("from_id")}
@@ -351,11 +361,7 @@ const AdminTrips: NextpageWithLayout = () => {
                     }}
                 >
                     <SelectFieldNormal
-                        allOptions={
-                            listDropoffAndPickUp.data === undefined
-                                ? []
-                                : listDropoffAndPickUp.data.pickup
-                        }
+                        allOptions={listDropoffAndPickUp.pickup}
                         control={control}
                         label="Điểm đón"
                         // {...register("from_id")}
@@ -369,11 +375,7 @@ const AdminTrips: NextpageWithLayout = () => {
                     }}
                 >
                     <SelectFieldNormal
-                        allOptions={
-                            listDropoffAndPickUp.data === undefined
-                                ? []
-                                : listDropoffAndPickUp.data.dropoff
-                        }
+                        allOptions={listDropoffAndPickUp.dropoff}
                         control={control}
                         label="Điểm trả"
                         // {...register("from_id")}
@@ -409,7 +411,7 @@ const AdminTrips: NextpageWithLayout = () => {
                 aria-describedby="add-booking"
             >
                 <BookForm
-                    visiblealertText={visiblealertText}
+                    visibleAlertText={visibleAlertText}
                     alertText={alertText}
                     onBook={handleBookSubmit}
                     onCancel={() => {
@@ -434,7 +436,7 @@ const AdminTrips: NextpageWithLayout = () => {
                 sx={{ zIndex: 100 }}
             >
                 <BookUpdateForm
-                    visiblealertText={visiblealertText}
+                    visibleAlertText={visibleAlertText}
                     alertText={alertText}
                     list_id={listIdBooking}
                     book_detail={bookingData}
@@ -508,11 +510,7 @@ const AdminTrips: NextpageWithLayout = () => {
                     setShowListTrip={setShowListTrip}
                     selectedSeatsBooked={selectedSeatsBooked}
                     setSelectedSeatsBooked={setSelectedSeatsBooked}
-                    listDropoffAndPickUp={
-                        !listDropoffAndPickUp.data
-                            ? { pickup: [], dropoff: [] }
-                            : listDropoffAndPickUp.data
-                    }
+                    listDropoffAndPickUp={listDropoffAndPickUp}
                     handleUpdateClick={handleUpdateClick}
                     setSingleSelectMode={setSingleSelectMode}
                     singleSelectMode={singleSelectMode}
@@ -522,6 +520,6 @@ const AdminTrips: NextpageWithLayout = () => {
     );
 };
 
-AdminTrips.Layout = AdminLayout;
+AdminBooking.Layout = SidebarLayout;
 
-export default AdminTrips;
+export default AdminBooking;

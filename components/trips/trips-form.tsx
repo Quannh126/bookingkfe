@@ -138,30 +138,30 @@ TripFormProps) {
         refreshWhenHidden: true,
     };
     const listDistrictFrom = useSWR<Array<NameValue> | [], Error>(
-        `/admin/locations/options/${watchFrom}`,
+        `/locations/options/${watchFrom}`,
         null,
         config
     );
 
     const listDistrictTo = useSWR<Array<NameValue> | [], Error>(
-        `/admin/locations/options/${watchTo}`,
+        `/locations/options/${watchTo}`,
         null,
         config
     );
 
     const listDetailPK = useSWR<Array<Array<NameValue>> | [], Error>(
-        `/admin/locations/detail/${watchFrom}`,
+        `/locations/detail/${watchFrom}`,
         null,
         config
     );
 
     const listDetailDO = useSWR<Array<Array<NameValue>> | [], Error>(
-        `/admin/locations/detail/${watchTo}`,
+        `/locations/detail/${watchTo}`,
         null,
         config
     );
     const listMenuCar = useSWR<Array<NameValue> | [], Error>(
-        `/admin/cars/carsyettostart`,
+        `/cars/carsyettostart`,
         null,
         config2
     );

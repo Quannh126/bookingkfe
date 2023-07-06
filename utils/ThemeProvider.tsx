@@ -1,12 +1,13 @@
-import { FC, useState, createContext, useEffect } from "react";
+import { useState, createContext, useEffect } from "react";
 import { ThemeProvider } from "@mui/material";
 import { themeCreator } from "./base";
 import { StyledEngineProvider } from "@mui/material/styles";
+import { LayoutProps } from "@/models";
 
 // eslint-disable-next-line no-unused-vars
 export const ThemeContext = createContext((_themeName: string): void => {});
 
-const ThemeProviderWrapper: FC = (props: any) => {
+const ThemeProviderWrapper = (props: LayoutProps) => {
     const [themeName, _setThemeName] = useState("PureLightTheme");
 
     useEffect(() => {

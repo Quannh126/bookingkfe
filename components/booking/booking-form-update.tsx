@@ -49,7 +49,7 @@ export interface BookUpdateFormProps {
     book_detail: ISeatDetail;
     list_id: string;
     alertText?: string;
-    visiblealertText?: boolean;
+    visibleAlertText?: boolean;
 }
 
 // let count = 0;
@@ -79,7 +79,7 @@ export function BookUpdateForm({
     book_detail,
     list_id,
     alertText,
-    visiblealertText,
+    visibleAlertText,
     handleClickDelete,
 }: // configCar,
 BookUpdateFormProps) {
@@ -145,9 +145,9 @@ BookUpdateFormProps) {
     const dataRes = useSWR<
         { dropoff: Array<NameValue>; pickup: Array<NameValue> },
         Error
-    >(`/admin/trips/option/${tripDetail._id}`, null, configPoint);
+    >(`/trips/option/${tripDetail._id}`, null, configPoint);
     const dataCustomer = useSWR<Array<ICustomer>, Error>(
-        `/admin/customer`,
+        `/customer`,
         null,
         customerGetOption
     );
@@ -353,7 +353,7 @@ BookUpdateFormProps) {
                     md={12}
                     sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                    {visiblealertText && (
+                    {visibleAlertText && (
                         <Typography
                             sx={{
                                 color: PureLightTheme.colors.error.main,

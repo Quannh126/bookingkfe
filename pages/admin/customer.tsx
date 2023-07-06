@@ -1,4 +1,4 @@
-import AdminLayout from "@/components/layout/admin";
+// import AdminLayout from "@/components/layout/admin";
 import { Box } from "@mui/system";
 import {
     Button,
@@ -19,6 +19,7 @@ import {
     CustomerUpdateForm,
 } from "@/components/customer";
 import { ICustomerDetail } from "@/models";
+import SidebarLayout from "@/components/layout/SidebarLayout";
 // import { SnackAlert, AlertContentProp } from "@/components/common";
 
 const AdminCustomer: NextpageWithLayout = () => {
@@ -58,11 +59,6 @@ const AdminCustomer: NextpageWithLayout = () => {
         try {
             await addCustomer(data);
             setShowCustomerForm(false);
-            // setShowSnackAlert({
-            //     content: "Thành công",
-            //     typeAlert: "success",
-            //     openInit: true,
-            // });
         } catch (error: any) {
             if (error.response.status == 409) {
                 setErrorMsg(error.response.data.message);
@@ -163,6 +159,6 @@ const AdminCustomer: NextpageWithLayout = () => {
     );
 };
 
-AdminCustomer.Layout = AdminLayout;
+AdminCustomer.Layout = SidebarLayout;
 
 export default AdminCustomer;

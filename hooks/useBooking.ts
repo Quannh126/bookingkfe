@@ -16,7 +16,7 @@ export function useBooking(
     //index.ts const fetcher: Fetcher<ICarDetail> = () => carsApi.getAllCars()
 
     if (!queryParams) {
-        queryParams = `/coaches?route=1-2&journey_date=${convertDateToString(
+        queryParams = `/search?route=1-2&journey_date=${convertDateToString(
             new Date()
         )}`;
     }

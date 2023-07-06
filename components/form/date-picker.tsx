@@ -1,19 +1,29 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { Control, useController } from "react-hook-form";
-import { TextField, TextFieldProps } from "@mui/material";
-import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TextFieldProps } from "@mui/material";
+// import {
+//     DatePicker,
+//     // DesktopDatePicker,
+//     LocalizationProvider,
+// } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import moment from "moment";
+
 export type DateTimerFieldProps = TextFieldProps & {
     name: string;
+    disablePast?: boolean;
+    isDisable?: boolean;
     control: Control<any>;
 };
 
 export function DatePickerField({
     name,
     control,
+    isDisable,
     label,
-    disabled,
-
+    disablePast,
     ...rest
 }: DateTimerFieldProps) {
     const {
@@ -23,28 +33,38 @@ export function DatePickerField({
         name,
         control,
     });
+
+    const [open, setOpen] = useState(false);
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DesktopDatePicker
-                disabled={disabled}
+        <LocalizationProvider dateAdapter={AdapterMoment}>
+            <DatePicker
                 label={label}
-                inputFormat="DD/MM/YYYY"
-                value={value}
+                open={open}
+                onOpen={() => setOpen(true)}
+                onClose={() => setOpen(false)}
+                disablePast={disablePast}
+                format="DD/MM/YYYY"
+                value={moment(value)}
                 onChange={onChange}
-                renderInput={(params) => (
-                    <TextField
-                        sx={{ m: 1 }}
-                        size="small"
-                        fullWidth
-                        name={name}
-                        onBlur={onBlur}
-                        error={!!error}
-                        inputRef={ref}
-                        helperText={error?.message}
-                        {...rest}
-                        {...params}
-                    />
-                )}
+                slotProps={{
+                    textField: {
+                        size: "small",
+                        fullWidth: true,
+                        name: name,
+                        sx: { m: 1 },
+                        error: !!error,
+
+                        disabled: isDisable,
+                        onBlur: onBlur,
+                        ref: ref,
+                        ...rest,
+                    },
+                    openPickerButton: {
+                        onClick: () => setOpen(true),
+                        size: "small",
+                        disabled: isDisable,
+                    },
+                }}
             />
         </LocalizationProvider>
     );

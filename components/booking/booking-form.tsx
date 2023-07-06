@@ -25,7 +25,7 @@ export interface BookFormProps {
     tripDetail: IBookingTrip;
     selectedSeats: string;
     s_journey_date: string;
-    visiblealertText?: boolean;
+    visibleAlertText?: boolean;
     alertText?: string;
 }
 
@@ -47,7 +47,7 @@ export function BookForm({
     selectedSeats,
     s_journey_date,
     alertText,
-    visiblealertText,
+    visibleAlertText,
 }: BookFormProps) {
     const schema = yup.object().shape({
         customer: yup.object().shape({
@@ -128,9 +128,9 @@ export function BookForm({
     const dataRes = useSWR<
         { dropoff: Array<NameValue>; pickup: Array<NameValue> },
         Error
-    >(`/admin/trips/option/${tripDetail._id}`, null, configPoint);
+    >(`/trips/option/${tripDetail._id}`, null, configPoint);
     const dataCustomer = useSWR<Array<ICustomer>, Error>(
-        `/admin/customer`,
+        `/customer`,
         null,
         customerGetOption
     );
@@ -254,7 +254,7 @@ export function BookForm({
                         </Grid>
                         <Grid item xs={12} md={12}>
                             <DatePickerField
-                                disabled
+                                disabled={true}
                                 label="Ngày khởi hành"
                                 name="journey_date"
                                 control={control}
@@ -348,7 +348,7 @@ export function BookForm({
                     md={12}
                     sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                    {visiblealertText && (
+                    {visibleAlertText && (
                         <Typography
                             sx={{
                                 color: PureLightTheme.colors.error.main,

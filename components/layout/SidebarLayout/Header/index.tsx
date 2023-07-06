@@ -1,4 +1,4 @@
-import { useContext } from "react";
+// import { useContext } from "react";
 
 import {
     Box,
@@ -15,14 +15,13 @@ import MenuTwoToneIcon from "@mui/icons-material/MenuTwoTone";
 
 import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
 
-// import HeaderButtons from "./Buttons";
-// import HeaderUserbox from "./Userbox";
-// import HeaderMenu from "./Menu";
-import { SidebarContext } from "@/components/contexts/SidebarContext";
+// import { SidebarContext } from "@/components/contexts/SidebarContext";
 import { PureLightTheme } from "@/utils";
 import HeaderUserbox from "./Userbox";
 import HeaderButtons from "./Buttons";
-
+// import HeaderMenu from "./Menu";
+import { toggleSidebar, selectMenuState } from "@/redux/selectedMenu";
+import { useSelector, useDispatch } from "react-redux";
 const HeaderWrapper = styled(Box)(
     ({ theme }) => `
         height: ${theme.header.height};
@@ -43,9 +42,10 @@ const HeaderWrapper = styled(Box)(
 );
 
 export default function Header() {
-    const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
+    // const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
     const theme = useTheme();
-
+    const dispath = useDispatch();
+    const status = useSelector(selectMenuState);
     return (
         <HeaderWrapper
             display="flex"
@@ -76,8 +76,6 @@ export default function Header() {
             </Stack>
             <Box display="flex" alignItems="center">
                 <HeaderButtons />
-
-                <HeaderUserbox />
                 <Box
                     component="span"
                     sx={{
@@ -86,8 +84,14 @@ export default function Header() {
                     }}
                 >
                     <Tooltip arrow title="Toggle Menu">
-                        <IconButton color="primary" onClick={toggleSidebar}>
-                            {!sidebarToggle ? (
+                        <IconButton
+                            color="primary"
+                            onClick={() => {
+                                console.log("click");
+                                dispath(toggleSidebar());
+                            }}
+                        >
+                            {!status ? (
                                 <MenuTwoToneIcon fontSize="small" />
                             ) : (
                                 <CloseTwoToneIcon fontSize="small" />
@@ -95,6 +99,7 @@ export default function Header() {
                         </IconButton>
                     </Tooltip>
                 </Box>
+                <HeaderUserbox />
             </Box>
         </HeaderWrapper>
     );

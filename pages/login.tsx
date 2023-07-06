@@ -5,32 +5,48 @@ import { Paper } from "@mui/material";
 import { Box } from "@mui/system";
 // import { DialogTitle, Button } from "@mui/material";
 import { LoginPayload } from "@/models";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
+import { setCredentials } from "@/redux/selectedAuth";
+import { useDispatch } from "react-redux";
 import EmptyLayout from "@/components/layout/empty";
-
+import { useEffect } from "react";
 // import AdminLayout from "@/components/layout/admin";
 export interface ILoginPage {}
 export default function LoginPage() {
-    console.log("login page");
-    const { login, profile } = useAuth({
+    // console.log("login page");
+    const router = useRouter();
+    const { login } = useAuth({
         revalidateOnMount: false,
     });
-    console.log("Profile: ", profile);
-
+    const dispatch = useDispatch();
     const [errorMsg, setErrorMsg] = useState("");
-    async function handelLoginSubmit(payload: LoginPayload) {
+    // async function handelLoginSubmit(payload: LoginPayload) {
+    //     try {
+    //         const res = await login(payload);
+    //         // console.log(res);
+    //         router.push("/admin");
+    //         dispatch(setCredentials(res.accessToken));
+    //     } catch (error) {
+    //         // console.log(error);
+    //         setErrorMsg("Tên đăng nhập hoặc mật khẩu không đúng");
+    //     }
+    // }
+    const handleSubmit = async (payload: LoginPayload) => {
         try {
-            await login(payload);
+            const res = await login(payload);
+            router.push("/admin");
+            dispatch(setCredentials(res.accessToken));
         } catch (error) {
+            // console.log(error);
             setErrorMsg("Tên đăng nhập hoặc mật khẩu không đúng");
         }
-    }
-    // const dispatch = useDispatch();
-    // dispatch(
-    //     setCredentials({
-    //         accessToken: accessToken,
-    //     })
-    // );
+    };
+
+    useEffect(() => {
+        // Prefetch the dashboard page
+        router.prefetch("/admin");
+    }, [router]);
+
     return (
         <Box>
             <Paper
@@ -43,7 +59,7 @@ export default function LoginPage() {
                     textAlign: "center",
                 }}
             >
-                <LoginForm onSubmit={handelLoginSubmit} errorMsg={errorMsg} />
+                <LoginForm onSubmit={handleSubmit} errorMsg={errorMsg} />
             </Paper>
         </Box>
     );

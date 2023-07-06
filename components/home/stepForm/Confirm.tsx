@@ -17,7 +17,8 @@ import { IBookingForm } from "@/models";
 import { selectTripState } from "@/redux/selectedTrip";
 import { Grid, Typography } from "@mui/material";
 import { InputField } from "@/components/form";
-import { MyContext } from "@/pages";
+import { MyContext } from "@/pages/coach";
+// import { MyContext } from "@/pages";
 
 export default function Confirm() {
     const { addBooking } = useContext(MyContext);

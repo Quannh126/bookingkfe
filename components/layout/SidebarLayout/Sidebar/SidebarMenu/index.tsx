@@ -4,20 +4,30 @@ import { useRouter } from "next/router";
 import {
     // ListSubheader,
     alpha,
-    Box,
     List,
     styled,
     Button,
     ListItem,
+    ListSubheader,
 } from "@mui/material";
-import NextLink from "next/link";
-
+// import Box from "next/link";
+import { Box } from "@mui/system";
 // import DesignServicesTwoToneIcon from "@mui/icons-material/DesignServicesTwoTone";
 // import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import { SidebarContext } from "@/components/contexts/SidebarContext";
-import { ROUTE_ADMIN } from "@/config/routes";
-import clsx from "clsx";
 
+import { SidebarContext } from "@/components/contexts/SidebarContext";
+import AirportShuttleIcon from "@mui/icons-material/AirportShuttle";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import BrightnessLowTwoToneIcon from "@mui/icons-material/BrightnessLowTwoTone";
+import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
+
+import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
+import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
+
+// import clsx from "clsx";
+// import { ROUTE_ADMIN, ROUTE_MANAGER, ROUTE_TICKETING } from "@/config/routes";
+import { Skeleton } from "@mui/material";
+import { useAuth } from "@/hooks";
 const MenuWrapper = styled(Box)(
     ({ theme }) => `
   .MuiList-root {
@@ -45,7 +55,8 @@ const SubMenuWrapper = styled(Box)(
 
       .MuiListItem-root {
         padding: 1px 0;
-
+        display: -webkit-box;   
+        
         .MuiBadge-root {
           position: absolute;
           right: ${theme.spacing(3.2)};
@@ -164,6 +175,24 @@ function SidebarMenu() {
     const { closeSidebar } = useContext(SidebarContext);
     const router = useRouter();
     // const currentRoute = router.pathname;
+    const { profile } = useAuth({
+        revalidateOnMount: false,
+    });
+
+    let permission: String[] = [];
+    if (!profile) {
+        return <Skeleton />;
+    } else {
+        if (profile.role == "Admin") {
+            permission = ["Admin", "Booking", "Manager"];
+        } else if (profile.role == "Manager") {
+            permission = ["Booking", "Manager"];
+        } else if (profile.role == "Employee") {
+            permission = ["Booking"];
+        }
+    }
+
+    const currentRoute = router.pathname;
     async function handelRoute(path: string) {
         try {
             router.push(path);
@@ -174,36 +203,160 @@ function SidebarMenu() {
     return (
         <>
             <MenuWrapper>
-                <List component="div">
-                    {ROUTE_ADMIN.map((route, index) => (
-                        <SubMenuWrapper key={index}>
+                {permission.includes("Admin") && (
+                    <List
+                        component="div"
+                        subheader={
+                            <ListSubheader component="div" disableSticky>
+                                Quản trị viên
+                            </ListSubheader>
+                        }
+                    >
+                        <SubMenuWrapper>
                             <List component="div">
                                 <ListItem component="div">
-                                    <NextLink href={route.path} passHref>
-                                        <Button
-                                            className={clsx({
-                                                active:
-                                                    router.pathname ===
-                                                    route.path,
-                                            })}
-                                            disableRipple
-                                            onClick={() => {
-                                                closeSidebar;
-                                                handelRoute(route.path);
-                                            }}
-                                            component="a"
-                                            // startIcon={
-                                            //     <DesignServicesTwoToneIcon />
-                                            // }
-                                        >
-                                            {route?.label}
-                                        </Button>
-                                    </NextLink>
+                                    <Button
+                                        className={
+                                            currentRoute === "/admin/dashboard"
+                                                ? "active"
+                                                : ""
+                                        }
+                                        disableRipple
+                                        component="a"
+                                        onClick={() => {
+                                            closeSidebar;
+                                            handelRoute("/admin/dashboard");
+                                        }}
+                                        startIcon={<BrightnessLowTwoToneIcon />}
+                                    >
+                                        Dashboard
+                                    </Button>
+                                </ListItem>
+                                <ListItem component="div">
+                                    <Button
+                                        className={
+                                            currentRoute === "/admin/users"
+                                                ? "active"
+                                                : ""
+                                        }
+                                        disableRipple
+                                        component="a"
+                                        onClick={() => {
+                                            closeSidebar;
+                                            handelRoute("/admin/users");
+                                        }}
+                                        startIcon={<AccountCircleTwoToneIcon />}
+                                    >
+                                        Quản lý tài khoản
+                                    </Button>
                                 </ListItem>
                             </List>
                         </SubMenuWrapper>
-                    ))}
-                </List>
+                    </List>
+                )}
+
+                {permission.includes("Manager") && (
+                    <List
+                        component="div"
+                        subheader={
+                            <ListSubheader component="div" disableSticky>
+                                Quản lý
+                            </ListSubheader>
+                        }
+                    >
+                        <SubMenuWrapper>
+                            <List component="div">
+                                <ListItem component="div">
+                                    <Button
+                                        className={
+                                            currentRoute === "/admin/trips"
+                                                ? "active"
+                                                : ""
+                                        }
+                                        disableRipple
+                                        component="a"
+                                        onClick={() => {
+                                            closeSidebar;
+                                            handelRoute("/admin/trips");
+                                        }}
+                                        startIcon={<CalendarMonthIcon />}
+                                    >
+                                        Lập lịch chạy
+                                    </Button>
+                                </ListItem>
+                                <ListItem component="div">
+                                    <Button
+                                        className={
+                                            currentRoute === "/admin/cars"
+                                                ? "active"
+                                                : ""
+                                        }
+                                        disableRipple
+                                        component="a"
+                                        onClick={() => {
+                                            closeSidebar;
+                                            handelRoute("/admin/cars");
+                                        }}
+                                        startIcon={<AirportShuttleIcon />}
+                                    >
+                                        Quản lý xe
+                                    </Button>
+                                </ListItem>
+                            </List>
+                        </SubMenuWrapper>
+                    </List>
+                )}
+                {permission.includes("Booking") && (
+                    <List
+                        component="div"
+                        subheader={
+                            <ListSubheader component="div" disableSticky>
+                                Đặt vé
+                            </ListSubheader>
+                        }
+                    >
+                        <SubMenuWrapper>
+                            <List component="div">
+                                <ListItem component="div">
+                                    <Button
+                                        className={
+                                            currentRoute === "/admin/booking"
+                                                ? "active"
+                                                : ""
+                                        }
+                                        disableRipple
+                                        component="a"
+                                        onClick={() => {
+                                            closeSidebar;
+                                            handelRoute("/admin/booking");
+                                        }}
+                                        startIcon={<AddToPhotosIcon />}
+                                    >
+                                        Quản lý đặt vé
+                                    </Button>
+                                </ListItem>
+                                <ListItem component="div">
+                                    <Button
+                                        className={
+                                            currentRoute === "/admin/customer"
+                                                ? "active"
+                                                : ""
+                                        }
+                                        disableRipple
+                                        component="a"
+                                        onClick={() => {
+                                            closeSidebar;
+                                            handelRoute("/admin/customer");
+                                        }}
+                                        startIcon={<PermIdentityOutlinedIcon />}
+                                    >
+                                        Quản lý khách hàng
+                                    </Button>
+                                </ListItem>
+                            </List>
+                        </SubMenuWrapper>
+                    </List>
+                )}
             </MenuWrapper>
         </>
     );

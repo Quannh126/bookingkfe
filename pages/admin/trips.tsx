@@ -1,4 +1,4 @@
-import AdminLayout from "@/components/layout/admin";
+// import AdminLayout from "@/components/layout/admin";
 import { Box } from "@mui/system";
 import {
     Button,
@@ -20,6 +20,7 @@ import { ITripForm } from "@/models/Trips/trip-form";
 import { TableListTrips } from "@/components/trips/table-list-trips";
 
 import useSWR, { SWRConfiguration } from "swr";
+import SidebarLayout from "@/components/layout/SidebarLayout";
 // import TableListCar from "@/components/cars/table-list-cars";
 const AdminTrips: NextpageWithLayout = () => {
     const [showTripForm, setShowTripForm] = useState(false);
@@ -40,7 +41,7 @@ const AdminTrips: NextpageWithLayout = () => {
         setShowTripUpdateForm(true);
     };
 
-    const hanleRemoveClick = (data: ITripForm) => {
+    const handleRemoveClick = (data: ITripForm) => {
         setSelected(data);
         setShowAlert(true);
     };
@@ -118,6 +119,7 @@ const AdminTrips: NextpageWithLayout = () => {
                 onClose={handleClose}
                 aria-labelledby="add-trip"
                 aria-describedby="add-trip"
+                scroll={"paper"}
             >
                 <TripForm
                     onAdd={handleAddTrip}
@@ -125,32 +127,48 @@ const AdminTrips: NextpageWithLayout = () => {
                     configProvince={listProvince.data!}
                 />
             </Dialog>
-            <Dialog
+            <TripFormUpdate
+                data={selected as ITripForm}
+                onUpdate={handleUpdateSubmit}
+                onCancel={() => setShowTripUpdateForm(false)}
+                configProvince={listProvince.data!}
+                showCarUpdateForm={showCarUpdateForm}
+                handleClose2={handleClose2}
+            />
+            {/* <Dialog
                 open={showCarUpdateForm}
                 // TransitionComponent={Transition}
                 keepMounted={false}
                 onClose={handleClose2}
                 aria-labelledby="update-trip"
                 aria-describedby="update-trip"
+                scroll={"paper"}
             >
-                <TripFormUpdate
-                    data={selected as ITripForm}
-                    onUpdate={handleUpdateSubmit}
-                    onCancel={() => setShowTripUpdateForm(false)}
-                    configProvince={listProvince.data!}
-                />
-            </Dialog>
+                <DialogTitle id="update-trip">Cập nhật lịch chạy</DialogTitle>
+                <DialogContent dividers={true}>
+                    <TripFormUpdate
+                        data={selected as ITripForm}
+                        onUpdate={handleUpdateSubmit}
+                        onCancel={() => setShowTripUpdateForm(false)}
+                        configProvince={listProvince.data!}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose}>Subscribe</Button>
+                </DialogActions>
+            </Dialog> */}
             <TableListTrips
                 listProvince={!listProvince.data ? [] : listProvince.data}
                 listTrips={listTrips}
                 handleEditClick={handleEditClick}
-                handleRemoveClick={hanleRemoveClick}
+                handleRemoveClick={handleRemoveClick}
                 setShowTripForm={setShowTripForm}
             />
         </Box>
     );
 };
 
-AdminTrips.Layout = AdminLayout;
+AdminTrips.Layout = SidebarLayout;
 
 export default AdminTrips;

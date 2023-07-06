@@ -1,4 +1,4 @@
-import AdminLayout from "@/components/layout/admin";
+// import AdminLayout from "@/components/layout/admin";
 import { Box } from "@mui/system";
 import {
     Button,
@@ -20,6 +20,8 @@ import GetAppIcon from "@mui/icons-material/GetApp";
 // import useMutation from "@/hooks/useUpload";
 import { axiosClient } from "@/api-client";
 import axios from "axios";
+import SidebarLayout from "@/components/layout/SidebarLayout";
+import Footer from "@/components/Footer";
 // import TableListCar from "@/components/cars/table-list-cars";
 const AdminCars: NextpageWithLayout = () => {
     const [showCarForm, setShowCarForm] = useState(false);
@@ -252,10 +254,11 @@ const AdminCars: NextpageWithLayout = () => {
                     handleRemoveClick={hanleRemoveClick}
                 />
             )}
+            <Footer />
         </Box>
     );
 };
 
-AdminCars.Layout = AdminLayout;
+AdminCars.Layout = SidebarLayout;
 
 export default AdminCars;

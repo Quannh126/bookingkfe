@@ -1,12 +1,8 @@
 import React from "react";
 import { Box } from "@mui/system";
 import { Container, Stack, Link } from "@mui/material";
-// import { ROUTE_LIST } from "../../config/routes";
-// import { useRouter } from "next/router";
-// import clsx from "clsx";
 
 export function HeaderDesktop() {
-    // const router = useRouter();
     return (
         <Box
             display={{ xs: "none", lg: "block" }}

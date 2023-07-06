@@ -10,6 +10,8 @@ import {
     Tooltip,
     CardContent,
     Avatar,
+    styled,
+    // alpha,
 } from "@mui/material";
 // import clsx from "clsx";\
 import AddIcon from "@mui/icons-material/Add";
@@ -38,6 +40,39 @@ function getName(list: Array<NameValue>, value: String): string {
     }
     return "";
 }
+
+const AvatarAddWrapper = styled(Avatar)(
+    ({ theme }) => `
+          background: ${theme.colors.alpha.black[10]};
+          color: ${theme.colors.primary.main};
+          width: ${theme.spacing(8)};
+          height: ${theme.spacing(8)};
+  `
+);
+
+const CardAddAction = styled(Card)(
+    ({ theme }) => `
+          border: ${theme.colors.primary.main} dashed 1px;
+          height: 100%;
+          color: ${theme.colors.primary.main};
+          transition: ${theme.transitions.create(["all"])};
+          
+          .MuiCardActionArea-root {
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+          }
+          
+          .MuiTouchRipple-root {
+            opacity: .2;
+          }
+          
+          &:hover {
+            border-color: ${theme.colors.alpha.black[70]};
+          }
+  `
+);
 export function TableListTrips({
     listTrips,
     listProvince,
@@ -120,7 +155,6 @@ export function TableListTrips({
                                             display="flex"
                                             sx={{ alignItems: "flex-start" }}
                                         >
-                                            {/* <Typography>Tuyến:</Typography> */}
                                             <Typography
                                                 variant="h6"
                                                 // ml={1}
@@ -185,6 +219,7 @@ export function TableListTrips({
                             </Card>
                         </Grid>
                     ))}
+
                 <Grid
                     item
                     xs={12}
@@ -196,33 +231,23 @@ export function TableListTrips({
                 >
                     <Card sx={{ height: "100%" }}>
                         <Tooltip title="Thêm" arrow>
-                            <CardActionArea
-                                onClick={() => {
-                                    //console.log("add");
-                                    setShowTripForm(true);
-                                }}
-                                sx={{
-                                    height: "198px",
-                                    width: "100%",
-                                    display: "flex",
-                                    justifyItems: "center",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <CardContent>
-                                    <Avatar
-                                        sx={{ height: "72px", width: "72px" }}
-                                    >
-                                        <AddIcon
-                                            sx={{
-                                                height: "50px",
-                                                width: "50px",
-                                                color: "rgb(85, 105, 255)",
-                                            }}
-                                        />
-                                    </Avatar>
-                                </CardContent>
-                            </CardActionArea>
+                            <CardAddAction>
+                                <CardActionArea
+                                    sx={{
+                                        px: 1,
+                                    }}
+                                    onClick={() => {
+                                        //console.log("add");
+                                        setShowTripForm(true);
+                                    }}
+                                >
+                                    <CardContent>
+                                        <AvatarAddWrapper>
+                                            <AddIcon fontSize="large" />
+                                        </AvatarAddWrapper>
+                                    </CardContent>
+                                </CardActionArea>
+                            </CardAddAction>
                         </Tooltip>
                     </Card>
                 </Grid>
