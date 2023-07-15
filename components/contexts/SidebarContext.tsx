@@ -16,7 +16,6 @@ type Props = {
 export function SidebarProvider({ children }: Props) {
     const [sidebarToggle, setSidebarToggle] = useState(false);
     const toggleSidebar = () => {
-        console.log("click");
         setSidebarToggle(!sidebarToggle);
     };
 

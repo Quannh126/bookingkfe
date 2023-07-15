@@ -1,71 +1,66 @@
 // import { authApi } from "@/api";
-import { bookingApi } from "@/api";
 
-import { IBookingForm, IBookingUpdateForm } from "@/models";
+import { coachApi } from "@/api-client";
+import { IBookingForm } from "@/models";
 import IBookingTrip from "@/models/Book/book-trip";
 // import { IBooking } from "@/models/Book/booking";
 import { convertDateToString } from "@/utils";
 
 import useSWR from "swr";
 import { PublicConfiguration, SWRConfiguration } from "swr/_internal";
-
-export function useBooking(
-    queryParams: string,
+export type CreateURLPayment = {
+    amount: string;
+    bankCode: string;
+    orderInfo: string;
+    orderType: String;
+    locale: string;
+};
+export function useCoach(
+    queryParams?: string,
+    isReady?: boolean,
     options?: Partial<PublicConfiguration>
 ) {
     //index.ts const fetcher: Fetcher<ICarDetail> = () => carsApi.getAllCars()
-
     if (!queryParams) {
         queryParams = `/search?route=1-2&journey_date=${convertDateToString(
             new Date()
         )}`;
     }
-    const config: SWRConfiguration = {
-        dedupingInterval: 2 * 1000,
 
+    const config: SWRConfiguration = {
+        dedupingInterval: 3 * 60 * 1000,
         revalidateOnFocus: false,
         revalidateOnMount: true,
         shouldRetryOnError: true,
         ...options,
     };
     const {
-        data: listBooking,
+        data: listCoach,
         isLoading,
         error,
         mutate,
     } = useSWR<Array<IBookingTrip>, Error>(
-        `/booking${queryParams}`,
+        isReady ? `/coaches/search${queryParams}` : null,
         null,
         config
     );
+    async function addBooking(data: IBookingForm): Promise<any> {
+        const orderIds = await coachApi.add(data);
 
-    async function addBooking(data: IBookingForm) {
-        await bookingApi.addBooking(data);
         await mutate();
+        return orderIds;
     }
-
-    async function removeBooking(trip_id: string, list_seat: string) {
-        await bookingApi.removeBooking(trip_id, list_seat);
-        mutate();
+    async function createURL(data: CreateURLPayment) {
+        const res = await coachApi.createPaymentURL(data);
+        // window.open(res, "_blank");
+        window.location.replace(res);
     }
-
-    async function updateBooking(data: IBookingUpdateForm) {
-        await bookingApi.updateBooking(data);
-        mutate();
-    }
-    async function updateSeat(seat: number, booking_id: string) {
-        await bookingApi.updateSeat(seat, booking_id);
-        mutate();
-    }
-
     return {
-        listBooking,
+        listCoach,
         error,
+        createURL,
         isLoading,
-        updateSeat,
         addBooking,
-        removeBooking,
-        updateBooking,
         mutate,
     };
 }

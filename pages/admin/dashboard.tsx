@@ -4,9 +4,9 @@ import Head from "next/head";
 // import { useRouter } from 'next/router'
 import { NextpageWithLayout } from "../../models";
 import SidebarLayout from "@/components/layout/SidebarLayout";
-import WatchList from "@/components/contexts/Dashboards/Charts/ChartComponents";
+import ChartComponents from "@/components/contexts/Dashboards/Charts/ChartComponents";
 import { Container, Grid, Typography } from "@mui/material";
-import AccountBalance from "@/components/contexts/Dashboards/Charts/DonutOfDay";
+import DonutOfDay from "@/components/contexts/Dashboards/Charts/DonutOfDay";
 
 import Footer from "@/components/Footer";
 import PageTitleWrapper from "@/components/PageTitleWrapper";
@@ -36,7 +36,7 @@ const Dashboard: NextpageWithLayout = () => {
                     </Grid>
 
                     <Grid item xs={12}>
-                        <AccountBalance />
+                        <DonutOfDay />
                     </Grid>
                     {/* <Grid item lg={8} xs={12}>
                         <Wallets />
@@ -45,7 +45,7 @@ const Dashboard: NextpageWithLayout = () => {
                         <AccountSecurity />
                     </Grid> */}
                     <Grid item xs={12}>
-                        <WatchList />
+                        <ChartComponents />
                     </Grid>
                 </Grid>
             </Container>

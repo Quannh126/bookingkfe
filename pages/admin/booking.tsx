@@ -2,12 +2,14 @@
 import { Box } from "@mui/system";
 import {
     Button,
+    Container,
     // Typography,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Grid,
     Typography,
 } from "@mui/material";
 // import { TransitionProps } from "@mui/material/transitions";
@@ -27,16 +29,19 @@ import { TableListBooking } from "@/components/booking/table-list-booking";
 import { DatePickerField, SelectFieldNormal } from "@/components/form";
 import { IFilterTrip } from "@/models/Trips/trip-filter";
 import { useForm } from "react-hook-form";
-import { convertDateToString } from "@/utils";
+import { convertDateToString, getErrorMessage } from "@/utils";
 import TripDetail from "@/components/booking/trip-detail";
 import { BookForm, BookUpdateForm } from "@/components/booking";
 import { useBooking } from "@/hooks/useBooking";
 import IBookingTrip, { ISeatDetail } from "@/models/Book/book-trip";
 import LoadingPage from "@/components/common/loading";
-import { AlertContentProp, SnackAlert } from "@/components/common";
+// import { AlertContentProp, SnackAlert } from "@/components/common";
 import SidebarLayout from "@/components/layout/SidebarLayout";
 import { Route12, Route21 } from "@/config/routes";
-
+import PageTitleWrapper from "@/components/PageTitleWrapper";
+import Head from "next/head";
+import moment from "moment";
+import { toast } from "react-toastify";
 const AdminBooking: NextpageWithLayout = () => {
     const [showBookingForm, setShowBookingForm] = useState(false);
     const [selectedTrip, setSelectedTrip] = useState<IBookingTrip>(
@@ -51,12 +56,12 @@ const AdminBooking: NextpageWithLayout = () => {
         convertDateToString(new Date())
     );
     const [openWarning, setOpenWarning] = useState(false);
-    const [openSnack, setOpenSnack] = useState(false);
-    const [snackData, setSnackData] = useState({
-        content: "",
-        typeAlert: "info",
-        openInit: false,
-    } as AlertContentProp);
+    // const [openSnack, setOpenSnack] = useState(false);
+    // const [snackData, setSnackData] = useState({
+    //     content: "",
+    //     typeAlert: "info",
+    //     openInit: false,
+    // } as AlertContentProp);
     const [swapId, setSwapId] = useState("");
     const [alertText, setAlertText] = useState("");
     const [visibleAlertText, setVisibleAlertText] = useState(false);
@@ -69,6 +74,7 @@ const AdminBooking: NextpageWithLayout = () => {
     const [swapSeat, setSwapSeat] = useState(-1);
     const [singleSelectMode, setSingleSelectMode] = useState(false);
     // const { listTrips } = useTrip(queryParams);
+
     const {
         listBooking,
         addBooking,
@@ -93,6 +99,7 @@ const AdminBooking: NextpageWithLayout = () => {
         },
         reValidateMode: "onSubmit",
     });
+    const watchRoute = watch("route", "1-2");
     const handleClose = (event: Object, reason: string) => {
         if (reason && reason == "backdropClick") return;
         setShowBookingForm(false);
@@ -114,21 +121,27 @@ const AdminBooking: NextpageWithLayout = () => {
     const handleSearchSubmit = (data: IFilterTrip) => {
         setSelectedTrip({} as IBookingTrip);
         // console.log(data);
-        let params = `/search?route=${data.route}&journey_date=${data.s_journey_date}&pickup_point=${data.from_point}&dropoff_point=${data.to_point}`;
+        let params = `/search?route=${data.route}&journey_date=${moment(
+            data.s_journey_date
+        ).format("YYYY-MM-DD")}&pickup_point=${data.from_point}&dropoff_point=${
+            data.to_point
+        }`;
 
         setQueryParams(params);
-        setJourneyDate(data.s_journey_date);
+        setJourneyDate(moment(data.s_journey_date).format("YYYY-MM-DD"));
         setShowListTrip(true);
         setSelectedTrip({} as IBookingTrip);
         setSelectedTripID("");
     };
 
     const handleAddClick = () => {
-        setOpenSnack(false);
+        // setOpenSnack(false);
+        toast.dismiss();
         setShowBookingForm(true);
     };
     const handleUpdateClick = async () => {
-        setOpenSnack(false);
+        // setOpenSnack(false);
+        toast.dismiss();
         const seat_number = selectedSeatsBooked[0];
 
         const book_detail = await selectedTrip.seat_detail.find(
@@ -147,7 +160,7 @@ const AdminBooking: NextpageWithLayout = () => {
             )
             .substring(1);
 
-        console.log(seat_number);
+        // console.log(seat_number);
         if (book_detail) {
             setBookingData(book_detail);
             setListIdBooking(listId);
@@ -156,36 +169,40 @@ const AdminBooking: NextpageWithLayout = () => {
     };
     const handleSwapClick = () => {
         setSingleSelectMode(true);
-        setSnackData({
-            content: "Vui lòng chọn chỗ muốn đổi",
-            typeAlert: "info",
-            openInit: true,
-        });
-        setOpenSnack(true);
+        // setSnackData({
+        //     content: "Vui lòng chọn chỗ muốn đổi",
+        //     typeAlert: "info",
+        //     openInit: true,
+        // });
+        // setOpenSnack(true);
+        toast.info("Vui lòng chọn chỗ muốn đổi");
     };
     const handleClickDelete = () => {
         setOpenWarning(true);
     };
     const handleDelelteSubmit = async (trip_id: string, list_seat: string) => {
         try {
-            console.log("log", trip_id, list_seat);
+            // console.log("log", trip_id, list_seat);
             setOpenWarning(false);
             setPageLoading(true);
             await removeBooking(trip_id, list_seat);
             setPageLoading(false);
         } catch (error: any) {
             setPageLoading(false);
-            setSnackData({
-                content: error?.response.data.message ?? "Có lỗi xảy ra",
-                typeAlert: "error",
-                openInit: true,
-            });
-            setOpenSnack(true);
+            // setSnackData({
+            //     content: error?.response.data.message ?? "Có lỗi xảy ra",
+            //     typeAlert: "error",
+            //     openInit: true,
+            // });
+            // setOpenSnack(true);
+            const msg = getErrorMessage(error);
+            toast.error(msg ?? "Có lỗi xảy ra");
         }
     };
     const handleChooseSwapSeat = async (seat: number) => {
         try {
-            setOpenSnack(false);
+            // setOpenSnack(false);
+            toast.dismiss();
             setSelectedSeatsBooked([]);
             setPageLoading(true);
             await updateSeat(seat, swapId);
@@ -193,20 +210,24 @@ const AdminBooking: NextpageWithLayout = () => {
             setSwapId("");
             setSingleSelectMode(false);
             setSwapSeat(-1);
-            setSnackData({
-                content: "Đổi chỗ thành công",
-                typeAlert: "success",
-                openInit: true,
-            });
-            setOpenSnack(true);
+            toast.success("Đổi chỗ thành công");
+            // setSnackData({
+            //     content: "Đổi chỗ thành công",
+            //     typeAlert: "success",
+            //     openInit: true,
+            // });
+            // setOpenSnack(true);
+            // toast.clearWaitingQueue();
         } catch (error: any) {
             setPageLoading(false);
-            setSnackData({
-                content: error?.response.data.message ?? "Có lỗi xảy ra",
-                typeAlert: "error",
-                openInit: true,
-            });
-            setOpenSnack(true);
+            // setSnackData({
+            //     content: error?.response.data.message ?? "Có lỗi xảy ra",
+            //     typeAlert: "error",
+            //     openInit: true,
+            // });
+            // setOpenSnack(true);
+            const msg = getErrorMessage(error);
+            toast.error(msg ?? "Có lỗi xảy ra");
         }
     };
     async function handleBookSubmit(data: IBookingForm) {
@@ -217,16 +238,19 @@ const AdminBooking: NextpageWithLayout = () => {
             setPageLoading(false);
             setShowBookingForm(false);
             setSelectedSeats([]);
-            setSnackData({
-                content: "Đặt thành công",
-                typeAlert: "success",
-                openInit: true,
-            });
-            setOpenSnack(true);
+            // setSnackData({
+            //     content: "Đặt thành công",
+            //     typeAlert: "success",
+            //     openInit: true,
+            // });
+            // setOpenSnack(true);
+            toast.success("Đặt thành công");
         } catch (error: any) {
             setPageLoading(false);
             setVisibleAlertText(true);
-            setAlertText(error?.response.data.message ?? "Có lỗi xảy ra");
+            const msg = getErrorMessage(error);
+            toast.error(msg ?? "Có lỗi xảy ra");
+            // setAlertText(error?.response.data.message ?? "Có lỗi xảy ra");
         }
     }
     async function handleBookUpdateSubmit(data: IBookingUpdateForm) {
@@ -236,18 +260,21 @@ const AdminBooking: NextpageWithLayout = () => {
             setPageLoading(false);
             setShowBookingUpdateForm(false);
             setSelectedSeatsBooked([]);
-            setSnackData({
-                content: "Cập nhật thành công",
-                typeAlert: "success",
-                openInit: true,
-            });
-            setOpenSnack(true);
+            // setSnackData({
+            //     content: "Cập nhật thành công",
+            //     typeAlert: "success",
+            //     openInit: true,
+            // });
+            // setOpenSnack(true);
+            toast.success("Cập nhật thành công");
         } catch (error: any) {
             console.log("update error", error);
 
             setPageLoading(false);
-            setVisibleAlertText(true);
-            setAlertText(error?.response.data.message ?? "Có lỗi xảy ra");
+            // setVisibleAlertText(true);
+            // setAlertText(error?.response.data.message ?? "Có lỗi xảy ra");
+            const msg = getErrorMessage(error);
+            toast.error(msg ?? "Có lỗi xảy ra");
         }
     }
     const config: SWRConfiguration = {
@@ -265,7 +292,7 @@ const AdminBooking: NextpageWithLayout = () => {
         null,
         config
     );
-    const watchRoute = watch("route", "1-2");
+
     // const listDropoffAndPickUp = useSWR<
     //     { pickup: Array<NameValue>; dropoff: Array<NameValue> },
     //     Error
@@ -299,118 +326,102 @@ const AdminBooking: NextpageWithLayout = () => {
         return <LoadingPage />;
     }
     return (
-        <Box p={2}>
+        <>
+            <Head>
+                <title>Đặt vé xe</title>
+            </Head>
             {isPageLoading && <LoadingPage />}
 
-            {openSnack && (
+            {/* {openSnack && (
                 <SnackAlert
                     openInit={true}
                     content={snackData.content}
                     typeAlert={snackData.typeAlert}
                 />
-            )}
-            <Box
-                component="form"
-                onSubmit={handleSubmit(handleSearchSubmit)}
-                sx={{
-                    display: "flex",
-                    justifyItems: "center",
-                }}
-            >
-                <Box
-                    sx={{
-                        paddingLeft: "20px",
-                        width: "100%",
-                    }}
-                >
-                    <SelectFieldNormal
-                        allOptions={[
-                            {
-                                name: "Hà Nội - Tuyên Quang",
-                                value: "1-2",
-                            },
-                            {
-                                name: "Tuyên Quang - Hà Nội",
-                                value: "2-1",
-                            },
-                        ]}
-                        control={control}
-                        label="Tuyến đường"
-                        // {...register("from_id")}
-                        name="route"
-                    />
-                </Box>
-                <Box
-                    sx={{
-                        paddingLeft: "20px",
-                        width: "100%",
-                    }}
-                >
-                    <DatePickerField
-                        disablePast={true}
-                        control={control}
-                        label="Ngày"
-                        // {...register("from_id")}
-                        name="s_journey_date"
-                    />
-                </Box>
-                <Box
-                    sx={{
-                        paddingLeft: "20px",
-                        width: "100%",
-                    }}
-                >
-                    <SelectFieldNormal
-                        allOptions={listDropoffAndPickUp.pickup}
-                        control={control}
-                        label="Điểm đón"
-                        // {...register("from_id")}
-                        name="from_point"
-                    />
-                </Box>
-                <Box
-                    sx={{
-                        paddingLeft: "20px",
-                        width: "100%",
-                    }}
-                >
-                    <SelectFieldNormal
-                        allOptions={listDropoffAndPickUp.dropoff}
-                        control={control}
-                        label="Điểm trả"
-                        // {...register("from_id")}
-                        name="to_point"
-                    />
-                </Box>
-
-                <Box
-                    sx={{
-                        paddingLeft: "20px",
-                        width: "100%",
-                        alignSelf: "center",
-                    }}
-                >
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        sx={{
-                            padding: "normal",
-                        }}
+            )} */}
+            <PageTitleWrapper>
+                <Container maxWidth="lg">
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit(handleSearchSubmit)}
                     >
-                        Tìm kiếm
-                    </Button>
-                </Box>
-            </Box>
+                        <Grid container spacing={1} columns={18}>
+                            <Grid
+                                item
+                                xs={18}
+                                sm={4}
+                                // sx={{
+                                //     paddingLeft: "20px",
+                                //     width: "100%",
+                                // }}
+                            >
+                                <SelectFieldNormal
+                                    allOptions={[
+                                        {
+                                            name: "Hà Nội - Tuyên Quang",
+                                            value: "1-2",
+                                        },
+                                        {
+                                            name: "Tuyên Quang - Hà Nội",
+                                            value: "2-1",
+                                        },
+                                    ]}
+                                    control={control}
+                                    label="Tuyến đường"
+                                    // {...register("from_id")}
+                                    name="route"
+                                />
+                            </Grid>
+                            <Grid item xs={18} sm={4}>
+                                <DatePickerField
+                                    disablePast={true}
+                                    control={control}
+                                    label="Ngày"
+                                    // {...register("from_id")}
+                                    name="s_journey_date"
+                                />
+                            </Grid>
+                            <Grid item xs={18} sm={4}>
+                                <SelectFieldNormal
+                                    allOptions={listDropoffAndPickUp.pickup}
+                                    control={control}
+                                    label="Điểm đón"
+                                    // {...register("from_id")}
+                                    name="from_point"
+                                />
+                            </Grid>
+                            <Grid item xs={18} sm={4}>
+                                <SelectFieldNormal
+                                    allOptions={listDropoffAndPickUp.dropoff}
+                                    control={control}
+                                    label="Điểm trả"
+                                    // {...register("from_id")}
+                                    name="to_point"
+                                />
+                            </Grid>
 
-            <Dialog
-                open={showBookingForm}
-                // TransitionComponent={Transition}
-                keepMounted={false}
-                onClose={handleClose}
-                aria-labelledby="add-booking"
-                aria-describedby="add-booking"
-            >
+                            <Grid item xs={18} sm={2}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    size="small"
+                                    sx={{
+                                        width: "100%",
+                                        height: "100%",
+                                    }}
+                                >
+                                    Tìm kiếm
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </Container>
+            </PageTitleWrapper>
+
+            {showBookingForm && (
                 <BookForm
+                    openBookForm={showBookingForm}
+                    onClose={handleClose}
                     visibleAlertText={visibleAlertText}
                     alertText={alertText}
                     onBook={handleBookSubmit}
@@ -424,18 +435,12 @@ const AdminBooking: NextpageWithLayout = () => {
                     selectedSeats={selectedSeats.join("-")}
                     s_journey_date={journeyDate}
                 />
-            </Dialog>
+            )}
 
-            <Dialog
-                open={showBookingUpdateForm}
-                // TransitionComponent={Transition}
-                keepMounted={false}
-                onClose={handleClose2}
-                aria-labelledby="update-booked-seats"
-                aria-describedby="update-booked-seats"
-                sx={{ zIndex: 100 }}
-            >
+            {showBookingUpdateForm && (
                 <BookUpdateForm
+                    openBookForm={showBookingUpdateForm}
+                    onClose={handleClose2}
                     visibleAlertText={visibleAlertText}
                     alertText={alertText}
                     list_id={listIdBooking}
@@ -452,7 +457,8 @@ const AdminBooking: NextpageWithLayout = () => {
                     s_journey_date={journeyDate}
                     handleClickDelete={handleClickDelete}
                 />
-            </Dialog>
+            )}
+
             <Dialog open={openWarning} keepMounted sx={{ zIndex: 200 }}>
                 <DialogTitle id="alert-dialog-title">
                     <Typography variant="h4">Thông báo</Typography>
@@ -516,7 +522,7 @@ const AdminBooking: NextpageWithLayout = () => {
                     singleSelectMode={singleSelectMode}
                 />
             )}
-        </Box>
+        </>
     );
 };
 

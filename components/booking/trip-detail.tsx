@@ -1,7 +1,15 @@
 import { NameValue } from "@/models";
 import React from "react";
 import { Box } from "@mui/system";
-import { Divider, Grid, Typography } from "@mui/material";
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    Container,
+    Divider,
+    Grid,
+    Typography,
+} from "@mui/material";
 // import { convertDateToStringT } from "@/utils";
 import SeatSelection from "./seatSelection";
 import IBookingTrip from "@/models/Book/book-trip";
@@ -64,144 +72,166 @@ export default function TripDetail({
     // const [selectedSeats, setSelectedSeats] = useState([] as Array<number>);
 
     return (
-        <Box>
-            <Grid container spacing={1}>
-                <Grid item xs={12} lg={3} xl={2}>
-                    <Box ml={1}>
-                        <Typography variant="h3" component="div" sx={{ mb: 2 }}>
-                            Thông tin chi tiết
-                        </Typography>
-                        <Divider />
-                        <Box
-                            display="flex"
-                            sx={{ alignItems: "baseline", mt: 2 }}
+        <>
+            <Container maxWidth="lg">
+                <Grid container spacing={1}>
+                    <Grid item xs={12} lg={3} xl={2}>
+                        <Card
+                            sx={{
+                                px: 1,
+                            }}
                         >
-                            <Typography variant="h4">
-                                {getName(listProvince, tripDetail.from_id!) +
-                                    " - " +
-                                    getName(listProvince, tripDetail.to_id!)}
-                            </Typography>
-                        </Box>
-                        <Box
-                            display="flex"
-                            sx={{ alignItems: "baseline", mt: 1 }}
-                        >
-                            <Typography variant="subtitle2">
-                                Khởi hành:
-                            </Typography>
-                            <Typography variant="h4" ml={1}>
-                                {tripDetail.departure_time}
-                            </Typography>
-                        </Box>
-                        <Box
-                            display="flex"
-                            sx={{ alignItems: "baseline", mt: 1 }}
-                        >
-                            <Typography variant="subtitle2">
-                                Dự kiến:
-                            </Typography>
-                            <Typography variant="h4" ml={1}>
-                                {tripDetail.destination_time}
-                            </Typography>
-                        </Box>
-                        <Box
-                            display="flex"
-                            sx={{ alignItems: "baseline", mt: 1 }}
-                        >
-                            <Typography variant="subtitle2">Ngày:</Typography>
-                            <Typography variant="h4" ml={1}>
-                                {converFormatDate(journeyDate)}
-                            </Typography>
-                        </Box>
+                            <CardHeader title="Thông tin chi tiết" />
+                            <Divider />
+                            <CardContent>
+                                <Box
+                                    display="flex"
+                                    sx={{ alignItems: "baseline", mt: 2 }}
+                                >
+                                    <Typography variant="h4">
+                                        {getName(
+                                            listProvince,
+                                            tripDetail.from_id!
+                                        ) +
+                                            " - " +
+                                            getName(
+                                                listProvince,
+                                                tripDetail.to_id!
+                                            )}
+                                    </Typography>
+                                </Box>
+                                <Box
+                                    display="flex"
+                                    sx={{ alignItems: "baseline", mt: 1 }}
+                                >
+                                    <Typography variant="subtitle2">
+                                        Khởi hành:
+                                    </Typography>
+                                    <Typography variant="h4" ml={1}>
+                                        {tripDetail.departure_time}
+                                    </Typography>
+                                </Box>
+                                <Box
+                                    display="flex"
+                                    sx={{ alignItems: "baseline", mt: 1 }}
+                                >
+                                    <Typography variant="subtitle2">
+                                        Dự kiến:
+                                    </Typography>
+                                    <Typography variant="h4" ml={1}>
+                                        {tripDetail.destination_time}
+                                    </Typography>
+                                </Box>
+                                <Box
+                                    display="flex"
+                                    sx={{ alignItems: "baseline", mt: 1 }}
+                                >
+                                    <Typography variant="subtitle2">
+                                        Ngày:
+                                    </Typography>
+                                    <Typography variant="h4" ml={1}>
+                                        {converFormatDate(journeyDate)}
+                                    </Typography>
+                                </Box>
 
-                        <Box
-                            display="flex"
-                            sx={{ alignItems: "baseline", mt: 1 }}
-                        >
-                            <Typography variant="subtitle2">Giá vé:</Typography>
-                            <Typography variant="h4" ml={1}>
-                                {`${tripDetail.fare.toLocaleString()} VNĐ `}
-                            </Typography>
-                        </Box>
-                        <Box
-                            display="flex"
-                            sx={{ alignItems: "baseline", mt: 1, mb: 2 }}
-                        >
-                            <Typography variant="subtitle2">
-                                Ghế đã đặt:
-                            </Typography>
-                            <Typography variant="h4" ml={1}>
-                                {`${tripDetail.seat_booked} `}
-                            </Typography>
-                        </Box>
-                        <Divider />
-                        <Box
-                            display="flex"
-                            sx={{ alignItems: "baseline", mt: 2 }}
-                        >
-                            <Typography variant="h4">
-                                {tripDetail.car.name}
-                            </Typography>
-                        </Box>
-                        <Box
-                            display="flex"
-                            sx={{ alignItems: "baseline", mt: 2 }}
-                        >
-                            <Typography variant="subtitle2">
-                                Biển số xe:
-                            </Typography>
-                            <Typography variant="h4" ml={1}>
-                                {tripDetail.car.license_plate}
-                            </Typography>
-                        </Box>
-                        <Box
-                            display="flex"
-                            sx={{ alignItems: "baseline", mt: 1 }}
-                        >
-                            <Typography variant="subtitle2">
-                                Tên tài xế:
-                            </Typography>
-                            <Typography variant="h4" ml={1}>
-                                {tripDetail.car.driver_name}
-                            </Typography>
-                        </Box>
-                        <Box
-                            display="flex"
-                            sx={{ alignItems: "baseline", mt: 1 }}
-                        >
-                            <Typography variant="subtitle2">
-                                Số điện thoại:
-                            </Typography>
-                            <Typography variant="h4" ml={1}>
-                                {tripDetail.car.phonenumber}
-                            </Typography>
-                        </Box>
-                    </Box>
-                    <Box>{selectedSeats.toString()}</Box>
-                    <Box>{selectedSeatsBooked.toString()}</Box>
+                                <Box
+                                    display="flex"
+                                    sx={{ alignItems: "baseline", mt: 1 }}
+                                >
+                                    <Typography variant="subtitle2">
+                                        Giá vé:
+                                    </Typography>
+                                    <Typography variant="h4" ml={1}>
+                                        {`${tripDetail.fare.toLocaleString()} VNĐ `}
+                                    </Typography>
+                                </Box>
+                                <Box
+                                    display="flex"
+                                    sx={{
+                                        alignItems: "baseline",
+                                        mt: 1,
+                                        mb: 2,
+                                    }}
+                                >
+                                    <Typography variant="subtitle2">
+                                        Ghế đã đặt:
+                                    </Typography>
+                                    <Typography variant="h4" ml={1}>
+                                        {`${tripDetail.seat_booked} `}
+                                    </Typography>
+                                </Box>
+                            </CardContent>
+                            <Divider />
+                            <CardContent>
+                                <Box
+                                    display="flex"
+                                    sx={{ alignItems: "baseline", mt: 2 }}
+                                >
+                                    <Typography variant="h4">
+                                        {tripDetail.car.name}
+                                    </Typography>
+                                </Box>
+                                <Box
+                                    display="flex"
+                                    sx={{ alignItems: "baseline", mt: 2 }}
+                                >
+                                    <Typography variant="subtitle2">
+                                        Biển số xe:
+                                    </Typography>
+                                    <Typography variant="h4" ml={1}>
+                                        {tripDetail.car.license_plate}
+                                    </Typography>
+                                </Box>
+                                <Box
+                                    display="flex"
+                                    sx={{ alignItems: "baseline", mt: 1 }}
+                                >
+                                    <Typography variant="subtitle2">
+                                        Tên tài xế:
+                                    </Typography>
+                                    <Typography variant="h4" ml={1}>
+                                        {tripDetail.car.driver_name}
+                                    </Typography>
+                                </Box>
+                                <Box
+                                    display="flex"
+                                    sx={{ alignItems: "baseline", mt: 1 }}
+                                >
+                                    <Typography variant="subtitle2">
+                                        Số điện thoại:
+                                    </Typography>
+                                    <Typography variant="h4" ml={1}>
+                                        {tripDetail.car.phonenumber}
+                                    </Typography>
+                                </Box>
+                            </CardContent>
+                        </Card>
+                        <Box>{selectedSeats.toString()}</Box>
+                        <Box>{selectedSeatsBooked.toString()}</Box>
+                    </Grid>
+                    {/* <Grid item xs={12} lg={5} xl={5}></Grid> */}
+                    <Grid item xs={12} lg={9} xl={10}>
+                        <SeatSelection
+                            setSwapSeat={setSwapSeat}
+                            swapSeat={swapSeat}
+                            setSwapId={setSwapId}
+                            handleChooseSwapSeat={handleChooseSwapSeat}
+                            handleSwapClick={handleSwapClick}
+                            tripDetail={tripDetail}
+                            selectedSeats={selectedSeats}
+                            setSelectedSeats={setSelectedSeats}
+                            handleAddClick={handleAddClick}
+                            handleUpdateClick={handleUpdateClick}
+                            setShowListTrip={setShowListTrip}
+                            listDropoffAndPickUp={listDropoffAndPickUp}
+                            selectedSeatsBooked={selectedSeatsBooked}
+                            setSelectedSeatsBooked={setSelectedSeatsBooked}
+                            setSingleSelectMode={setSingleSelectMode}
+                            singleSelectMode={singleSelectMode}
+                        />
+                    </Grid>
                 </Grid>
-                {/* <Grid item xs={12} lg={5} xl={5}></Grid> */}
-                <Grid item xs={12} lg={9} xl={10}>
-                    <SeatSelection
-                        setSwapSeat={setSwapSeat}
-                        swapSeat={swapSeat}
-                        setSwapId={setSwapId}
-                        handleChooseSwapSeat={handleChooseSwapSeat}
-                        handleSwapClick={handleSwapClick}
-                        tripDetail={tripDetail}
-                        selectedSeats={selectedSeats}
-                        setSelectedSeats={setSelectedSeats}
-                        handleAddClick={handleAddClick}
-                        handleUpdateClick={handleUpdateClick}
-                        setShowListTrip={setShowListTrip}
-                        listDropoffAndPickUp={listDropoffAndPickUp}
-                        selectedSeatsBooked={selectedSeatsBooked}
-                        setSelectedSeatsBooked={setSelectedSeatsBooked}
-                        setSingleSelectMode={setSingleSelectMode}
-                        singleSelectMode={singleSelectMode}
-                    />
-                </Grid>
-            </Grid>
-        </Box>
+            </Container>
+        </>
     );
 }

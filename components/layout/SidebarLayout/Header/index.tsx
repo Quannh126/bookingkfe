@@ -44,8 +44,9 @@ const HeaderWrapper = styled(Box)(
 export default function Header() {
     // const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
     const theme = useTheme();
-    const dispath = useDispatch();
+    const dispatch = useDispatch();
     const status = useSelector(selectMenuState);
+
     return (
         <HeaderWrapper
             display="flex"
@@ -88,7 +89,7 @@ export default function Header() {
                             color="primary"
                             onClick={() => {
                                 console.log("click");
-                                dispath(toggleSidebar());
+                                dispatch(toggleSidebar());
                             }}
                         >
                             {!status ? (

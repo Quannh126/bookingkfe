@@ -23,6 +23,7 @@ export function useTrip(
     const {
         data: listTrips,
         error,
+        isLoading,
         mutate,
     } = useSWR<Array<ITrip> | [], Error>(`/trips${queryParams}`, null, config);
 
@@ -48,5 +49,6 @@ export function useTrip(
         removeTrip,
         updateTrip,
         mutate,
+        isLoading,
     };
 }

@@ -36,6 +36,6 @@ export const locationApi = {
         return axiosClient.get(`/locations/detail/${province_id}`);
     },
     getLocationGrouped(): Promise<Array<ILocationGrouped>> {
-        return axiosClient.get(`locations/group-options`);
+        return axiosClient.get(`/locations/group-options`);
     },
 };

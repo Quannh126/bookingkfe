@@ -10,6 +10,10 @@ import {
 import {
     Button,
     ButtonProps,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     Divider,
     Grid,
     TextField,
@@ -50,6 +54,9 @@ export interface BookUpdateFormProps {
     list_id: string;
     alertText?: string;
     visibleAlertText?: boolean;
+    openBookForm: boolean;
+    // eslint-disable-next-line no-unused-vars
+    onClose?: (event: Object, reason: string) => void;
 }
 
 // let count = 0;
@@ -69,8 +76,11 @@ function getName(list: Array<NameValue>, value: String): string {
     }
     return "";
 }
+
 export function BookUpdateForm({
     updateBooking,
+    openBookForm,
+    onClose,
     onCancel,
     configProvince,
     tripDetail,
@@ -160,45 +170,39 @@ BookUpdateFormProps) {
     }, [watchSeats, tripDetail, setValue]);
 
     return (
-        <Box
-            component="form"
-            // onSubmit={}
-
-            sx={{
-                display: "flex",
-                alignItems: "flex-start",
-                justifyContent: "center",
-                flexDirection: "column",
-                flexGrow: 1,
-            }}
-            p={4}
-            onSubmit={handleSubmit(handleBookUpdateSubmit)}
+        <Dialog
+            open={openBookForm}
+            // TransitionComponent={Transition}
+            keepMounted={false}
+            onClose={onClose}
+            aria-labelledby="update-booked-seats"
+            aria-describedby="update-booked-seats"
+            sx={{ zIndex: 100 }}
+            scroll="body"
         >
-            <Grid container>
-                <Grid
-                    item
-                    xs={12}
-                    md={12}
+            <Box
+                component="form"
+                // onSubmit={}
+                onSubmit={handleSubmit(handleBookUpdateSubmit)}
+            >
+                <DialogTitle
+                    id="add-trip"
                     display="flex"
                     sx={{ justifyContent: "center" }}
                 >
                     <Typography gutterBottom variant="h3" component="div">
                         Thông tin đặt vé
                     </Typography>
-                </Grid>
-
-                <Grid item xs={12} md={5}>
-                    <Grid container>
+                </DialogTitle>
+                <DialogContent dividers={false}>
+                    <Grid container spacing={2}>
                         <Grid item xs={12} md={12}>
                             <Typography
                                 gutterBottom
                                 variant="h3"
                                 component="div"
+                                sx={{ alignContent: "center" }}
                             >
-                                Thông tin vé
-                            </Typography>
-                            <Divider sx={{ marginTop: 1 }} />
-                            <Typography variant="h5">
                                 {`${getName(
                                     configProvince,
                                     tripDetail.from_id!
@@ -207,11 +211,17 @@ BookUpdateFormProps) {
                                 ${getName(
                                     configProvince,
                                     tripDetail.to_id!
-                                )} : ${tripDetail.departure_time}`}
+                                )} - ${tripDetail.departure_time}`}
                             </Typography>
                         </Grid>
-
-                        <Grid item xs={12} md={12} sx={{ marginTop: 2 }}>
+                        <Grid item xs={12} md={12}>
+                            <Typography variant="h5">
+                                {` Tài xế: ${tripDetail.car.driver_name} 
+                                 - ${tripDetail.car.phonenumber}`}
+                            </Typography>
+                            <Divider sx={{ marginTop: 1 }} />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
                             <SelectFieldNormal
                                 disabled={isPaid}
                                 allOptions={
@@ -225,7 +235,7 @@ BookUpdateFormProps) {
                                 name="pickup_point"
                             />
                         </Grid>
-                        <Grid item xs={12} md={12}>
+                        <Grid item xs={12} md={6}>
                             <SelectFieldNormal
                                 disabled={isPaid}
                                 allOptions={
@@ -239,18 +249,17 @@ BookUpdateFormProps) {
                                 name="dropoff_point"
                             />
                         </Grid>
-                        <Grid item xs={12} md={5}>
+                        <Grid item xs={12} md={6}>
                             <TextField
                                 disabled
-                                sx={{ m: 1 }}
                                 size="small"
                                 fullWidth
                                 label="Khởi hành"
                                 defaultValue={tripDetail.departure_time}
                             />
                         </Grid>
-                        <Grid item xs={0} md={2}></Grid>
-                        <Grid item xs={12} md={5}>
+
+                        <Grid item xs={12} md={6}>
                             <TextField
                                 disabled
                                 size="small"
@@ -259,7 +268,7 @@ BookUpdateFormProps) {
                                 defaultValue={tripDetail.destination_time}
                             />
                         </Grid>
-                        <Grid item xs={12} md={12}>
+                        <Grid item xs={12} md={6}>
                             <DatePickerField
                                 disabled
                                 label="Ngày khởi hành"
@@ -267,7 +276,7 @@ BookUpdateFormProps) {
                                 control={control}
                             />
                         </Grid>
-                        <Grid item xs={12} md={12}>
+                        <Grid item xs={12} md={6}>
                             <InputField
                                 disabled={isPaid}
                                 type="text"
@@ -276,7 +285,7 @@ BookUpdateFormProps) {
                                 control={control}
                             />
                         </Grid>
-                        <Grid item xs={12} md={12}>
+                        <Grid item xs={12} md={6}>
                             <InputMoneyField
                                 disabled
                                 type="text"
@@ -285,74 +294,69 @@ BookUpdateFormProps) {
                                 control={control}
                             />
                         </Grid>
+
+                        <Grid item xs={12} md={6}></Grid>
+
+                        <Grid item xs={12} md={12}>
+                            <Divider sx={{ marginTop: 1 }} />
+                            <Typography
+                                gutterBottom
+                                variant="h3"
+                                component="div"
+                            >
+                                Thông tin khách hàng
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <PhoneNumberField
+                                optionsData={dataCustomer}
+                                disabled
+                                type="text"
+                                label="Số điện thoại"
+                                name="customer.phonenumber"
+                                control={control}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InputField
+                                disabled
+                                type="text"
+                                label="Khách hàng"
+                                name="customer.name"
+                                control={control}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InputField
+                                disabled
+                                type="text"
+                                label="Email"
+                                name="customer.email"
+                                control={control}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <SelectFieldNormal
+                                disabled={isPaid}
+                                allOptions={TYPE_PAYMENT}
+                                control={control}
+                                label="Trạng thái"
+                                name="status_payment"
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={12}>
+                            <InputField
+                                multiline
+                                rows={4}
+                                type="text"
+                                label="Ghi chú"
+                                name="note"
+                                control={control}
+                            />
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Grid item xs={0} md={2}></Grid>
-                <Grid item xs={12} md={5}>
-                    <Grid item xs={12} md={12}>
-                        <Typography gutterBottom variant="h3" component="div">
-                            Thông tin khách hàng
-                        </Typography>
-                        <Divider sx={{ marginTop: 1 }} />
-                        <Typography variant="h5">
-                            {` Tài xế: ${tripDetail.car.driver_name} 
-                                 - ${tripDetail.car.phonenumber}`}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12} md={12} sx={{ marginTop: 2 }}>
-                        <PhoneNumberField
-                            optionsData={dataCustomer}
-                            disabled
-                            type="text"
-                            label="Số điện thoại"
-                            name="customer.phonenumber"
-                            control={control}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                        <InputField
-                            disabled
-                            type="text"
-                            label="Khách hàng"
-                            name="customer.name"
-                            control={control}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                        <InputField
-                            disabled
-                            type="text"
-                            label="Email"
-                            name="customer.email"
-                            control={control}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                        <SelectFieldNormal
-                            disabled={isPaid}
-                            allOptions={TYPE_PAYMENT}
-                            control={control}
-                            label="Trạng thái"
-                            name="status_payment"
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                        <InputField
-                            multiline
-                            rows={4}
-                            type="text"
-                            label="Ghi chú"
-                            name="note"
-                            control={control}
-                        />
-                    </Grid>
-                </Grid>
-                <Grid
-                    item
-                    xs={12}
-                    md={12}
-                    sx={{ display: "flex", justifyContent: "flex-end" }}
-                >
+                </DialogContent>
+                <DialogActions>
                     {visibleAlertText && (
                         <Typography
                             sx={{
@@ -363,7 +367,6 @@ BookUpdateFormProps) {
                             component="h4"
                             variant="h4"
                         >
-                            {" "}
                             {alertText}
                         </Typography>
                     )}
@@ -389,8 +392,8 @@ BookUpdateFormProps) {
                             Đóng
                         </Button>
                     </Box>
-                </Grid>
-            </Grid>
-        </Box>
+                </DialogActions>
+            </Box>
+        </Dialog>
     );
 }

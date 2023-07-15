@@ -1,22 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box } from "@mui/system";
-import {
-    Paper,
-    TableContainer,
-    Table,
-    TableRow,
-    TableCell,
-    TableHead,
-    TableBody,
-    IconButton,
-    TableFooter,
-    TablePagination,
-} from "@mui/material";
-import TablePaginationActions from "./table-with-paging";
+import { IconButton, Tooltip } from "@mui/material";
 
 import { ICustomerDetail } from "@/models";
 import EditIcon from "@mui/icons-material/Edit";
 import ClearIcon from "@mui/icons-material/Clear";
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 // import { Identifier } from "typescript";
 export interface ITableListCustomerProps {
     listCustomer: [ICustomerDetail];
@@ -25,136 +14,125 @@ export interface ITableListCustomerProps {
     // eslint-disable-next-line no-unused-vars
     handleRemoveClick: (data: ICustomerDetail) => void;
 }
-
+type Row = ICustomerDetail;
 export function TableListCustomer({
     listCustomer,
     handleEditClick,
     handleRemoveClick,
 }: ITableListCustomerProps) {
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [pageSize, setPageSize] = React.useState<number>(5);
+    const columns: GridColDef[] = [
+        {
+            field: "name",
+            type: "string",
+            headerName: "Tên",
+            width: 300,
+            headerAlign: "center",
+            align: "center",
+        },
+        {
+            field: "phonenumber",
+            type: "string",
+            headerName: "Số điện thoại",
+            width: 200,
+            headerAlign: "center",
+            align: "center",
+        },
 
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows =
-        page > 0
-            ? Math.max(0, (1 + page) * rowsPerPage - listCustomer.length)
-            : 0;
+        {
+            field: "address",
+            type: "number",
+            width: 100,
+            headerName: "Địa chỉ",
+            headerAlign: "center",
+            align: "center",
+        },
+        {
+            field: "email",
+            type: "string",
+            width: 150,
+            headerName: "Email",
+            headerAlign: "center",
+            align: "center",
+        },
+        {
+            field: "times_booking",
+            type: "string",
+            width: 200,
+            headerName: "Số lần đặt vé",
+            headerAlign: "center",
+            align: "center",
+        },
 
-    const handleChangePage = (
-        event: React.MouseEvent<HTMLButtonElement> | null,
-        newPage: number
-    ) => {
-        setPage(newPage);
-    };
+        // {
+        //     field: "status",
+        //     type: "dateTime",
+        //     width: 250,
+        //     headerName: "Trạng thái",
+        //     headerAlign: "center",
+        //     align: "center",
+        // },
 
-    const handleChangeRowsPerPage = (
-        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
-    return (
-        <Box m={2}>
-            <TableContainer component={Paper}>
-                <Table
-                    sx={{ minWidth: 650 }}
-                    size="small"
-                    aria-label="a dense table"
-                >
-                    <TableHead>
-                        <TableRow
-                            sx={{
-                                "th": {
-                                    backgroundColor: "rgb(141 147 225 / 87%)",
-                                },
-                            }}
-                        >
-                            <TableCell align="center">Tên</TableCell>
-                            <TableCell align="center">Số điện thoại</TableCell>
-                            <TableCell align="center">Đại chỉ</TableCell>
-                            <TableCell align="center">Email</TableCell>
-                            <TableCell align="center">Số lần đặt vé</TableCell>
-                            <TableCell align="center">Action</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {(rowsPerPage > 0
-                            ? listCustomer.slice(
-                                  page * rowsPerPage,
-                                  page * rowsPerPage + rowsPerPage
-                              )
-                            : listCustomer
-                        ).map((customer: ICustomerDetail, index) => (
-                            <TableRow key={index}>
-                                <TableCell align="left">
-                                    {customer.name}
-                                </TableCell>
-                                <TableCell align="left">
-                                    {`${customer.phonenumber}`}
-                                </TableCell>
-                                <TableCell align="left">
-                                    {customer.address}
-                                </TableCell>
-                                <TableCell align="left">
-                                    {customer.email}
-                                </TableCell>
-                                <TableCell align="left">
-                                    {`${customer.times_booking}`}
-                                </TableCell>
-                                <TableCell align="center">
-                                    <IconButton
-                                        aria-label="Edit"
-                                        onClick={() =>
-                                            handleEditClick(customer)
-                                        }
-                                    >
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton
-                                        aria-label="Delete"
-                                        onClick={() =>
-                                            handleRemoveClick(customer)
-                                        }
-                                    >
-                                        <ClearIcon />
-                                    </IconButton>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                        {emptyRows > 0 && (
-                            <TableRow style={{ height: 53 * emptyRows }}>
-                                <TableCell colSpan={6} />
-                            </TableRow>
-                        )}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                rowsPerPageOptions={[
-                                    5,
-                                    10,
-                                    25,
-                                    { label: "All", value: -1 },
-                                ]}
-                                colSpan={6}
-                                count={listCustomer.length}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                SelectProps={{
-                                    inputProps: {
-                                        "aria-label": "rows per page",
-                                    },
-                                    native: true,
+        {
+            field: "actions",
+            // type: "actions",
+            headerName: "Actions",
+            headerAlign: "center",
+            width: 150,
+            align: "center",
+            sortable: false,
+            renderCell: (cellValue: GridRenderCellParams<Row>) => {
+                return (
+                    <Box>
+                        <Tooltip title="Sửa" arrow placement="left-start">
+                            <IconButton
+                                aria-label="Edit"
+                                onClick={() => {
+                                    handleEditClick(cellValue.row);
                                 }}
-                                onPageChange={handleChangePage}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                                ActionsComponent={TablePaginationActions}
-                            />
-                        </TableRow>
-                    </TableFooter>
-                </Table>
-            </TableContainer>
-        </Box>
+                            >
+                                <EditIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Xoá" arrow placement="right-end">
+                            <IconButton
+                                aria-label="Delete"
+                                onClick={() => handleRemoveClick(cellValue.row)}
+                            >
+                                <ClearIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                );
+            },
+        },
+    ];
+    return (
+        <>
+            <DataGrid
+                sx={{
+                    ".MuiDataGrid-columnHeaders": {
+                        backgroundColor: "rgb(141 147 225 / 87%)",
+                    },
+                }}
+                rowHeight={60}
+                columns={columns}
+                rows={listCustomer}
+                getRowId={(row) => row._id}
+                pageSize={pageSize}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                rowsPerPageOptions={[5, 10, 20]}
+                pagination
+                autoHeight={true}
+                componentsProps={{
+                    pagination: {
+                        labelRowsPerPage: "Số dòng trong trang",
+                    },
+                }}
+                // components={{
+                //     Toolbar: CustomToolbar,
+                // }}
+            />
+        </>
     );
 }

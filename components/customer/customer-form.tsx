@@ -2,7 +2,15 @@ import { Box } from "@mui/system";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { InputField } from "../form";
-import { Button, Grid, Typography } from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    Typography,
+} from "@mui/material";
 import { ICustomerForm } from "@/models";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,12 +19,21 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 export interface CustomerFormProps {
     errorMsg?: string;
+    showCustomerForm: boolean;
     // eslint-disable-next-line no-unused-vars
     onAdd?: (data: ICustomerForm) => void;
     onCancel: () => void;
+    // eslint-disable-next-line no-unused-vars
+    handleClose: (event: Object, reason: string) => void;
 }
 
-export function CustomerForm({ onAdd, onCancel, errorMsg }: CustomerFormProps) {
+export function CustomerForm({
+    onAdd,
+    onCancel,
+    showCustomerForm,
+    handleClose,
+    errorMsg,
+}: CustomerFormProps) {
     const schema = yup.object().shape({
         name: yup
             .string()
@@ -50,91 +67,107 @@ export function CustomerForm({ onAdd, onCancel, errorMsg }: CustomerFormProps) {
         onCancel();
     }
     return (
-        <Box
-            component="form"
-            // onSubmit={}
-            sx={{
-                display: "flex",
-                alignItems: "flex-start",
-                justifyContent: "center",
-                flexDirection: "column",
-                flexGrow: 1,
-            }}
-            p={4}
-            onSubmit={handleSubmit(handleAddSubmit)}
+        <Dialog
+            open={showCustomerForm}
+            // TransitionComponent={Transition}
+            keepMounted={false}
+            onClose={handleClose}
+            // maxWidth="lg"
+            aria-labelledby="add-customer"
+            aria-describedby="add-customer"
         >
-            <Grid container spacing={1}>
-                <Grid item xs={12} md={12}>
-                    <Typography gutterBottom variant="h5" component="div">
-                        Thêm mới khách hàng
+            <Box
+                component="form"
+                // onSubmit={}
+                onSubmit={handleSubmit(handleAddSubmit)}
+            >
+                <DialogTitle
+                    id="add-trip"
+                    display="flex"
+                    sx={{ justifyContent: "center" }}
+                >
+                    <Typography gutterBottom variant="h3" component="div">
+                        Thêm khách hàng
                     </Typography>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <InputField
-                        type="text"
-                        name="name"
-                        control={control}
-                        label="Tên khách hàng"
-                    />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <InputField
-                        type="text"
-                        name="email"
-                        label="Email"
-                        control={control}
-                    />
-                </Grid>
-                <Grid item xs={12} md={3}>
-                    <InputField
-                        type="text"
-                        label="Số điện thoại"
-                        name="phonenumber"
-                        control={control}
-                    />
-                </Grid>
+                </DialogTitle>
+                <DialogContent dividers={false}>
+                    <Grid container spacing={1}>
+                        <Grid item xs={12} md={12}>
+                            <Typography
+                                gutterBottom
+                                variant="h5"
+                                component="div"
+                            >
+                                Thêm mới khách hàng
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InputField
+                                type="text"
+                                name="name"
+                                control={control}
+                                label="Tên khách hàng"
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InputField
+                                type="text"
+                                name="email"
+                                label="Email"
+                                control={control}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={3}>
+                            <InputField
+                                type="text"
+                                label="Số điện thoại"
+                                name="phonenumber"
+                                control={control}
+                            />
+                        </Grid>
 
-                <Grid item xs={12} md={9}>
-                    <InputField
-                        label="Địa chỉ"
-                        type="text"
-                        name="address"
-                        // multiline
-                        // rows={4}
-                        control={control}
-                    />
-                </Grid>
-                <Grid item xs={12} md={8}>
-                    {errorMsg && (
-                        <Typography
-                            component="p"
+                        <Grid item xs={12} md={9}>
+                            <InputField
+                                label="Địa chỉ"
+                                type="text"
+                                name="address"
+                                // multiline
+                                // rows={4}
+                                control={control}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={8}>
+                            {errorMsg && (
+                                <Typography
+                                    component="p"
+                                    sx={{
+                                        color: "red",
+                                        alignSelf: "stretch",
+                                    }}
+                                >
+                                    {errorMsg}
+                                </Typography>
+                            )}
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Box sx={{ marginTop: 2 }}>
+                        <Button type="submit" variant="contained">
+                            Thêm
+                        </Button>
+                        <Button
+                            onClick={handleOnCancel}
                             sx={{
-                                color: "red",
-                                alignSelf: "stretch",
+                                margin: "normal",
+                                marginLeft: 2,
                             }}
                         >
-                            {errorMsg}
-                        </Typography>
-                    )}
-                </Grid>
-
-                <Grid item xs={12} md={1}></Grid>
-                <Grid item xs={12} md={1}></Grid>
-                <Grid item xs={2} md={2} sx={{ display: "flex" }}>
-                    <Button type="submit" variant="contained">
-                        Thêm
-                    </Button>
-                    <Button
-                        onClick={handleOnCancel}
-                        sx={{
-                            margin: "normal",
-                            marginLeft: 2,
-                        }}
-                    >
-                        Đóng
-                    </Button>
-                </Grid>
-            </Grid>
-        </Box>
+                            Đóng
+                        </Button>
+                    </Box>
+                </DialogActions>
+            </Box>
+        </Dialog>
     );
 }

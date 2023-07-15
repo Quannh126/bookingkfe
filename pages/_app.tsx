@@ -11,9 +11,11 @@ import { Provider } from "react-redux";
 import ThemeProvider from "@/utils/ThemeProvider";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider } from "@emotion/react";
+import { ToastContainer } from "react-toastify";
 import { createEmotionCache } from "@/utils/index";
-
+import "react-toastify/dist/ReactToastify.min.css";
 import { wrapper } from "@/redux/store";
+
 const clientSideEmotionCache = createEmotionCache();
 function App({ Component, pageProps, ...rest }: AppPropsWithLayout) {
     const Layout = Component.Layout ?? EmptyLayout;
@@ -34,6 +36,10 @@ function App({ Component, pageProps, ...rest }: AppPropsWithLayout) {
                     <ThemeProvider>
                         <>
                             <CssBaseline />
+                            <ToastContainer
+                                newestOnTop
+                                position="bottom-right"
+                            />
                             <Layout>
                                 <Component {...pageProps} />
                             </Layout>

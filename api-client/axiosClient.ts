@@ -2,6 +2,8 @@ import axios, { AxiosError } from "axios";
 require("dotenv").config();
 import Router from "next/router";
 import { GetServerSidePropsContext } from "next";
+// import { store } from "@/redux/store";
+// import { selectAuthState, setCredentials } from "@/redux/selectedAuth";
 const isServer = () => {
     return typeof window === "undefined";
 };
@@ -41,6 +43,7 @@ const onAccessTokenFetched = (token: string) => {
 const addSubscriber = (callback: (token: string) => any) => {
     subscribers.push(callback);
 };
+
 const refreshToken = async (oError: AxiosError) => {
     try {
         const { response } = oError;
@@ -51,6 +54,7 @@ const refreshToken = async (oError: AxiosError) => {
                 axiosClient.defaults.headers.common[
                     "Authorization"
                 ] = `Bearer ${token}`;
+
                 resolve(axios(response!.config));
             });
         });
@@ -63,6 +67,8 @@ const refreshToken = async (oError: AxiosError) => {
             const res: any = await axiosClient.post(
                 process.env.API_URL + "/api/v1/auth/refresh"
             );
+
+            // store.dispatch(setCredentials(res.accessToken));
             // check if this is server or not. We don't wanna save response token on server.
             if (!isServer) {
                 setAccessToken(res.accessToken);
@@ -86,6 +92,7 @@ const refreshToken = async (oError: AxiosError) => {
         fetchingToken = false;
     }
 };
+
 axiosClient.interceptors.response.use(
     (response) => {
         return response.data;
@@ -100,9 +107,10 @@ axiosClient.interceptors.response.use(
             return refreshToken(error);
         }
 
-        return Promise.reject(error);
+        return Promise.reject(error.response?.data);
     }
 );
+
 axiosClientFile.interceptors.response.use(
     function (response) {
         return response.data;

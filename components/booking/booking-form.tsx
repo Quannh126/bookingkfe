@@ -7,7 +7,17 @@ import {
     InputMoneyField,
     SelectFieldNormal,
 } from "../form";
-import { Button, Divider, Grid, TextField, Typography } from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Divider,
+    Grid,
+    TextField,
+    Typography,
+} from "@mui/material";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IBookingForm, ICustomer } from "@/models";
@@ -27,9 +37,10 @@ export interface BookFormProps {
     s_journey_date: string;
     visibleAlertText?: boolean;
     alertText?: string;
+    openBookForm: boolean;
+    // eslint-disable-next-line no-unused-vars
+    onClose?: (event: Object, reason: string) => void;
 }
-
-// let count = 0;
 
 function getName(list: Array<NameValue>, value: String): string {
     for (let i = 0; i < list.length; i++) {
@@ -42,6 +53,8 @@ function getName(list: Array<NameValue>, value: String): string {
 export function BookForm({
     onBook,
     onCancel,
+    onClose,
+    openBookForm,
     configProvince,
     tripDetail,
     selectedSeats,
@@ -111,8 +124,7 @@ export function BookForm({
     function handleOnCancel() {
         onCancel();
     }
-    // const [optionDropoff, setOptionDropoff] = useState([] as Array<NameValue>);
-    // const [optionPickup, setOptionPickup] = useState([] as Array<NameValue>);
+
     const configPoint: SWRConfiguration = {
         dedupingInterval: 60 * 1000,
         revalidateOnMount: true,
@@ -155,45 +167,34 @@ export function BookForm({
     };
     //console.log(count++);
     return (
-        <Box
-            component="form"
-            // onSubmit={}
-
-            sx={{
-                display: "flex",
-                alignItems: "flex-start",
-                justifyContent: "center",
-                flexDirection: "column",
-                flexGrow: 1,
-            }}
-            p={4}
-            onSubmit={handleSubmit(handleBookSubmit)}
+        <Dialog
+            open={openBookForm}
+            // TransitionComponent={Transition}
+            keepMounted={false}
+            onClose={onClose}
+            aria-labelledby="add-booking"
+            aria-describedby="add-booking"
+            scroll={"body"}
         >
-            <Grid container>
-                <Grid
-                    item
-                    xs={12}
-                    md={12}
+            <Box component="form" onSubmit={handleSubmit(handleBookSubmit)}>
+                <DialogTitle
+                    id="add-trip"
                     display="flex"
                     sx={{ justifyContent: "center" }}
                 >
                     <Typography gutterBottom variant="h3" component="div">
                         Thông tin đặt vé
                     </Typography>
-                </Grid>
-
-                <Grid item xs={12} md={5}>
-                    <Grid container>
+                </DialogTitle>
+                <DialogContent dividers={false}>
+                    <Grid container spacing={2}>
                         <Grid item xs={12} md={12}>
                             <Typography
                                 gutterBottom
                                 variant="h3"
                                 component="div"
+                                sx={{ alignContent: "center" }}
                             >
-                                Thông tin vé
-                            </Typography>
-                            <Divider sx={{ marginTop: 1 }} />
-                            <Typography variant="h5">
                                 {`${getName(
                                     configProvince,
                                     tripDetail.from_id!
@@ -202,11 +203,18 @@ export function BookForm({
                                 ${getName(
                                     configProvince,
                                     tripDetail.to_id!
-                                )} : ${tripDetail.departure_time}`}
+                                )} - ${tripDetail.departure_time}`}
                             </Typography>
                         </Grid>
 
-                        <Grid item xs={12} md={12} sx={{ marginTop: 2 }}>
+                        <Grid item xs={12} md={12}>
+                            <Typography variant="h5">
+                                {` Tài xế: ${tripDetail.car.driver_name} 
+                                 - ${tripDetail.car.phonenumber}`}
+                            </Typography>
+                            <Divider sx={{ marginTop: 1 }} />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
                             <SelectFieldNormal
                                 allOptions={
                                     dataRes.isLoading || !dataRes.data
@@ -219,7 +227,7 @@ export function BookForm({
                                 name="pickup_point"
                             />
                         </Grid>
-                        <Grid item xs={12} md={12}>
+                        <Grid item xs={12} md={6}>
                             <SelectFieldNormal
                                 allOptions={
                                     dataRes.isLoading || !dataRes.data
@@ -232,18 +240,17 @@ export function BookForm({
                                 name="dropoff_point"
                             />
                         </Grid>
-                        <Grid item xs={12} md={5}>
+                        <Grid item xs={12} md={6}>
                             <TextField
                                 disabled
-                                sx={{ m: 1 }}
                                 size="small"
                                 fullWidth
                                 label="Khởi hành"
                                 defaultValue={tripDetail.departure_time}
                             />
                         </Grid>
-                        <Grid item xs={0} md={2}></Grid>
-                        <Grid item xs={12} md={5}>
+
+                        <Grid item xs={12} md={6}>
                             <TextField
                                 disabled
                                 size="small"
@@ -252,7 +259,7 @@ export function BookForm({
                                 defaultValue={tripDetail.destination_time}
                             />
                         </Grid>
-                        <Grid item xs={12} md={12}>
+                        <Grid item xs={12} md={6}>
                             <DatePickerField
                                 disabled={true}
                                 label="Ngày khởi hành"
@@ -260,7 +267,7 @@ export function BookForm({
                                 control={control}
                             />
                         </Grid>
-                        <Grid item xs={12} md={12}>
+                        <Grid item xs={12} md={6}>
                             <InputField
                                 disabled
                                 type="text"
@@ -269,7 +276,7 @@ export function BookForm({
                                 control={control}
                             />
                         </Grid>
-                        <Grid item xs={12} md={12}>
+                        <Grid item xs={12} md={6}>
                             <InputMoneyField
                                 disabled
                                 type="text"
@@ -278,91 +285,85 @@ export function BookForm({
                                 control={control}
                             />
                         </Grid>
+
+                        <Grid item xs={12} md={12}>
+                            <Divider sx={{ marginTop: 1 }} />
+                            <Typography
+                                gutterBottom
+                                variant="h3"
+                                component="div"
+                            >
+                                Thông tin khách hàng
+                            </Typography>
+                        </Grid>
+
+                        <Grid item xs={12} md={6}>
+                            <PhoneNumberField
+                                optionsData={dataCustomer}
+                                type="text"
+                                label="Số điện thoại"
+                                // name="customer.phonenumber"
+                                control={control}
+                                {...register("customer.phonenumber", {
+                                    onChange: (e) => handlePhoneChange(e),
+                                })}
+                                ref={null}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InputField
+                                disabled={isDisable}
+                                type="text"
+                                label="Khách hàng"
+                                name="customer.name"
+                                control={control}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InputField
+                                disabled={isDisable}
+                                type="text"
+                                label="Email"
+                                name="customer.email"
+                                control={control}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <SelectFieldNormal
+                                allOptions={TYPE_PAYMENT}
+                                control={control}
+                                label="Trạng thái"
+                                name="status_payment"
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={12}>
+                            <InputField
+                                multiline
+                                rows={4}
+                                type="text"
+                                label="Ghi chú"
+                                name="note"
+                                control={control}
+                            />
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Grid item xs={0} md={2}></Grid>
-                <Grid item xs={12} md={5}>
-                    <Grid item xs={12} md={12}>
-                        <Typography gutterBottom variant="h3" component="div">
-                            Thông tin khách hàng
-                        </Typography>
-                        <Divider sx={{ marginTop: 1 }} />
-                        <Typography variant="h5">
-                            {` Tài xế: ${tripDetail.car.driver_name} 
-                                 - ${tripDetail.car.phonenumber}`}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12} md={12} sx={{ marginTop: 2 }}>
-                        <PhoneNumberField
-                            optionsData={dataCustomer}
-                            type="text"
-                            label="Số điện thoại"
-                            // name="customer.phonenumber"
-                            control={control}
-                            {...register("customer.phonenumber", {
-                                onChange: (e) => handlePhoneChange(e),
-                            })}
-                            ref={null}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                        <InputField
-                            disabled={isDisable}
-                            type="text"
-                            label="Khách hàng"
-                            name="customer.name"
-                            control={control}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                        <InputField
-                            disabled={isDisable}
-                            type="text"
-                            label="Email"
-                            name="customer.email"
-                            control={control}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                        <SelectFieldNormal
-                            allOptions={TYPE_PAYMENT}
-                            control={control}
-                            label="Trạng thái"
-                            name="status_payment"
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                        <InputField
-                            multiline
-                            rows={4}
-                            type="text"
-                            label="Ghi chú"
-                            name="note"
-                            control={control}
-                        />
-                    </Grid>
-                </Grid>
-                <Grid
-                    item
-                    xs={12}
-                    md={12}
-                    sx={{ display: "flex", justifyContent: "flex-end" }}
-                >
-                    {visibleAlertText && (
-                        <Typography
-                            sx={{
-                                color: PureLightTheme.colors.error.main,
-                                marginRight: 6,
-                                marginTop: 3,
-                            }}
-                            component="h4"
-                            variant="h4"
-                        >
-                            {" "}
-                            {alertText}
-                        </Typography>
-                    )}
+                </DialogContent>
+                <DialogActions>
                     <Box sx={{ marginTop: 2 }}>
+                        {visibleAlertText && (
+                            <Typography
+                                sx={{
+                                    color: PureLightTheme.colors.error.main,
+                                    marginRight: 6,
+                                    marginTop: 3,
+                                }}
+                                component="h4"
+                                variant="h4"
+                            >
+                                {" "}
+                                {alertText}
+                            </Typography>
+                        )}
                         <Button type="submit" variant="contained">
                             Đặt vé
                         </Button>
@@ -376,8 +377,8 @@ export function BookForm({
                             Đóng
                         </Button>
                     </Box>
-                </Grid>
-            </Grid>
-        </Box>
+                </DialogActions>
+            </Box>
+        </Dialog>
     );
 }

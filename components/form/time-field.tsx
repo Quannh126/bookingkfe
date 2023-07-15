@@ -1,33 +1,31 @@
 import React, { useState } from "react";
 import { Control, useController } from "react-hook-form";
 import { TextFieldProps } from "@mui/material";
-
 // import {
 //     DatePicker,
 //     // DesktopDatePicker,
 //     LocalizationProvider,
 // } from "@mui/x-date-pickers";
-
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import moment from "moment";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { TimePicker } from "@mui/x-date-pickers";
+import moment from "moment";
 
-export type DateTimerFieldProps = TextFieldProps & {
+export type TimerFieldProps = TextFieldProps & {
     name: string;
     disablePast?: boolean;
     isDisable?: boolean;
     control: Control<any>;
 };
 
-export function DatePickerField({
+export function TimerField({
     name,
     control,
     isDisable,
     label,
     disablePast,
     ...rest
-}: DateTimerFieldProps) {
+}: TimerFieldProps) {
     const {
         field: { onChange, onBlur, value, ref },
         fieldState: { error },
@@ -39,13 +37,13 @@ export function DatePickerField({
     const [open, setOpen] = useState(false);
     return (
         <LocalizationProvider dateAdapter={AdapterMoment}>
-            <DatePicker
+            <TimePicker
                 label={label}
                 open={open}
                 onOpen={() => setOpen(true)}
                 onClose={() => setOpen(false)}
                 disablePast={disablePast}
-                format="DD/MM/YYYY"
+                views={["hours", "minutes"]}
                 value={moment(value)}
                 onChange={onChange}
                 slotProps={{
@@ -63,6 +61,15 @@ export function DatePickerField({
                         onClick: () => setOpen(true),
                         size: "small",
                         disabled: isDisable,
+                    },
+                    desktopPaper: {
+                        sx: {
+                            ".MuiList-root": {
+                                "::-webkit-scrollbar": {
+                                    display: "none",
+                                },
+                            },
+                        },
                     },
                 }}
             />

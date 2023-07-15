@@ -3,12 +3,16 @@ import {
     Button,
     Card,
     CardActionArea,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     Grid,
     IconButton,
     Tooltip,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {} from "@mui/material";
 import clsx from "clsx";
 import { Typography } from "@mui/material";
@@ -22,8 +26,23 @@ import { PureLightTheme } from "@/utils";
 import EditIcon from "@mui/icons-material/Edit";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import PrintIcon from "@mui/icons-material/Print";
+import ReactToPrint, { useReactToPrint } from "react-to-print";
 // import { ICustomer } from "@/models";
 // import "../../styles/globals.css";
+// const Example = () => {
+
+//   return (
+//     <div>
+//       <Ticket ref={componentRef} />
+//       <Button onClick={handlePrint}>Print this out!</Button>
+//     </div>
+//   );
+// };
+class Ticket extends React.PureComponent {
+    render() {
+        return <Box>My cool content here!</Box>;
+    }
+}
 export interface ISeatSelectionProps {
     selectedSeats: Array<number>;
     selectedSeatsBooked: Array<number>;
@@ -72,7 +91,13 @@ export default function SeatSelection({
     const [seatDetail, setSeatDetail] = useState(tripDetail);
     const [errorText, setErrorText] = useState("");
     const [showError, setShowError] = useState(false);
-
+    const [showTicket, setShowTicket] = useState(false);
+    function handleCloseTicket(event: Object, reason: string) {
+        if (reason && reason == "backdropClick") return;
+        setShowTicket(false);
+        // setVisibleAlertText(false);
+        // setAlertText("");
+    }
     function handleClickToSeat(seatNumber: number) {
         if (selectedSeats.includes(seatNumber)) {
             // //console.log(selectedSeats + "---" + seatNumber);
@@ -86,6 +111,10 @@ export default function SeatSelection({
             setSelectedSeatsBooked([]);
         }
     }
+    const componentRef = useRef(null);
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    });
     function handleClickToSeatBooked(seatNumber: number) {
         const listSeatSameCustomer: Array<number> = [] as Array<number>;
         const customer_id = tripDetail.seat_detail.find(
@@ -127,7 +156,43 @@ export default function SeatSelection({
     }, [tripDetail]);
 
     return (
-        <Box>
+        <>
+            <Dialog
+                open={showTicket}
+                keepMounted={false}
+                onClose={handleCloseTicket}
+                scroll="body"
+            >
+                <DialogTitle
+                    id="ticket"
+                    display="flex"
+                    sx={{ justifyContent: "center" }}
+                >
+                    <Typography gutterBottom variant="h3" component="div">
+                        In vé
+                    </Typography>
+                </DialogTitle>
+                <DialogContent>
+                    <Ticket ref={componentRef} />
+                </DialogContent>
+                <DialogActions>
+                    <ReactToPrint
+                        trigger={() => (
+                            <IconButton onClick={handlePrint}>
+                                <PrintIcon
+                                    sx={{
+                                        color: PureLightTheme.colors.primary
+                                            .main,
+                                    }}
+                                />
+                            </IconButton>
+                        )}
+                        content={() => componentRef.current}
+                    />
+
+                    <Button onClick={() => setShowTicket(false)}>Close</Button>
+                </DialogActions>
+            </Dialog>
             <Grid container>
                 <Grid item xs={12} display="flex">
                     <Tooltip title="Trở lại" arrow>
@@ -544,9 +609,6 @@ export default function SeatSelection({
                                                     <IconButton
                                                         aria-label="Print"
                                                         onClick={(e) => {
-                                                            // //console.log(
-                                                            //     "click"
-                                                            // );
                                                             if (
                                                                 selectedSeatsBooked.length ==
                                                                 0
@@ -561,8 +623,8 @@ export default function SeatSelection({
                                                                 setShowError(
                                                                     false
                                                                 );
-                                                                handleUpdateClick(
-                                                                    selectedSeats
+                                                                setShowTicket(
+                                                                    true
                                                                 );
                                                             }
                                                             e.stopPropagation();
@@ -732,6 +794,6 @@ export default function SeatSelection({
                     }
                 )}
             </Grid>
-        </Box>
+        </>
     );
 }

@@ -7,6 +7,7 @@ export interface IBookingForm {
     // name: string;
     // email: string;
     // customer_id: string;
+    is_payment_online?: Boolean;
     selected_seats: string;
     fare: Number;
     note: string;

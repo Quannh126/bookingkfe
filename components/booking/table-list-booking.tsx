@@ -1,6 +1,13 @@
 import React from "react";
 import { Box } from "@mui/system";
-import { Grid, Typography, Card, CardActionArea, Tooltip } from "@mui/material";
+import {
+    Grid,
+    Typography,
+    Card,
+    CardActionArea,
+    Tooltip,
+    Container,
+} from "@mui/material";
 // import clsx from "clsx";
 import { NameValue } from "@/models";
 import IBookingTrip from "@/models/Book/book-trip";
@@ -30,8 +37,13 @@ export function TableListBooking({
     handleClickToTrip,
 }: ITableListCarProps) {
     return (
-        <Box sx={{}}>
-            <Grid container>
+        <Container maxWidth="lg">
+            <Grid
+                container
+                justifyContent="flex-start"
+                alignItems="stretch"
+                spacing={2}
+            >
                 {listBooking &&
                     listBooking!.map((trip: IBookingTrip, index) => (
                         <Grid
@@ -41,8 +53,8 @@ export function TableListBooking({
                             sm={6}
                             md={4}
                             lg={3}
-                            xl={2}
-                            sx={{ paddingLeft: 1, paddingTop: 1 }}
+
+                            // sx={{ paddingLeft: 1, paddingTop: 1 }}
                         >
                             <Card
                                 elevation={2}
@@ -193,6 +205,6 @@ export function TableListBooking({
                     <Box></Box>
                 </Grid>
             </Grid>
-        </Box>
+        </Container>
     );
 }

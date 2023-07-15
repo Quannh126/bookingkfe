@@ -120,7 +120,6 @@ export default function PhoneNumberField({
                     size="small"
                     fullWidth
                     disabled={disabled}
-                    sx={{ m: 1 }}
                     // inputRef={field.ref}
                     error={!!error}
                     helperText={error?.message}

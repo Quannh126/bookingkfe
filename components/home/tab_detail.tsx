@@ -80,7 +80,7 @@ export default function TabDetailTrip({
                     <Tab label="Chính sách" {...a11yProps(2)} />
                     <Tab label="Điểm đón, trả" {...a11yProps(3)} />
                     <IconButton
-                        sx={{ marginLeft: "auto", color: "red" }}
+                        sx={{ marginLeft: "auto" }}
                         onClick={() => {
                             setShowDetail({
                                 isBook: false,

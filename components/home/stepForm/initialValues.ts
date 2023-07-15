@@ -65,4 +65,10 @@ export const initialValues: ValidationSchema = {
         validate: "number",
         required: true,
     },
+    is_payment_online: {
+        value: false,
+        error: "",
+        validate: "checkbox",
+        required: true,
+    },
 };

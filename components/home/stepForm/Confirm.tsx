@@ -16,13 +16,15 @@ import {
 import { IBookingForm } from "@/models";
 import { selectTripState } from "@/redux/selectedTrip";
 import { Grid, Typography } from "@mui/material";
-import { InputField } from "@/components/form";
-import { MyContext } from "@/pages/coach";
-// import { MyContext } from "@/pages";
+import { InputField, MyCheckBox } from "@/components/form";
+import { MyContext } from "@/pages/coaches";
+// import { date } from "yup/lib/locale";
+import { CreateURLPayment } from "@/hooks";
+import { getErrorMessage } from "@/utils";
+import { toast } from "react-toastify";
 
 export default function Confirm() {
-    const { addBooking } = useContext(MyContext);
-
+    const { addBooking, createURL } = useContext(MyContext);
     const formValues = useSelector(getFormState);
     const selectedTrip = useSelector(selectTripState).seletedTrip;
     const dispatch = useDispatch();
@@ -39,6 +41,7 @@ export default function Confirm() {
                 )
                 .required("Xin hãy nhập email"),
         }),
+
         selected_seats: yup
             .string()
             .required("Xin nhập số ghế đã cập nhật")
@@ -63,6 +66,7 @@ export default function Confirm() {
                 phonenumber: formValues["phone"].value,
                 email: formValues["email"].value,
             },
+            is_payment_online: formValues["is_payment_online"].value,
             selected_seats: formValues["selected_seats"].value.join("-"),
             fare: formValues["fare"].value,
             note: formValues["note"].value,
@@ -76,15 +80,34 @@ export default function Confirm() {
     });
     const handleSubmitClick = async (data: IBookingForm) => {
         try {
-            console.log(formValues);
-            await addBooking(data);
+            // console.log(formValues);
+
+            // localStorage.setItem("formState", JSON.stringify(formValues));
+
+            const order_id = await addBooking(data);
+            const { message } = order_id;
+
+            if (data.is_payment_online) {
+                const createURLData: CreateURLPayment = {
+                    amount: data.fare.toString(),
+                    bankCode: "IB",
+                    orderInfo: "Thanh toán vé " + message,
+                    orderType: "billpayment",
+                    locale: "vn",
+                };
+                await createURL(createURLData);
+            }
+
             dispatch(nextStep());
-        } catch (error) {
-            console.log(error);
+        } catch (error: unknown) {
+            // console.log(error);
+            const msg = getErrorMessage(error);
+            toast.error(msg);
         }
     };
     const watchCustomer = watch("customer");
     const watchNote = watch("note");
+    const watchCheckBox = watch("is_payment_online");
     const heightTab = localStorage.getItem("step1height")!;
     useEffect(() => {
         dispatch(
@@ -93,9 +116,10 @@ export default function Confirm() {
                 phone: watchCustomer.phonenumber,
                 email: watchCustomer.email,
                 note: watchNote,
+                is_payment_online: watchCheckBox,
             })
         );
-    }, [watchNote, watchCustomer, dispatch]);
+    }, [watchNote, watchCustomer, watchCheckBox, dispatch]);
     return (
         <Box
             sx={{
@@ -131,44 +155,49 @@ export default function Confirm() {
                     height: "100%",
                 }}
             >
-                <Box sx={{ width: "50%" }}>
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <InputField
-                                type="text"
-                                label="Tên"
-                                name="customer.name"
-                                control={control}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <InputField
-                                type="text"
-                                label="Email"
-                                name="customer.email"
-                                control={control}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <InputField
-                                type="text"
-                                label="Số điện thoại"
-                                name="customer.phonenumber"
-                                control={control}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <InputField
-                                type="text"
-                                label="Ghi chú"
-                                name="note"
-                                multiline
-                                rows={4}
-                                control={control}
-                            />
-                        </Grid>
+                <Grid container spacing={1}>
+                    <Grid item xs={12}>
+                        <InputField
+                            type="text"
+                            label="Tên"
+                            name="customer.name"
+                            control={control}
+                        />
                     </Grid>
-                </Box>
+                    <Grid item xs={12}>
+                        <InputField
+                            type="text"
+                            label="Email"
+                            name="customer.email"
+                            control={control}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <InputField
+                            type="text"
+                            label="Số điện thoại"
+                            name="customer.phonenumber"
+                            control={control}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <MyCheckBox
+                            label="Thanh toán trực tuyến"
+                            name="is_payment_online"
+                            control={control}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <InputField
+                            type="text"
+                            label="Ghi chú"
+                            name="note"
+                            multiline
+                            rows={4}
+                            control={control}
+                        />
+                    </Grid>
+                </Grid>
 
                 <Box
                     sx={{

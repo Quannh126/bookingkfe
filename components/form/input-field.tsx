@@ -27,7 +27,6 @@ export function InputField({
     });
     return (
         <TextField
-            sx={{ m: 1 }}
             size="small"
             fullWidth
             name={name}

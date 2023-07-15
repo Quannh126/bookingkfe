@@ -124,6 +124,12 @@ const initialState: ValidationSchema = {
         validate: "number",
         required: true,
     },
+    is_payment_online: {
+        value: false,
+        error: "",
+        validate: "checkbox",
+        required: true,
+    },
 };
 
 // Actual Slice
@@ -158,6 +164,7 @@ export const formStepSlice = createSlice({
             state.email.value = action.payload.email;
             state.note.value = action.payload.note;
             state.phone.value = action.payload.phone;
+            state.is_payment_online.value = action.payload.is_payment_online;
         },
     },
 });

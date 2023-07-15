@@ -151,34 +151,26 @@ TripFormUpdateProps) {
     //console.log(count);
 
     return (
-        <Box
-            component="form"
-            sx={{
-                display: "flex",
-                alignItems: "flex-start",
-                justifyContent: "center",
-                flexDirection: "column",
-                flexGrow: 1,
-            }}
-            p={4}
-            onSubmit={handleSubmit(handleUpdateSubmit)}
-            //onSubmit={() => //console.log("submit")}
+        <Dialog
+            open={showCarUpdateForm}
+            // TransitionComponent={Transition}
+            keepMounted={false}
+            onClose={handleClose2}
+            aria-labelledby="update-trip"
+            aria-describedby="update-trip"
+            scroll={"body"}
         >
-            <Dialog
-                open={showCarUpdateForm}
-                // TransitionComponent={Transition}
-                keepMounted={false}
-                onClose={handleClose2}
-                aria-labelledby="update-trip"
-                aria-describedby="update-trip"
-                scroll={"body"}
+            <Box
+                component="form"
+                onSubmit={handleSubmit(handleUpdateSubmit)}
+                //onSubmit={() => //console.log("submit")}
             >
                 <DialogTitle
                     id="update-trip"
                     display="flex"
                     sx={{ justifyContent: "center" }}
                 >
-                    <Typography gutterBottom variant="h4" component="div">
+                    <Typography gutterBottom variant="h3" component="div">
                         Cập nhật lịch chạy
                     </Typography>
                 </DialogTitle>
@@ -192,11 +184,11 @@ TripFormUpdateProps) {
                         >
                             <Typography
                                 gutterBottom
-                                variant="h6"
+                                variant="h5"
                                 component="div"
                                 justifySelf="center"
                             >
-                                Tuyến
+                                Thông tin xe
                             </Typography>
                         </Grid>
                         <Grid item xs={12} md={6}>
@@ -230,7 +222,7 @@ TripFormUpdateProps) {
                                 component="div"
                                 justifySelf="center"
                             >
-                                Chi tiết
+                                <Divider />
                             </Typography>
                         </Grid>
                         <Grid item xs={12} md={6}>
@@ -249,6 +241,21 @@ TripFormUpdateProps) {
                                 control={control}
                             />
                         </Grid>
+                        <Grid
+                            item
+                            xs={12}
+                            md={12}
+                            sx={{ display: "flex", justifyContent: "center" }}
+                        >
+                            <Typography
+                                gutterBottom
+                                variant="h6"
+                                component="div"
+                                justifySelf="center"
+                            >
+                                <Divider />
+                            </Typography>
+                        </Grid>
                         <Grid item xs={12} md={6}>
                             <InputField
                                 type="text"
@@ -266,7 +273,21 @@ TripFormUpdateProps) {
                                 name="sell_type"
                             />
                         </Grid>
-
+                        <Grid
+                            item
+                            xs={12}
+                            md={12}
+                            sx={{ display: "flex", justifyContent: "center" }}
+                        >
+                            <Typography
+                                gutterBottom
+                                variant="h6"
+                                component="div"
+                                justifySelf="center"
+                            >
+                                <Divider />
+                            </Typography>
+                        </Grid>
                         <Grid item xs={12} md={6}>
                             <SelectField
                                 allOptions={
@@ -290,7 +311,7 @@ TripFormUpdateProps) {
                         >
                             <Typography
                                 gutterBottom
-                                variant="h6"
+                                variant="h5"
                                 component="div"
                                 justifySelf="center"
                             >
@@ -527,7 +548,7 @@ TripFormUpdateProps) {
                         Đóng
                     </Button>
                 </DialogActions>
-            </Dialog>
-        </Box>
+            </Box>
+        </Dialog>
     );
 }

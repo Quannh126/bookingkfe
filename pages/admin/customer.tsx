@@ -1,5 +1,5 @@
 // import AdminLayout from "@/components/layout/admin";
-import { Box } from "@mui/system";
+
 import {
     Button,
     Typography,
@@ -8,6 +8,8 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
+    Container,
+    Grid,
 } from "@mui/material";
 // import { TransitionProps } from "@mui/material/transitions";
 import { useCustomer } from "@/hooks";
@@ -20,6 +22,9 @@ import {
 } from "@/components/customer";
 import { ICustomerDetail } from "@/models";
 import SidebarLayout from "@/components/layout/SidebarLayout";
+import Head from "next/head";
+import PageTitleWrapper from "@/components/PageTitleWrapper";
+
 // import { SnackAlert, AlertContentProp } from "@/components/common";
 
 const AdminCustomer: NextpageWithLayout = () => {
@@ -86,76 +91,86 @@ const AdminCustomer: NextpageWithLayout = () => {
     }
 
     return (
-        <Box>
-            <Typography component="h1" variant="h5" p={2}>
-                Quản lý danh sách khách hàng
-            </Typography>
+        <>
+            <Head>
+                <title>Quản lý khách hàng</title>
+            </Head>
+            <PageTitleWrapper>
+                <Typography component="h1" variant="h5">
+                    Quản lý khách hàng
+                </Typography>
+            </PageTitleWrapper>
+            <Container maxWidth="lg">
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="stretch"
+                    spacing={3}
+                >
+                    <Grid item xs={12}>
+                        <Button
+                            onClick={() => setShowCustomerForm(true)}
+                            variant="outlined"
+                        >
+                            Thêm mới khách hàng
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12}>
+                        {listCustomer && (
+                            <TableListCustomer
+                                listCustomer={listCustomer}
+                                handleEditClick={handleEditClick}
+                                handleRemoveClick={hanleRemoveClick}
+                            />
+                        )}
+                    </Grid>
+                </Grid>
 
-            <Button
-                sx={{ ml: 2 }}
-                onClick={() => setShowCustomerForm(true)}
-                variant="outlined"
-            >
-                Thêm mới khách hàng
-            </Button>
+                {showCustomerForm && (
+                    <CustomerForm
+                        showCustomerForm={showCustomerForm}
+                        handleClose={handleClose}
+                        errorMsg={errorMsg}
+                        onAdd={handleAddCustomer}
+                        onCancel={() => setShowCustomerForm(false)}
+                    />
+                )}
 
-            <Dialog
-                open={showCustomerForm}
-                // TransitionComponent={Transition}
-                keepMounted={false}
-                onClose={handleClose}
-                // maxWidth="lg"
-                aria-labelledby="add-customer"
-                aria-describedby="add-customer"
-            >
-                <CustomerForm
-                    errorMsg={errorMsg}
-                    onAdd={handleAddCustomer}
-                    onCancel={() => setShowCustomerForm(false)}
-                />
-            </Dialog>
-            <Dialog
-                open={showCustomerUpdateForm}
-                keepMounted={false}
-                onClose={handleClose2}
-                // maxWidth="lg"
-                aria-labelledby="update-customer"
-                aria-describedby="update-customer"
-            >
-                <CustomerUpdateForm
-                    initData={selected as ICustomerDetail}
-                    onUpdate={handleUpdateSubmit}
-                    activity="Update"
-                    onCancel={() => setShowCustomerUpdateForm(false)}
-                />
-            </Dialog>
-            <Dialog open={showAlert} keepMounted>
-                <DialogTitle id="alert-dialog-title">{"Thông báo"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Bạn có chắc xoá thông tin bản ghi không?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setShowAlert(false)}>Huỷ</Button>
-                    <Button
-                        onClick={() =>
-                            handleDelelteSubmit(selected as ICustomerDetail)
-                        }
-                        autoFocus
-                    >
-                        Đồng ý
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            {listCustomer && (
-                <TableListCustomer
-                    listCustomer={listCustomer}
-                    handleEditClick={handleEditClick}
-                    handleRemoveClick={hanleRemoveClick}
-                />
-            )}
-        </Box>
+                {showCustomerUpdateForm && (
+                    <CustomerUpdateForm
+                        showCustomerUpdateForm={showCustomerUpdateForm}
+                        initData={selected as ICustomerDetail}
+                        handleClose2={handleClose2}
+                        onUpdate={handleUpdateSubmit}
+                        activity="Update"
+                        onCancel={() => setShowCustomerUpdateForm(false)}
+                    />
+                )}
+
+                <Dialog open={showAlert} keepMounted>
+                    <DialogTitle id="alert-dialog-title">
+                        {"Thông báo"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Bạn có chắc xoá thông tin bản ghi không?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setShowAlert(false)}>Huỷ</Button>
+                        <Button
+                            onClick={() =>
+                                handleDelelteSubmit(selected as ICustomerDetail)
+                            }
+                            autoFocus
+                        >
+                            Đồng ý
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Container>
+        </>
     );
 };
 

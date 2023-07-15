@@ -1,5 +1,7 @@
 import { LoginPayload } from "@/models/auth";
 import { axiosClient } from "./axiosClient";
+// import { store } from "@/redux/store";
+// import { setCredentials } from "@/redux/selectedAuth";
 // import { setCredentials, logout } from "@/redux/selectedAuth";
 // import { useDispatch } from "react-redux";
 export const authApi = {
@@ -8,12 +10,11 @@ export const authApi = {
             axiosClient
                 .post("/auth", payload)
                 .then((response: any) => {
-                    const { accessToken } = response;
-                    console.log(accessToken);
+                    //store.dispatch(setCredentials(response.accessToken));
 
                     axiosClient.defaults.headers.common[
                         "Authorization"
-                    ] = `Bearer ${accessToken}`;
+                    ] = `Bearer ${response.accessToken}`;
 
                     resolve(response);
                 })

@@ -8,7 +8,7 @@ import {
     Typography,
     // styled,
     Tooltip,
-    Divider,
+    // Divider,
 } from "@mui/material";
 // import ViewWeekTwoToneIcon from "@mui/icons-material/ViewWeekTwoTone";
 // import TableRowsTwoToneIcon from "@mui/icons-material/TableRowsTwoTone";
@@ -56,15 +56,11 @@ function ChartComponents() {
                         </Tooltip>
                     </ToggleButton>
 
-                    <Divider absolute orientation="vertical" />
-
                     <ToggleButton disableRipple value="watch_month">
                         <Tooltip title="Tháng" placement="top">
                             <Box>M</Box>
                         </Tooltip>
                     </ToggleButton>
-
-                    <Divider absolute orientation="vertical" />
 
                     <ToggleButton disableRipple value="watch_year">
                         <Tooltip title="Năm" placement="right">

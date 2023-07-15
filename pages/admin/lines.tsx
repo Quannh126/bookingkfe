@@ -1,5 +1,5 @@
 import AdminLayout from "@/components/layout/admin";
-import { Box } from "@mui/system";
+
 import {
     Button,
     Typography,
@@ -35,7 +35,7 @@ const AdminLines: NextpageWithLayout = () => {
         setShowLineUpdateForm(true);
     };
 
-    const hanleRemoveClick = (data: ILineDetail) => {
+    const handleRemoveClick = (data: ILineDetail) => {
         setSelected(data);
         setShowAlert(true);
     };
@@ -71,7 +71,7 @@ const AdminLines: NextpageWithLayout = () => {
     }
 
     return (
-        <Box>
+        <>
             <Typography
                 component="h1"
                 variant="h4"
@@ -137,10 +137,10 @@ const AdminLines: NextpageWithLayout = () => {
                 <TableListLine
                     listLine={listLine}
                     handleEditClick={handleEditClick}
-                    handleRemoveClick={hanleRemoveClick}
+                    handleRemoveClick={handleRemoveClick}
                 />
             )}
-        </Box>
+        </>
     );
 };
 

@@ -1,7 +1,12 @@
 import { useAuth } from "@/hooks/useAuth";
 // import { useRouter } from "next/router";
-import React, { ReactElement } from "react";
+import React, {
+    ReactElement,
+    // useEffect,
+    // useState
+} from "react";
 import LoadingPage from "./loading";
+// import { useRouter } from "next/router";
 // import { useSelector } from "react-redux";
 // import { selectAuthState } from "@/redux/selectedAuth";
 export interface AuthProp {
@@ -10,9 +15,9 @@ export interface AuthProp {
 
 export default function Auth({ children }: AuthProp) {
     // const router = useRouter();
-    const { profile } = useAuth();
+    const { profile, firstLoading } = useAuth();
     // const token = useSelector(selectAuthState);
-    // const [calledPush, setCalledPush] = useState(false);
+
     // useEffect(() => {
     //     if (
     //         !firstLoading &&
@@ -20,16 +25,13 @@ export default function Auth({ children }: AuthProp) {
     //         //&& profile?.username === "adminBooking"
     //     ) {
     //         // console.log(router.asPath);
-    //         // if (calledPush) {
-    //         //     return;
-    //         // }
-    //         // router.push(`/login?from=${encodeURIComponent(router.asPath)}`);
-    //         // //router.push("/login");
-    //         // setCalledPush(true);
+
+    //         router.push(`/login?from=${encodeURIComponent(router.asPath)}`);
+    //         //router.push("/login");
     //     }
     // }, [router, profile, firstLoading]);
 
-    if (!profile?.username) {
+    if (!profile?.username || firstLoading) {
         return <LoadingPage />;
     }
 

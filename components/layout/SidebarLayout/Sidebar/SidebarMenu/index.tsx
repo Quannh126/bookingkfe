@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import { useRouter } from "next/router";
 
 import {
@@ -15,7 +14,7 @@ import { Box } from "@mui/system";
 // import DesignServicesTwoToneIcon from "@mui/icons-material/DesignServicesTwoTone";
 // import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 
-import { SidebarContext } from "@/components/contexts/SidebarContext";
+// import { SidebarContext } from "@/components/contexts/SidebarContext";
 import AirportShuttleIcon from "@mui/icons-material/AirportShuttle";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import BrightnessLowTwoToneIcon from "@mui/icons-material/BrightnessLowTwoTone";
@@ -23,7 +22,8 @@ import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
-
+import { closeSidebar } from "@/redux/selectedMenu";
+import { useDispatch } from "react-redux";
 // import clsx from "clsx";
 // import { ROUTE_ADMIN, ROUTE_MANAGER, ROUTE_TICKETING } from "@/config/routes";
 import { Skeleton } from "@mui/material";
@@ -172,8 +172,10 @@ const SubMenuWrapper = styled(Box)(
 );
 
 function SidebarMenu() {
-    const { closeSidebar } = useContext(SidebarContext);
+    const dispatch = useDispatch();
+    // const status = useSelector(selectMenuState);
     const router = useRouter();
+
     // const currentRoute = router.pathname;
     const { profile } = useAuth({
         revalidateOnMount: false,
@@ -224,7 +226,7 @@ function SidebarMenu() {
                                         disableRipple
                                         component="a"
                                         onClick={() => {
-                                            closeSidebar;
+                                            dispatch(closeSidebar());
                                             handelRoute("/admin/dashboard");
                                         }}
                                         startIcon={<BrightnessLowTwoToneIcon />}
@@ -242,7 +244,7 @@ function SidebarMenu() {
                                         disableRipple
                                         component="a"
                                         onClick={() => {
-                                            closeSidebar;
+                                            dispatch(closeSidebar());
                                             handelRoute("/admin/users");
                                         }}
                                         startIcon={<AccountCircleTwoToneIcon />}
@@ -276,7 +278,7 @@ function SidebarMenu() {
                                         disableRipple
                                         component="a"
                                         onClick={() => {
-                                            closeSidebar;
+                                            dispatch(closeSidebar());
                                             handelRoute("/admin/trips");
                                         }}
                                         startIcon={<CalendarMonthIcon />}
@@ -294,7 +296,7 @@ function SidebarMenu() {
                                         disableRipple
                                         component="a"
                                         onClick={() => {
-                                            closeSidebar;
+                                            dispatch(closeSidebar());
                                             handelRoute("/admin/cars");
                                         }}
                                         startIcon={<AirportShuttleIcon />}
@@ -327,7 +329,7 @@ function SidebarMenu() {
                                         disableRipple
                                         component="a"
                                         onClick={() => {
-                                            closeSidebar;
+                                            dispatch(closeSidebar());
                                             handelRoute("/admin/booking");
                                         }}
                                         startIcon={<AddToPhotosIcon />}
@@ -345,7 +347,7 @@ function SidebarMenu() {
                                         disableRipple
                                         component="a"
                                         onClick={() => {
-                                            closeSidebar;
+                                            dispatch(closeSidebar());
                                             handelRoute("/admin/customer");
                                         }}
                                         startIcon={<PermIdentityOutlinedIcon />}
