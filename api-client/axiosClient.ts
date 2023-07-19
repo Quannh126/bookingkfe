@@ -19,7 +19,7 @@ export const setContext = (_context: GetServerSidePropsContext) => {
     context = _context;
 };
 export const axiosClient = axios.create({
-    baseURL: process.env.API_URL + "/api/v1",
+    baseURL: `${process.env.API_URL}/api/v1`,
     headers: {
         "Content-Type": "application/json",
     },
@@ -27,6 +27,7 @@ export const axiosClient = axios.create({
 });
 
 export const axiosClientFile = axios.create({
+    baseURL: `${process.env.API_URL}/api/v1`,
     headers: { "Content-Type": "multipart/form-data" },
     withCredentials: true,
 });
