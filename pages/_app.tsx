@@ -45,7 +45,7 @@ function App(props: AppPropsWithLayout) {
         <CacheProvider value={emotionCache!}>
             <Provider store={store}>
                 <Head>
-                    <title>BYGroup Đặt vé xe</title>
+                    <title>Đặt vé xe BYGroup</title>
                     <meta
                         name="viewport"
                         content="width=device-width, initial-scale=1, shrink-to-fit=no"
