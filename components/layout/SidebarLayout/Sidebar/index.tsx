@@ -35,11 +35,12 @@ const SidebarWrapper = styled(Box)(
 
 function Sidebar() {
     // const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
+    const dispatch = useDispatch();
     const closeSidebar = () => {
-        console.log("Tg");
+        // console.log("Tg");
         dispatch(toggleSidebar());
     };
-    const dispatch = useDispatch();
+
     const status = useSelector(selectMenuState);
     const theme = useTheme();
 
@@ -48,7 +49,7 @@ function Sidebar() {
     });
 
     const handleLogout = (): void => {
-        logoutHook();
+        logoutHook;
         dispatch(logout());
     };
     return (
@@ -192,7 +193,7 @@ function Sidebar() {
                     <Box p={2}>
                         <Button
                             onClick={() => {
-                                handleLogout;
+                                handleLogout();
                                 closeSidebar;
                             }}
                             sx={{

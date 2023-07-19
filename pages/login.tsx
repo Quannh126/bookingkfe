@@ -1,5 +1,5 @@
 import { useAuth } from "@/hooks";
-import React, { useState } from "react";
+
 import { LoginForm } from "@/components/auth";
 import { Paper } from "@mui/material";
 import { Box } from "@mui/system";
@@ -8,8 +8,11 @@ import { LoginPayload } from "@/models";
 import { useRouter } from "next/router";
 import { setCredentials } from "@/redux/selectedAuth";
 import { useDispatch } from "react-redux";
-import EmptyLayout from "@/components/layout/empty";
+// import EmptyLayout from "@/components/layout/empty";
 import { useEffect } from "react";
+import BaseLayout from "@/components/layout/BaseLayout";
+import { toast } from "react-toastify";
+import { getErrorMessage } from "@/utils";
 // import AdminLayout from "@/components/layout/admin";
 export interface ILoginPage {}
 export default function LoginPage() {
@@ -19,31 +22,21 @@ export default function LoginPage() {
         revalidateOnMount: false,
     });
     const dispatch = useDispatch();
-    const [errorMsg, setErrorMsg] = useState("");
-    // async function handelLoginSubmit(payload: LoginPayload) {
-    //     try {
-    //         const res = await login(payload);
-    //         // console.log(res);
-    //         router.push("/admin");
-    //         dispatch(setCredentials(res.accessToken));
-    //     } catch (error) {
-    //         // console.log(error);
-    //         setErrorMsg("Tên đăng nhập hoặc mật khẩu không đúng");
-    //     }
-    // }
+
     const handleSubmit = async (payload: LoginPayload) => {
         try {
             const res = await login(payload);
             router.push("/admin");
             dispatch(setCredentials(res.accessToken));
-        } catch (error) {
+        } catch (error: any) {
             // console.log(error);
-            setErrorMsg("Tên đăng nhập hoặc mật khẩu không đúng");
+            // setErrorMsg("Tên đăng nhập hoặc mật khẩu không đúng");
+            const msg = getErrorMessage(error);
+            toast.error(msg);
         }
     };
 
     useEffect(() => {
-        // Prefetch the dashboard page
         router.prefetch("/admin");
     }, [router]);
 
@@ -59,9 +52,9 @@ export default function LoginPage() {
                     textAlign: "center",
                 }}
             >
-                <LoginForm onSubmit={handleSubmit} errorMsg={errorMsg} />
+                <LoginForm onSubmit={handleSubmit} />
             </Paper>
         </Box>
     );
 }
-LoginPage.Layout = EmptyLayout;
+LoginPage.Layout = BaseLayout;

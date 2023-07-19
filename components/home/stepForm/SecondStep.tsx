@@ -121,27 +121,29 @@ export default function SecondStep() {
                                     }}
                                     onChange={handleChangePickup}
                                 >
-                                    {listPickup.map((point, index) => {
-                                        const value =
-                                            point.district_id +
-                                            "-" +
-                                            point.point_id;
-                                        const label =
-                                            // selectedTrip?.departure_time +
-                                            // ` • ` +
-                                            getName(
-                                                listDropoffAndPickUp.pickup,
-                                                value
+                                    {listPickup.map(
+                                        (point: any, index: any) => {
+                                            const value =
+                                                point.district_id +
+                                                "-" +
+                                                point.point_id;
+                                            const label =
+                                                // selectedTrip?.departure_time +
+                                                // ` • ` +
+                                                getName(
+                                                    listDropoffAndPickUp.pickup,
+                                                    value
+                                                );
+                                            return (
+                                                <FormControlLabel
+                                                    value={value}
+                                                    control={<Radio />}
+                                                    label={label}
+                                                    key={index}
+                                                />
                                             );
-                                        return (
-                                            <FormControlLabel
-                                                value={value}
-                                                control={<Radio />}
-                                                label={label}
-                                                key={index}
-                                            />
-                                        );
-                                    })}
+                                        }
+                                    )}
                                 </RadioGroup>
                             </FormControl>
                         </Box>
@@ -186,27 +188,29 @@ export default function SecondStep() {
                                     }}
                                     onChange={handleChangeDropoff}
                                 >
-                                    {listDropoff.map((point, index) => {
-                                        const value =
-                                            point.district_id +
-                                            "-" +
-                                            point.point_id;
-                                        const label =
-                                            // selectedTrip?.destination_time +
-                                            // ` • ` +
-                                            getName(
-                                                listDropoffAndPickUp.dropoff,
-                                                value
+                                    {listDropoff.map(
+                                        (point: any, index: any) => {
+                                            const value =
+                                                point.district_id +
+                                                "-" +
+                                                point.point_id;
+                                            const label =
+                                                // selectedTrip?.destination_time +
+                                                // ` • ` +
+                                                getName(
+                                                    listDropoffAndPickUp.dropoff,
+                                                    value
+                                                );
+                                            return (
+                                                <FormControlLabel
+                                                    value={value}
+                                                    control={<Radio />}
+                                                    label={label}
+                                                    key={index}
+                                                />
                                             );
-                                        return (
-                                            <FormControlLabel
-                                                value={value}
-                                                control={<Radio />}
-                                                label={label}
-                                                key={index}
-                                            />
-                                        );
-                                    })}
+                                        }
+                                    )}
                                 </RadioGroup>
                             </FormControl>
                         </Box>

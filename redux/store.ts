@@ -15,7 +15,7 @@ export const store: ToolkitStore = configureStore({
         [formStepSlice.name]: formStepSlice.reducer,
         [seatSlice.name]: seatSlice.reducer,
         [menuSlice.name]: menuSlice.reducer,
-        [filterSlice.name]: menuSlice.reducer,
+        [filterSlice.name]: filterSlice.reducer,
     },
     devTools: true,
 });

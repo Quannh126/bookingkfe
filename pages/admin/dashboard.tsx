@@ -9,8 +9,8 @@ import { Container, Grid, Typography } from "@mui/material";
 import DonutOfDay from "@/components/contexts/Dashboards/Charts/DonutOfDay";
 
 import Footer from "@/components/Footer";
-import PageTitleWrapper from "@/components/PageTitleWrapper";
-import PageHeader from "@/components/contexts/Dashboards/Charts/PageHeader";
+// import PageTitleWrapper from "@/components/PageTitleWrapper";
+// import PageHeader from "@/components/contexts/Dashboards/Charts/PageHeader";
 
 const Dashboard: NextpageWithLayout = () => {
     return (
@@ -18,9 +18,9 @@ const Dashboard: NextpageWithLayout = () => {
             <Head>
                 <title>Báo cáo - Thống kê</title>
             </Head>
-            <PageTitleWrapper>
+            {/* <PageTitleWrapper>
                 <PageHeader />
-            </PageTitleWrapper>
+            </PageTitleWrapper> */}
             <Container maxWidth="lg">
                 <Grid
                     container

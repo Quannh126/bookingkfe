@@ -6,3 +6,4 @@ export * from "./useLines";
 export * from "./useCustomer";
 export * from "./useBooking";
 export * from "./useCoach";
+export * from "./useUser";

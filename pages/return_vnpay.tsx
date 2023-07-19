@@ -12,8 +12,23 @@ export interface IAbountPageProps {}
 
 import queryString from "query-string";
 import BaseLayout from "@/components/layout/BaseLayout";
-import { Card, CardContent, Typography } from "@mui/material";
-import { getReturnUrlStatus } from "@/utils";
+import {
+    Button,
+    Card,
+    CardContent,
+    Container,
+    // IconButton,
+    Typography,
+    styled,
+} from "@mui/material";
+import { PureLightTheme, getReturnUrlStatus } from "@/utils";
+import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
+import HighlightOffTwoToneIcon from "@mui/icons-material/HighlightOffTwoTone";
+import PrintTwoToneIcon from "@mui/icons-material/PrintTwoTone";
+import { Box } from "@mui/system";
+import Head from "next/head";
+import Logo from "@/components/Logo";
+import moment from "moment";
 export type DataCheckSum = {
     vnp_Amount: string;
     vnp_BankCode: string;
@@ -28,11 +43,34 @@ export type DataCheckSum = {
     vnp_TxnRef: string;
     vnp_SecureHash: string;
 };
-
+const HeaderWrapper = styled(Card)(
+    ({ theme }) => `
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: ${theme.spacing(10)};
+    margin-bottom: ${theme.spacing(2)};
+  `
+);
+const TextDetail = styled(Typography)(
+    ({ theme }) => `
+    font-size: 18px
+    color: ${theme.colors.primary.light};
+    
+    
+`
+);
+const RowTextDetail = styled(Box)(
+    ({ theme }) => `
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: ${theme.spacing(3)};
+`
+);
 const Return_Vnp: NextpageWithLayout = () => {
     const router = useRouter();
 
-    const [dataCheckSum, setDataCheckSum] = useState({ ...router.query });
+    // const [dataCheckSum, setDataCheckSum] = useState({ ...router.query });
     const [checkSumResult, setCheckSumResult] = useState({
         code: "",
         message: "",
@@ -41,9 +79,10 @@ const Return_Vnp: NextpageWithLayout = () => {
 
     useEffect(() => {
         const { query } = router;
+        // console.log("Qurry", query);
         const queryParams = queryString.stringify(query);
-        //console.log(queryParams);
-        setDataCheckSum({ ...router.query });
+
+        // setDataCheckSum({ ...router.query });
 
         const checkSum = async () => {
             setIsLoading(true);
@@ -56,45 +95,174 @@ const Return_Vnp: NextpageWithLayout = () => {
         if (queryParams) {
             checkSum();
         }
-
         setIsLoading(false);
     }, [router]);
-    // {Object.entries(dataCheckSum).map(([key, value], i) => {
-    //     return (
-    //         <Typography key={i} component="p">
-    //             <Typography component="b">{`${key}: `}</Typography>
-    //             {value}
-    //         </Typography>
-    //     );
-    // }
-
-    if (isLoading) {
-        return <LoadingPage />;
-    } else {
+    if (isLoading || !router.isReady) {
         return (
             <>
-                <Card>
-                    <Typography variant="h3" color="GrayText">
-                        {checkSumResult.code}
-                    </Typography>
-                    <Typography variant="h3" color="GrayText">
-                        {checkSumResult.code}
-                        {getReturnUrlStatus(checkSumResult.code, "vn")}
-                    </Typography>
-                    <CardContent>
-                        {Object.entries(dataCheckSum).map(([key, value], i) => {
-                            return (
-                                <Typography key={i} component="p">
-                                    <Typography component="b">{`${key}: `}</Typography>
-                                    {value}
-                                </Typography>
-                            );
-                        })}
-                    </CardContent>
-                </Card>
+                <LoadingPage />
             </>
         );
     }
+    return (
+        <Box
+            sx={{
+                overflow: "auto",
+                flex: 1,
+                overflowX: "hidden",
+            }}
+        >
+            <Head>
+                <title>{`Kết quả thanh toán`}</title>
+            </Head>
+            <HeaderWrapper>
+                <Container maxWidth="lg">
+                    <Box display="flex">
+                        <Logo />
+                    </Box>
+                </Container>
+            </HeaderWrapper>
+            <Container maxWidth="sm">
+                <Card
+                    sx={{
+                        padding: PureLightTheme.spacing(3),
+                    }}
+                >
+                    <CardContent>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                            }}
+                        >
+                            {checkSumResult.code === "00" ||
+                            checkSumResult.code === "02" ? (
+                                <CheckCircleTwoToneIcon
+                                    fontSize="large"
+                                    sx={{
+                                        color: PureLightTheme.colors.success
+                                            .light,
+                                        fontSize: "80px",
+                                    }}
+                                />
+                            ) : (
+                                <HighlightOffTwoToneIcon
+                                    fontSize="large"
+                                    sx={{
+                                        color: PureLightTheme.colors.error
+                                            .light,
+                                        fontSize: "80px",
+                                    }}
+                                />
+                            )}
+                            <Typography
+                                variant="h3"
+                                color="GrayText"
+                                sx={{
+                                    paddingBottom: PureLightTheme.spacing(2),
+                                    textAlign: "center",
+                                }}
+                            >
+                                {getReturnUrlStatus(checkSumResult.code, "vn")}
+                            </Typography>
+                        </Box>
+                        {/* <Typography variant="h3" color="GrayText">
+                                {checkSumResult.code}
+                            </Typography> */}
+                        <RowTextDetail display="flex">
+                            <TextDetail variant="h4" color="GrayText">
+                                Loại thẻ
+                            </TextDetail>
+                            <TextDetail variant="h4" color="GrayText">
+                                {`${router.query?.vnp_CardType}`}
+                            </TextDetail>
+                        </RowTextDetail>
+                        <RowTextDetail display="flex">
+                            <TextDetail variant="h4" color="GrayText">
+                                Ngân hàng
+                            </TextDetail>
+                            <TextDetail variant="h4" color="GrayText">
+                                {`${router.query?.vnp_BankCode}`}
+                            </TextDetail>
+                        </RowTextDetail>
+                        <RowTextDetail display="flex">
+                            <TextDetail variant="h4" color="GrayText">
+                                Số tiền
+                            </TextDetail>
+                            <TextDetail variant="h4" color="GrayText">
+                                {`${(
+                                    parseFloat(
+                                        router.query?.vnp_Amount!.toString()
+                                    ) / 100
+                                )?.toLocaleString()} VNĐ`}
+                            </TextDetail>
+                        </RowTextDetail>
+                        <RowTextDetail display="flex">
+                            <TextDetail variant="h4" color="GrayText">
+                                Mã giao dịch tại Ngân hàng
+                            </TextDetail>
+                            <TextDetail variant="h4" color="GrayText">
+                                {`${router.query?.vnp_BankTranNo}`}
+                            </TextDetail>
+                        </RowTextDetail>
+                        <RowTextDetail display="flex">
+                            <TextDetail variant="h4" color="GrayText">
+                                Mã giao dịch VNPay
+                            </TextDetail>
+                            <TextDetail variant="h4" color="GrayText">
+                                {`${router.query?.vnp_TransactionNo}`}
+                            </TextDetail>
+                        </RowTextDetail>
+                        <RowTextDetail display="flex">
+                            <TextDetail variant="h4" color="GrayText">
+                                Thời gian thanh toán
+                            </TextDetail>
+                            <TextDetail variant="h4" color="GrayText">
+                                {`${moment(
+                                    router.query?.vnp_PayDate,
+                                    "YYYYMMDDHHmmss"
+                                ).format("DD/MM/YYYY, h:mm:ss")}`}
+                            </TextDetail>
+                        </RowTextDetail>
+                        <RowTextDetail>
+                            {/* <TextDetail variant="h4" color="GrayText" >
+                                    
+                                </TextDetail> */}
+                            <TextDetail variant="h4" color="GrayText">
+                                {`Mô tả: ${router.query?.vnp_OrderInfo}`}
+                            </TextDetail>
+                        </RowTextDetail>
+
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-around",
+                                alignItems: "center",
+                                marginTop: PureLightTheme.spacing(3),
+                            }}
+                        >
+                            {(checkSumResult.code === "02" ||
+                                checkSumResult.code === "00") && (
+                                <Button
+                                    variant="contained"
+                                    endIcon={<PrintTwoToneIcon />}
+                                >
+                                    In vé
+                                </Button>
+                            )}
+                            <Button
+                                variant="contained"
+                                onClick={() => router.push("/")}
+                            >
+                                Trở lại trang chủ
+                            </Button>
+                        </Box>
+                    </CardContent>
+                </Card>
+            </Container>
+        </Box>
+    );
 };
 
 Return_Vnp.Layout = BaseLayout;

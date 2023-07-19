@@ -1,46 +1,48 @@
 // import { authApi } from "@/api";
-import { carsApi } from "@/api";
-import { ICarDetail, ICarForm } from "@/models";
+import { userApi } from "@/api";
+import { IUserDetail } from "@/models/Users/user-detail";
+
+import { IUserForm } from "@/models/Users/users-form";
 import useSWR from "swr";
 import { PublicConfiguration, SWRConfiguration } from "swr/_internal";
-export function useCar(options?: Partial<PublicConfiguration>) {
-    //index.ts const fetcher: Fetcher<ICarDetail> = () => carsApi.getAllCars()
+export function useUser(options?: Partial<PublicConfiguration>) {
+    //index.ts const fetcher: Fetcher<ICarDetail> = () => userApi.getAllCars()
     const config: SWRConfiguration = {
         dedupingInterval: 60 * 60 * 1000,
         revalidateOnFocus: false,
         ...options,
     };
     const {
-        data: listCar,
+        data: listUser,
         error,
         mutate,
-    } = useSWR<[ICarDetail], Error>("/cars", null, config);
+    } = useSWR<[IUserDetail], Error>("/users", null, config);
 
-    async function addCars(date: ICarForm) {
-        await carsApi.addCars(date);
+    async function addUsers(data: IUserForm) {
+        await userApi.addCars(data);
         mutate();
     }
-    async function getCars() {
-        return await carsApi.getAllCars();
-    }
+    // async function getUsers() {
+    //     return await userApi.getAllCars();
+    // }
 
-    async function removeCar(id: string) {
-        let res = await carsApi.removeCar(id);
+    async function removeUser(id: string) {
+        let res = await userApi.removeCar(id);
         console.log(res);
         mutate();
     }
 
-    async function updateCar(data: ICarDetail) {
-        await carsApi.updateCar(data);
+    async function updateUser(data: IUserDetail) {
+        await userApi.updateCar(data);
         mutate();
     }
     return {
-        listCar,
+        listUser,
         error,
-        addCars,
-        getCars,
-        removeCar,
-        updateCar,
+        addUsers,
+        updateUser,
+        removeUser,
+        // getUsers,
         mutate,
     };
 }

@@ -20,7 +20,7 @@ import { InputField, MyCheckBox } from "@/components/form";
 import { MyContext } from "@/pages/coaches";
 // import { date } from "yup/lib/locale";
 import { CreateURLPayment } from "@/hooks";
-import { getErrorMessage } from "@/utils";
+import { PureLightTheme, getErrorMessage } from "@/utils";
 import { toast } from "react-toastify";
 
 export default function Confirm() {
@@ -137,7 +137,8 @@ export default function Confirm() {
                 variant="body2"
                 sx={{
                     display: "inline-block",
-                    padding: "8px 12px",
+                    padding: PureLightTheme.spacing(2),
+                    margin: `${PureLightTheme.spacing(2)}px 0px`,
                     borderRadius: "4px",
                     backgroundColor: "rgb(236, 244, 253)",
                 }}
@@ -153,9 +154,10 @@ export default function Confirm() {
                     alignItems: "center",
                     justifyContent: "center",
                     height: "100%",
+                    margin: `${PureLightTheme.spacing(2)} 0`,
                 }}
             >
-                <Grid container spacing={1}>
+                <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <InputField
                             type="text"

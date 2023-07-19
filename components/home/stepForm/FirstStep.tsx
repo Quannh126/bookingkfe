@@ -275,7 +275,9 @@ export default function FirstStep() {
                                                     {row.map((seat, index2) => {
                                                         let isBooked =
                                                             selectedTrip.seat_detail.some(
-                                                                (seatDetail) =>
+                                                                (
+                                                                    seatDetail: any
+                                                                ) =>
                                                                     seatDetail.seat ===
                                                                     `${seat}`
                                                             );

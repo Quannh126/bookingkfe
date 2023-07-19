@@ -19,7 +19,7 @@ function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
 
     return (
-        <div
+        <Box
             role="tabpanel"
             hidden={value !== index}
             id={`trip-tabpanel-${index}`}
@@ -31,7 +31,7 @@ function TabPanel(props: TabPanelProps) {
                     <Box>{children}</Box>
                 </Box>
             )}
-        </div>
+        </Box>
     );
 }
 function getName(list: Array<NameValue>, value: String): string {
@@ -69,40 +69,44 @@ export default function TabDetailTrip({
 
     return (
         <Box sx={{ width: "100%", pl: "30px", pr: "30px " }}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Box
+                sx={{
+                    borderBottom: 1,
+                    borderColor: "divider",
+                    display: "flex",
+                    flexDirection: "row",
+                }}
+            >
                 <Tabs
                     value={value}
                     onChange={handleChange}
                     aria-label="detail trip tab"
                 >
-                    <Tab label="Hình ảnh" {...a11yProps(0)} />
-                    <Tab label="Tiện ích" {...a11yProps(1)} />
-                    <Tab label="Chính sách" {...a11yProps(2)} />
-                    <Tab label="Điểm đón, trả" {...a11yProps(3)} />
-                    <IconButton
-                        sx={{ marginLeft: "auto" }}
-                        onClick={() => {
-                            setShowDetail({
-                                isBook: false,
-                                isDetail: false,
-                                tripId: "",
-                            });
-                        }}
-                    >
-                        <HighlightOffIcon />
-                    </IconButton>
+                    <Tab label="Tiện ích" {...a11yProps(0)} />
+                    <Tab label="Chính sách" {...a11yProps(1)} />
+                    <Tab label="Điểm đón, trả" {...a11yProps(2)} />
                 </Tabs>
+                <IconButton
+                    sx={{ marginLeft: "auto" }}
+                    onClick={() => {
+                        setShowDetail({
+                            isBook: false,
+                            isDetail: false,
+                            tripId: "",
+                        });
+                    }}
+                >
+                    <HighlightOffIcon />
+                </IconButton>
             </Box>
+
             <TabPanel value={value} index={0}>
-                Hình ảnh
-            </TabPanel>
-            <TabPanel value={value} index={1}>
                 Tiện ích
             </TabPanel>
-            <TabPanel value={value} index={2}>
+            <TabPanel value={value} index={1}>
                 <Policy />
             </TabPanel>
-            <TabPanel value={value} index={3}>
+            <TabPanel value={value} index={2}>
                 <Box component="p">
                     <Typography
                         component="span"

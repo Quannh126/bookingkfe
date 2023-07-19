@@ -15,3 +15,4 @@ export * from "./Trips/trip-form";
 export * from "./Trips";
 export * from "./Customer";
 export * from "./Book";
+export * from "./Users";

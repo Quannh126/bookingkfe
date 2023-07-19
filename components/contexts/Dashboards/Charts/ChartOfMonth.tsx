@@ -7,6 +7,7 @@ import {
     alpha,
     useTheme,
     styled,
+    CardContent,
 } from "@mui/material";
 import Label from "@/components/Label";
 // import Text from "@/components/Text";
@@ -87,7 +88,7 @@ function ChartOfMonth() {
                 show: false,
             },
             sparkline: {
-                enabled: true,
+                enabled: false,
             },
             zoom: {
                 enabled: false,
@@ -122,7 +123,7 @@ function ChartOfMonth() {
         labels: listDays,
         xaxis: {
             labels: {
-                show: false,
+                show: true,
             },
             axisBorder: {
                 show: false,
@@ -166,82 +167,86 @@ function ChartOfMonth() {
                         overflow: "visible",
                     }}
                 >
-                    <Box
-                        sx={{
-                            p: 3,
-                        }}
-                    >
-                        <Box display="flex" alignItems="center">
-                            <AvatarWrapper>
-                                <Box
-                                    component="img"
-                                    alt="sales"
-                                    src="/icon/sales-icon.jpg"
-                                />
-                            </AvatarWrapper>
-                            <Box>
-                                <Typography variant="h4" noWrap>
-                                    {`Doanh số theo tháng ${currentMonth}`}
+                    <CardContent>
+                        <Box
+                            sx={{
+                                p: 3,
+                            }}
+                        >
+                            <Box display="flex" alignItems="center">
+                                <AvatarWrapper>
+                                    <Box
+                                        component="img"
+                                        alt="sales"
+                                        src="/icon/sales-icon.jpg"
+                                    />
+                                </AvatarWrapper>
+                                <Box>
+                                    <Typography variant="h4" noWrap>
+                                        {`Doanh số theo tháng ${currentMonth}`}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "flex-start",
+                                    pt: 3,
+                                }}
+                            >
+                                <Typography
+                                    variant="h3"
+                                    sx={{
+                                        pr: 1,
+                                        mb: 1,
+                                    }}
+                                >
+                                    Tổng doanh số:
+                                </Typography>
+                                <Typography
+                                    variant="h3"
+                                    component="p"
+                                    sx={{
+                                        pr: 1,
+                                        mb: 1,
+                                    }}
+                                >
+                                    {`${total.toLocaleString()} VNĐ`}
                                 </Typography>
                             </Box>
-                        </Box>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "flex-start",
-                                pt: 3,
-                            }}
-                        >
-                            <Typography
-                                variant="h3"
+                            <Box
                                 sx={{
-                                    pr: 1,
-                                    mb: 1,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "flex-start",
                                 }}
                             >
-                                Tổng doanh số:
-                            </Typography>
-                            <Typography
-                                variant="h3"
-                                component="p"
-                                sx={{
-                                    pr: 1,
-                                    mb: 1,
-                                }}
-                            >
-                                {`${total.toLocaleString()} VNĐ`}
-                            </Typography>
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{
+                                        pl: 1,
+                                    }}
+                                >
+                                    Tháng trước
+                                </Typography>
+                                <Label
+                                    color={subTotal > 0 ? "success" : "error"}
+                                >
+                                    {`${
+                                        subTotal > 0 ? "+" : ""
+                                    } ${subTotal.toLocaleString()} VNĐ`}{" "}
+                                </Label>
+                            </Box>
                         </Box>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "flex-start",
-                            }}
-                        >
-                            <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                sx={{
-                                    pl: 1,
-                                }}
-                            >
-                                Tháng trước
-                            </Typography>
-                            <Label color={subTotal > 0 ? "success" : "error"}>
-                                {`${
-                                    subTotal > 0 ? "+" : ""
-                                } ${subTotal.toLocaleString()} VNĐ`}{" "}
-                            </Label>
-                        </Box>
-                    </Box>
-                    <Chart
-                        options={chartOptions}
-                        series={chart2Data}
-                        type="area"
-                        height={200}
-                    />
+                        <Chart
+                            options={chartOptions}
+                            series={chart2Data}
+                            type="area"
+                            height={200}
+                        />
+                    </CardContent>
                 </Card>
             </Grid>
         </Grid>

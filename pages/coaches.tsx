@@ -13,11 +13,11 @@ import {
 // import { useBooking } from "@/hooks/useBooking";
 import React, { createContext, useState } from "react";
 import {
-    Button,
+    // Button,
     Card,
     CardContent,
     CardProps,
-    CircularProgress,
+    // CircularProgress,
     Container,
     FormControl,
     Grid,
@@ -31,7 +31,7 @@ import {
 import ListBooking from "@/components/home/list_trip_booking";
 import { useRouter } from "next/router";
 import { CreateURLPayment, useCoach } from "@/hooks";
-import LoadingPage from "@/components/common/loading";
+// import LoadingPage from "@/components/common/loading";
 // import { Route12, Route21 } from "@/config/routes";
 import Head from "next/head";
 import BaseLayout from "@/components/layout/BaseLayout";
@@ -39,12 +39,23 @@ import Logo from "@/components/Logo";
 
 import useSWR, { SWRConfiguration } from "swr";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import Router from "next/router";
+// import Router from "next/router";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import moment from "moment";
 
 import { PureLightTheme } from "@/utils";
+import FilterCard from "@/components/home/filter";
+import { useSelector, useDispatch } from "react-redux";
+import {
+    setFilterSL,
+    setFilterEL,
+    setFilterJD,
+    selectFilterState,
+} from "@/redux/selectedFilter";
+import { Skeleton } from "@mui/material";
+import SkeletonListCoach from "@/components/home/SkeletonListCoach";
+// import dynamic from "next/dynamic";
 // eslint-disable-next-line no-unused-vars
 type FunctionType = (data: IBookingForm) => any;
 // eslint-disable-next-line no-unused-vars
@@ -58,6 +69,15 @@ export const MyContext = createContext<BookContextType>({
     addBooking: () => {},
     createURL: () => {},
 });
+export type FormDataState = {
+    startLocation: string;
+    endLocation: string;
+    journeyDate: string;
+    gn: boolean;
+    gt: boolean;
+    times: string;
+    avSeat: number;
+};
 const HeaderWrapper = styled(Card)(
     ({ theme }) => `
     width: 100%;
@@ -67,86 +87,79 @@ const HeaderWrapper = styled(Card)(
     margin-bottom: ${theme.spacing(2)};
   `
 );
-const OverviewWrapper = styled(Box)(
-    ({ theme }) => `
-      overflow: auto;
-      background: ${theme.palette.common.white};
-      flex: 1;
-      overflow-x: hidden;
-  `
-);
+// const OverviewWrapper = styled(Box)(
+//     ({ theme }) => `
+//       overflow: auto;
+//       flex: 1;
+//       overflow-x: hidden;
+//   `
+// );
 
 const SearchWrapper = styled(Card)<CardProps>(
     ({ theme }) => `
     background-color: ${theme.colors.alpha.white[100]};
   `
 );
-//let renderCount = 0;//
+
+// let renderCount = 0;
 
 const Coach: NextpageWithLayout = () => {
     // const [locations, setLocations] = useState<ILocationGrouped[]>([]);
-
+    const formState = useSelector(selectFilterState);
+    const dispatch = useDispatch();
     const router = useRouter();
     // http://localhost:3000/coaches?startLocation=&endLocation=&journeyDate=2023-07-09
     // console.log(router.query)
-    const { startLocation, endLocation, journeyDate } = router.query;
-    const [formData, setFormData] = useState({
-        startLocation: startLocation ?? "",
-        endLocation: endLocation ?? "",
+    const { startLocation, endLocation, journeyDate, times, gn, gt, avSeat } =
+        formState;
+    // const [checked, setChecked] = React.useState([
+    //     carType === "Giường nằm",
+    //     carType === "Ghế ngồi",
+    // ]);
+    //console.log(formState);
+    const [formData, setFormData] = useState<FormDataState>({
+        startLocation: startLocation?.toString() ?? "",
+        endLocation: endLocation?.toString() ?? "",
         journeyDate:
             moment(journeyDate).format("YYYY-MM-DD") ??
             today.format("YYYY-MM-DD"),
-        capacity: "",
-        carType: "",
+        times: times?.toString() ?? "",
+        gn: gn ?? false,
+        gt: gt ?? false,
+        avSeat: avSeat ?? 0,
     });
-    let route, from_point, to_point;
+
+    let route;
     if (!startLocation || !endLocation) {
         route = "1-2";
-        from_point = "";
-        to_point = "";
     } else {
         const startList = formData.startLocation.toString()!.split("-");
         const endList = formData.endLocation.toString()!.split("-");
         route = startList[0] + "-" + endList[0];
-        from_point = startList[1] + "-" + startList[2];
-        to_point = endList[1] + "-" + endList[2];
     }
+
     const locationFrom = route === "1-2" ? "Hà Nội" : "Tuyên Quang";
     const locationTo = route === "2-1" ? "Tuyên Quang" : "Hà Nội";
-    const queryParams = `?route=${route}&journey_date=${journeyDate}&pickup_point=${from_point}&dropoff_point=${to_point}&capacity=${formData.capacity}&car_type=${formData.carType}`;
+    const queryParams = `?startLocation=${startLocation}&endLocation=${endLocation}&journey_date=${journeyDate}&times=${times}&gn=${gn}&gt=${gt}&available_seat=${avSeat}`;
     const {
         listCoach,
         isLoading: isLoadingHook,
         addBooking,
         createURL,
+        mutate,
     } = useCoach(queryParams, router.isReady);
 
-    const onClickSearch = () => {
-        // console.log("Click search", formData);
-        Router.push({
-            pathname: "/coaches",
-            query: formData,
-        });
-    };
     const onChangeFrom = (val: any) => {
-        //console.log(val.target.value);
+        // console.log(val.target.value);
         setFormData({ ...formData, ...{ startLocation: val.target.value } });
         // checkButtonDisabled();
+        dispatch(setFilterSL(val.target.value));
     };
     const onChangeTo = (val: any) => {
-        //console.log(val.target.value);
+        console.log(val.target.value);
         setFormData({ ...formData, ...{ endLocation: val.target.value } });
         // checkButtonDisabled();
-    };
-    const onChangeCapacity = (val: any) => {
-        //console.log(val.target.value);
-        setFormData({ ...formData, ...{ capacity: val.target.value } });
-        // checkButtonDisabled();
-    };
-    const onChangeCarType = (val: any) => {
-        //console.log(val.target.value);
-        setFormData({ ...formData, ...{ carType: val.target.value } });
-        // checkButtonDisabled();
+        dispatch(setFilterEL(val.target.value));
     };
 
     const onChangeDate = (val: any) => {
@@ -154,6 +167,7 @@ const Coach: NextpageWithLayout = () => {
         const journeyDate = val && moment(val._d).format("YYYY-MM-DD");
         setFormData({ ...formData, ...{ journeyDate } });
         // checkButtonDisabled();
+        dispatch(setFilterJD(journeyDate));
     };
     const config: SWRConfiguration = {
         dedupingInterval: 60 * 60 * 1000,
@@ -166,11 +180,6 @@ const Coach: NextpageWithLayout = () => {
         Error
     >(`/locations/group-options`, null, config);
 
-    // if (route == "1-2") {
-    //     listDropoffAndPickUp = Route12;
-    // } else {
-    //     listDropoffAndPickUp = Route21;
-    // }
     const { data: listDropoffAndPickUp, isLoading: isLoadingConfig } = useSWR<
         {
             pickup: NameValue[];
@@ -178,12 +187,35 @@ const Coach: NextpageWithLayout = () => {
         },
         Error
     >(router.isReady ? `/locations/points/${route}` : null, null, config);
-    if (!listCoach || isLoadingHook) {
-        return <LoadingPage />;
+    if (!isLoadingConfig && listDropoffAndPickUp) {
+        localStorage.setItem(
+            "listDropoffAndPickUp",
+            JSON.stringify(listDropoffAndPickUp)
+        );
     }
-    //console.log("Render count Coach: ", renderCount++, locations);
+    // const ListBooking = dynamic(
+    //     () => import("@/components/home/list_trip_booking"),
+    //     {
+    //         loading: () => (
+    //             <Skeleton
+    //                 variant="rectangular"
+    //                 width="100%"
+    //                 height={PureLightTheme.spacing(10)}
+    //             />
+    //         ),
+    //     }
+    // );
+    // if (!router.isReady) {
+    //     return <LoadingPage />;
+    // }
     return (
-        <OverviewWrapper>
+        <Box
+            sx={{
+                overflow: "auto",
+                flex: 1,
+                overflowX: "hidden",
+            }}
+        >
             <Head>
                 <title>{`Đặt vé từ ${locationFrom} đến ${locationTo}`}</title>
             </Head>
@@ -191,17 +223,6 @@ const Coach: NextpageWithLayout = () => {
                 <Container maxWidth="lg">
                     <Box display="flex" alignItems="center">
                         <Logo />
-                        {/* <Box
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="space-between"
-                            flex={1}
-                        >
-                            <Box />
-                            <Box>
-                                <Button>Đăng nhập</Button>
-                            </Box>
-                        </Box> */}
                     </Box>
                 </Container>
             </HeaderWrapper>
@@ -210,7 +231,49 @@ const Coach: NextpageWithLayout = () => {
                 <SearchWrapper elevation={2}>
                     <CardContent sx={{ padding: PureLightTheme.spacing(2) }}>
                         {isLoading || !locations || locations === undefined ? (
-                            <CircularProgress />
+                            <Grid
+                                container
+                                spacing={1}
+                                sx={
+                                    {
+                                        // paddingBottom: PureLightTheme.spacing(2),
+                                    }
+                                }
+                            >
+                                <Grid item xs={12} md={4}>
+                                    <Skeleton
+                                        height="1.4375em"
+                                        sx={{
+                                            padding: "16.5px 14px",
+                                            display: "block",
+                                            borderRadius: "10px",
+                                            boxSizing: "content-box",
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={4}>
+                                    <Skeleton
+                                        height="1.4375em"
+                                        sx={{
+                                            padding: "16.5px 14px",
+                                            display: "block",
+                                            borderRadius: "10px",
+                                            boxSizing: "content-box",
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={4}>
+                                    <Skeleton
+                                        height="1.4375em"
+                                        sx={{
+                                            padding: "16.5px 14px",
+                                            display: "block",
+                                            borderRadius: "10px",
+                                            boxSizing: "content-box",
+                                        }}
+                                    />
+                                </Grid>
+                            </Grid>
                         ) : (
                             <Grid
                                 container
@@ -221,11 +284,11 @@ const Coach: NextpageWithLayout = () => {
                                     }
                                 }
                             >
-                                <Grid item xs={12} md={3}>
+                                <Grid item xs={12} md={4}>
                                     <FormControl fullWidth>
                                         <InputLabel
                                             htmlFor="select_from"
-                                            shrink
+                                            id="select_from"
                                         >
                                             Điểm đi
                                         </InputLabel>
@@ -273,15 +336,18 @@ const Coach: NextpageWithLayout = () => {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid item xs={12} md={3}>
+                                <Grid item xs={12} md={4}>
                                     <FormControl fullWidth>
-                                        <InputLabel htmlFor="select_to" shrink>
+                                        <InputLabel
+                                            htmlFor="select_to"
+                                            id="select_to"
+                                        >
                                             Điểm đến
                                         </InputLabel>
                                         <Select
                                             native
                                             id="select_to"
-                                            label="from"
+                                            label="to"
                                             fullWidth
                                             defaultValue={endLocation}
                                             // size="small"
@@ -324,7 +390,7 @@ const Coach: NextpageWithLayout = () => {
                                     </FormControl>
                                 </Grid>
 
-                                <Grid item xs={12} md={3}>
+                                <Grid item xs={12} md={4}>
                                     <LocalizationProvider
                                         dateAdapter={AdapterMoment}
                                     >
@@ -341,17 +407,6 @@ const Coach: NextpageWithLayout = () => {
                                         </Box>
                                     </LocalizationProvider>
                                 </Grid>
-                                <Grid item xs={12} md={3}>
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        sx={{ height: "100%", width: "100%" }}
-                                        onClick={onClickSearch}
-                                        // disabled={disabled}
-                                    >
-                                        Tìm kiếm
-                                    </Button>
-                                </Grid>
                             </Grid>
                         )}
                         {/* <Divider />
@@ -361,70 +416,77 @@ const Coach: NextpageWithLayout = () => {
             </Container>
             <Container maxWidth="lg">
                 <Grid
-                    spacing={{ xs: 6, md: 10 }}
+                    spacing={2}
                     paddingTop={PureLightTheme.spacing(2)}
                     justifyContent="center"
-                    alignItems="center"
+                    alignItems="flex-start"
                     container
                 >
-                    {listCoach.length == 0 &&
-                    !isLoadingHook &&
-                    !isLoadingConfig ? (
-                        <Grid item md={12} lg={12} mx="auto">
-                            <Typography
-                                sx={{
-                                    padding: PureLightTheme.spacing(3),
-                                    justifyContent: "center",
-                                }}
-                                variant="h3"
-                            >
-                                Không tìm thấy chuyến nào !
-                            </Typography>
-                        </Grid>
-                    ) : (
-                        <>
-                            <Grid item md={2} lg={4} mx="auto">
-                                <Card>
-                                    <CardContent>
-                                        <FormControlLabel
-                                            label="Parent"
-                                            control={
-                                                <Checkbox
-                                                    checked={
-                                                        checked[0] && checked[1]
-                                                    }
-                                                    indeterminate={
-                                                        checked[0] !==
-                                                        checked[1]
-                                                    }
-                                                    onChange={handleChange1}
-                                                />
-                                            }
-                                        />
-                                        {children}
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-
-                            <Grid item md={10} lg={8} mx="auto">
-                                <MyContext.Provider
-                                    value={{ addBooking, createURL }}
+                    <>
+                        <Grid
+                            item
+                            xs={12}
+                            md={2}
+                            lg={4}
+                            mx="auto"
+                            marginBottom="auto"
+                        >
+                            <Card>
+                                <CardContent
+                                    sx={{
+                                        padding: PureLightTheme.spacing(4),
+                                    }}
                                 >
-                                    <ListBooking
-                                        listData={listCoach}
-                                        listDropoffAndPickUp={
-                                            listDropoffAndPickUp
-                                        }
-                                        addBooking={addBooking}
-                                        createURL={createURL}
+                                    <FilterCard
+                                        setFormData={setFormData}
+                                        formData={formData}
                                     />
-                                </MyContext.Provider>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        {!listCoach ||
+                        isLoadingHook ||
+                        isLoadingConfig ||
+                        !listDropoffAndPickUp ? (
+                            <Grid item xs={12} md={10} lg={8} mx="auto">
+                                <SkeletonListCoach />
                             </Grid>
-                        </>
-                    )}
+                        ) : (
+                            <Grid item xs={12} md={10} lg={8} mx="auto">
+                                {/* <SkeletonListCoach /> */}
+                                {listCoach.length == 0 &&
+                                !isLoadingHook &&
+                                !isLoadingConfig ? (
+                                    <Typography
+                                        sx={{
+                                            padding: PureLightTheme.spacing(3),
+                                            justifyContent: "center",
+                                        }}
+                                        variant="h3"
+                                    >
+                                        Không tìm thấy chuyến nào !
+                                    </Typography>
+                                ) : (
+                                    <MyContext.Provider
+                                        value={{ addBooking, createURL }}
+                                    >
+                                        <ListBooking
+                                            mutate={mutate}
+                                            listData={listCoach}
+                                            listDropoffAndPickUp={
+                                                listDropoffAndPickUp
+                                            }
+                                            addBooking={addBooking}
+                                            createURL={createURL}
+                                        />
+                                    </MyContext.Provider>
+                                )}
+                            </Grid>
+                        )}
+                    </>
                 </Grid>
             </Container>
-        </OverviewWrapper>
+        </Box>
     );
 };
 

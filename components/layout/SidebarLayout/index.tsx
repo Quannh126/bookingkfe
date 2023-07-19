@@ -4,7 +4,9 @@ import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { LayoutProps } from "@/models";
 import Auth from "@/components/common/auth";
-
+// import dynamic from "next/dynamic";
+// const Header = dynamic(() => import("./Header"), { ssr: false });
+// const Sidebar = dynamic(() => import("./Header"), { ssr: false });
 export default function SidebarLayout({ children }: LayoutProps) {
     const theme = useTheme();
 

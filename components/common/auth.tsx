@@ -16,20 +16,6 @@ export interface AuthProp {
 export default function Auth({ children }: AuthProp) {
     // const router = useRouter();
     const { profile, firstLoading } = useAuth();
-    // const token = useSelector(selectAuthState);
-
-    // useEffect(() => {
-    //     if (
-    //         !firstLoading &&
-    //         !profile?.username
-    //         //&& profile?.username === "adminBooking"
-    //     ) {
-    //         // console.log(router.asPath);
-
-    //         router.push(`/login?from=${encodeURIComponent(router.asPath)}`);
-    //         //router.push("/login");
-    //     }
-    // }, [router, profile, firstLoading]);
 
     if (!profile?.username || firstLoading) {
         return <LoadingPage />;

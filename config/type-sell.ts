@@ -19,3 +19,35 @@ export const TYPE_PAYMENT = [
         name: "Đã thanh toán",
     },
 ];
+export const Role_List = [
+    {
+        value: "",
+        name: "",
+    },
+    {
+        value: "Admin",
+        name: "Quản trị viên",
+    },
+    {
+        value: "Manager",
+        name: "Quản lý",
+    },
+    {
+        value: "Employee",
+        name: "Nhân viên",
+    },
+];
+export const StatusAccount = [
+    {
+        value: "",
+        name: "",
+    },
+    {
+        value: "Active",
+        name: "Hoạt động",
+    },
+    {
+        value: "Inactive",
+        name: "Không hoạt động",
+    },
+];

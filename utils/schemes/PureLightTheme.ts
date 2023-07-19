@@ -1209,11 +1209,11 @@ export const PureLightTheme = createTheme({
             color: colors.alpha.black[100],
         },
         h4: {
-            fontWeight: 700,
+            fontWeight: 600,
             fontSize: 16,
         },
         h5: {
-            fontWeight: 700,
+            fontWeight: 500,
             fontSize: 14,
         },
         h6: {

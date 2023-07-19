@@ -178,7 +178,7 @@ export function BookForm({
         >
             <Box component="form" onSubmit={handleSubmit(handleBookSubmit)}>
                 <DialogTitle
-                    id="add-trip"
+                    id="add-booking"
                     display="flex"
                     sx={{ justifyContent: "center" }}
                 >

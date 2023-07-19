@@ -7,7 +7,13 @@ import { ILocationGrouped, NextpageWithLayout } from "../models";
 import { Popular } from "@/components/home";
 
 import React, { useEffect, useState } from "react";
-
+import { useSelector, useDispatch } from "react-redux";
+import {
+    setFilterSL,
+    setFilterEL,
+    setFilterJD,
+    selectFilterState,
+} from "@/redux/selectedFilter";
 import Router from "next/router";
 import {
     // Avatar,
@@ -49,14 +55,13 @@ const SearchWrapper = styled(Card)<CardProps>(
     background-color: ${theme.colors.alpha.white[100]};
   `
 );
-const OverviewWrapper = styled(Box)(
-    ({ theme }) => `
-      overflow: auto;
-      background: ${theme.palette.common.white};
-      flex: 1;
-      overflow-x: hidden;
-  `
-);
+// const OverviewWrapper = styled(Box)(
+//     ({ theme }) => `
+//       overflow: auto;
+//       flex: 1;
+//       overflow-x: hidden;
+//   `
+// );
 const HeaderWrapper = styled(Card)(
     ({ theme }) => `
     width: 100%;
@@ -78,36 +83,40 @@ const today = moment();
 // const threeLengthArray: Array<string> = [];
 const Home: NextpageWithLayout = () => {
     // const router = useRouter();
+    const formState = useSelector(selectFilterState);
+    const dispatch = useDispatch();
     const [locations, setLocations] = useState<ILocationGrouped[]>([]);
-    const [formData, setFormData] = useState({
-        startLocation: "",
-        endLocation: "",
-        journeyDate: today.format("YYYY-MM-DD"),
-    });
+    // const [formData, setFormData] = useState({
+    //     startLocation: "",
+    //     endLocation: "",
+    //     journeyDate: today.format("YYYY-MM-DD"),
+    // });
     const [isLoading, setIsLoading] = useState(true);
 
     const onClickSearch = () => {
-        console.log("Click search", formData);
+        // console.log("Click search", formData);
         Router.push({
             pathname: "/coaches",
-            query: formData,
         });
     };
     const onChangeFrom = (val: any) => {
         console.log(val.target.value);
-        setFormData({ ...formData, ...{ startLocation: val.target.value } });
+        dispatch(setFilterSL(val.target.value));
+        // setFormData({ ...formData, ...{ startLocation: val.target.value } });
         // checkButtonDisabled();
     };
     const onChangeTo = (val: any) => {
         console.log(val.target.value);
-        setFormData({ ...formData, ...{ endLocation: val.target.value } });
+        dispatch(setFilterEL(val.target.value));
+        //setFormData({ ...formData, ...{ endLocation: val.target.value } });
         // checkButtonDisabled();
     };
 
     const onChangeDate = (val: any) => {
         console.log(val._d);
         const journeyDate = today.format("YYYY-MM-DD");
-        setFormData({ ...formData, ...{ journeyDate } });
+        dispatch(setFilterJD(journeyDate));
+        //setFormData({ ...formData, ...{ journeyDate } });
         // checkButtonDisabled();
     };
     const fetchAllLocations = async () => {
@@ -123,7 +132,13 @@ const Home: NextpageWithLayout = () => {
         return <LoadingPage />;
     }
     return (
-        <OverviewWrapper>
+        <Box
+            sx={{
+                overflow: "auto",
+                flex: 1,
+                overflowX: "hidden",
+            }}
+        >
             <HeaderWrapper>
                 <Container maxWidth="lg">
                     <Box display="flex" alignItems="center">
@@ -142,15 +157,7 @@ const Home: NextpageWithLayout = () => {
                     </Box>
                 </Container>
             </HeaderWrapper>
-            <Box
-            // sx={{
-            //     alignItems: "center",
-            //     justifyContent: "center",
-            //     position: "relative",
-            //     zIndex: -1,
-            //     WebkitTapHighlightColor: "transparent",
-            // }}
-            >
+            <Box>
                 <Box
                     component="img"
                     sx={{
@@ -161,14 +168,7 @@ const Home: NextpageWithLayout = () => {
                 ></Box>
             </Box>
             <Container maxWidth="lg">
-                <SearchWrapper
-                    elevation={2}
-                    // sx={{
-                    //     mx: "auto",
-
-                    //     textAlign: "center",
-                    // }}
-                >
+                <SearchWrapper elevation={2}>
                     <CardContent sx={{ padding: PureLightTheme.spacing(3) }}>
                         {isLoading || !locations ? (
                             <CircularProgress />
@@ -187,7 +187,9 @@ const Home: NextpageWithLayout = () => {
                                         </InputLabel>
                                         <Select
                                             native
-                                            defaultValue=""
+                                            defaultValue={
+                                                formState.startLocation
+                                            }
                                             id="select_from"
                                             label="from"
                                             // size="small"
@@ -236,7 +238,7 @@ const Home: NextpageWithLayout = () => {
                                         </InputLabel>
                                         <Select
                                             native
-                                            defaultValue=""
+                                            defaultValue={formState.endLocation}
                                             id="select_to"
                                             label="from"
                                             fullWidth
@@ -286,7 +288,9 @@ const Home: NextpageWithLayout = () => {
                                     >
                                         <Box>
                                             <DatePicker
-                                                defaultValue={today}
+                                                defaultValue={moment(
+                                                    formState.journey_date
+                                                )}
                                                 disablePast
                                                 onChange={onChangeDate}
                                                 // slotProps={{
@@ -320,7 +324,7 @@ const Home: NextpageWithLayout = () => {
             </Container>
 
             <Popular />
-        </OverviewWrapper>
+        </Box>
     );
 };
 

@@ -9,12 +9,12 @@ import {
     Grid,
     Link,
     Paper,
-    PaperProps,
+    // PaperProps,
     styled,
     Tooltip,
     Typography,
 } from "@mui/material";
-import LoadingPage from "../common/loading";
+// import LoadingPage from "../common/loading";
 import { useDispatch } from "react-redux";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
@@ -29,6 +29,7 @@ import { setSelectedTrip } from "@/redux/selectedTrip";
 import { resetState } from "@/redux/stepForm";
 import dayjs from "dayjs";
 import { CreateURLPayment } from "@/hooks";
+import { KeyedMutator } from "swr";
 
 export interface IListBookingProps {
     listData: Array<IBookingTrip>;
@@ -40,15 +41,14 @@ export interface IListBookingProps {
     addBooking: (data: IBookingForm) => void;
     // eslint-disable-next-line no-unused-vars
     createURL: (data: CreateURLPayment) => void;
+    mutate: KeyedMutator<IBookingTrip[]>;
 }
-const CoachWrapper = styled(Paper)<PaperProps>(
-    ({ theme }) => `
-    background-color: ${theme.colors.primary.lighter};
-    
-    display: "flex",
-   
-  `
-);
+// const Paper = styled(Paper)<PaperProps>(
+//     ({ theme }) => `
+
+//     display: "flex",
+//   `
+// );
 
 // const LinkDetailWrapper = styled(Link)<LinkProps>(
 //     ({ theme }) => `
@@ -81,6 +81,7 @@ export type showStateType = {
 export default function ListBooking({
     listData,
     listDropoffAndPickUp,
+    mutate,
 }: IListBookingProps) {
     const dispatch = useDispatch();
     const [showDetail, setShowDetail] = useState({
@@ -88,29 +89,29 @@ export default function ListBooking({
         isDetail: false,
         tripId: "",
     } as showStateType);
-    if (!listData || !listDropoffAndPickUp) {
-        return <LoadingPage />;
-    }
+    // const [showBooking, setShowBooking] = useState({ isBook: false, tripId: ""});
+    // if (!listData || !listDropoffAndPickUp) {
+    //     return <LoadingPage />;
+    // }
     // console.log(listData);
-
     return (
         <Grid container direction="column" rowSpacing={2}>
             {listData.map((item: IBookingTrip) => {
                 const dropoff = getName(
-                    listDropoffAndPickUp.dropoff,
+                    listDropoffAndPickUp!.dropoff,
                     `${item.dropoff_point[0]!.district_id}-${
                         item.dropoff_point[0]!.point_id
                     }`
                 );
                 const pickup = getName(
-                    listDropoffAndPickUp.pickup,
+                    listDropoffAndPickUp!.pickup,
                     `${item.pickup_point[0]!.district_id}-${
                         item.pickup_point[0]!.point_id
                     }`
                 );
                 return (
                     <Grid item key={item._id} xs={12}>
-                        <CoachWrapper>
+                        <Paper>
                             <CardContent>
                                 <Grid container spacing={1}>
                                     <Grid
@@ -158,7 +159,7 @@ export default function ListBooking({
                                                 mt: "20px",
                                                 mb: "20px",
                                                 fontSize: "14px",
-                                                color: "rgb(72, 72, 72)",
+                                                // color: "rgb(72, 72, 72)",
                                             }}
                                         >
                                             {`${item.car.type_car} ${item.car.capacity} Chỗ`}
@@ -196,7 +197,6 @@ export default function ListBooking({
                                                         ml={1}
                                                         sx={{
                                                             fontSize: "14px",
-                                                            color: "#223354",
                                                         }}
                                                     >
                                                         {`${pickup}`}
@@ -230,7 +230,7 @@ export default function ListBooking({
                                                         ml={1}
                                                         sx={{
                                                             fontSize: "14px",
-                                                            color: "#223354",
+
                                                             overflow: "hidden",
                                                             textOverflow:
                                                                 "ellipsis",
@@ -284,7 +284,11 @@ export default function ListBooking({
                                                     variant="contained"
                                                     onClick={() => {
                                                         // console.log(item);
+                                                        mutate();
                                                         dispatch(resetState());
+                                                        console.log(
+                                                            listDropoffAndPickUp
+                                                        );
 
                                                         dispatch(
                                                             setSelectedTrip(
@@ -294,16 +298,13 @@ export default function ListBooking({
 
                                                         setShowDetail({
                                                             isBook:
+                                                                showDetail.isBook &&
                                                                 showDetail.tripId ==
-                                                                item._id
-                                                                    ? !showDetail.isBook
+                                                                    item._id
+                                                                    ? false
                                                                     : true,
                                                             isDetail: false,
-                                                            tripId:
-                                                                showDetail.tripId ==
-                                                                item._id
-                                                                    ? ""
-                                                                    : item._id,
+                                                            tripId: item._id,
                                                         });
                                                     }}
                                                     // sx={{ mb: "110px" }}
@@ -332,11 +333,7 @@ export default function ListBooking({
                                                                     ? !showDetail.isBook
                                                                     : true,
                                                             isDetail: false,
-                                                            tripId:
-                                                                showDetail.tripId ==
-                                                                item._id
-                                                                    ? ""
-                                                                    : item._id,
+                                                            tripId: item._id,
                                                         });
                                                     }}
                                                     // sx={{ mb: "110px" }}
@@ -348,6 +345,17 @@ export default function ListBooking({
                                                         : `Gọi đặt vé`}
                                                 </ColorButton>
                                             )}
+                                            <Typography
+                                                component="p"
+                                                variant="h4"
+                                                sx={{
+                                                    marginTop: "auto",
+                                                }}
+                                            >
+                                                {`${parseFloat(
+                                                    item.fare
+                                                ).toLocaleString()} đ`}
+                                            </Typography>
                                             <Typography
                                                 component="p"
                                                 variant="h5"
@@ -376,20 +384,13 @@ export default function ListBooking({
                                                             item._id
                                                                 ? !showDetail.isDetail
                                                                 : true,
-                                                        tripId:
-                                                            showDetail.tripId ==
-                                                            item._id
-                                                                ? ""
-                                                                : item._id,
+                                                        tripId: item._id,
                                                     });
                                                 }}
                                             >
                                                 <Typography
                                                     sx={{
                                                         fontSize: "15px",
-                                                        color: PureLightTheme
-                                                            .colors.primary
-                                                            .main,
                                                     }}
                                                 >
                                                     Chi tiết
@@ -426,7 +427,7 @@ export default function ListBooking({
                                             <Box sx={{ marginTop: "20px" }}>
                                                 <TabDetailTrip
                                                     listDropoffAndPickUp={
-                                                        listDropoffAndPickUp
+                                                        listDropoffAndPickUp!
                                                     }
                                                     setShowDetail={
                                                         setShowDetail
@@ -467,7 +468,7 @@ export default function ListBooking({
                                         </Box>
                                     )}
                             </CardContent>
-                        </CoachWrapper>
+                        </Paper>
                     </Grid>
                 );
             })}

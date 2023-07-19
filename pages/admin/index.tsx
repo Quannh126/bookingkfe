@@ -8,10 +8,10 @@ import SidebarLayout from "@/components/layout/SidebarLayout";
 import { Container, Grid, Typography } from "@mui/material";
 
 import Footer from "@/components/Footer";
-import PageTitleWrapper from "@/components/PageTitleWrapper";
+// import PageTitleWrapper from "@/components/PageTitleWrapper";
 import DonutOfDay from "@/components/contexts/Dashboards/Charts/DonutOfDay";
 import ChartComponents from "@/components/contexts/Dashboards/Charts/ChartComponents";
-import PageHeader from "@/components/contexts/Dashboards/Charts/PageHeader";
+// import PageHeader from "@/components/contexts/Dashboards/Charts/PageHeader";
 
 const Admin: NextpageWithLayout = () => {
     return (
@@ -19,9 +19,9 @@ const Admin: NextpageWithLayout = () => {
             <Head>
                 <title>Báo cáo - Thống kê</title>
             </Head>
-            <PageTitleWrapper>
+            {/* <PageTitleWrapper>
                 <PageHeader />
-            </PageTitleWrapper>
+            </PageTitleWrapper> */}
             <Container maxWidth="lg">
                 <Grid
                     container
