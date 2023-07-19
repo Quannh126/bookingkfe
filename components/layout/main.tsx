@@ -1,11 +1,16 @@
-import * as React from 'react';
-import { LayoutProps } from '@/models/index';
+import * as React from "react";
+import { LayoutProps } from "@/models/index";
 
-
-export default function MainLayout(props: LayoutProps) {
+import { Stack, Box } from "@mui/material";
+import { Footer, HeaderDesktop } from "../common";
+export default function MainLayout({ children }: LayoutProps) {
     return (
-        <div>
-            
-        </div>
+        <Stack minHeight="100vh">
+            <HeaderDesktop />
+            <Box component="main" flexGrow={1}>
+                {children}
+            </Box>
+            <Footer isSideBar={false} />
+        </Stack>
     );
 }

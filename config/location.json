@@ -1,0 +1,97 @@
+{
+    "1": {
+        "name": "TP Hà Nội",
+        "location": {
+            "13": {
+                "name": "Hoàng Mai",
+                "pickup_point": {
+                    "1": "B"
+                }
+            },
+            "14": {
+                "name": "Cầu Giấy",
+                "pickup_point": {
+                    "1": ""
+                }
+            },
+            "15": {
+                "name": "Đống Đa",
+                "pickup_point": {
+                    "1": ""
+                }
+            },
+            "16": {
+                "name": "Hà Đông",
+                "pickup_point": {
+                    "1": ""
+                }
+            },
+            "17": {
+                "name": "Hai Bà Trưng",
+                "pickup_point": {
+                    "1": ""
+                }
+            },
+            "18": {
+                "name": "Hoàn Kiếm",
+                "pickup_point": {
+                    "1": ""
+                }
+            },
+            "19": {
+                "name": "Hoàng Mai",
+                "pickup_point": {
+                    "1": ""
+                }
+            },
+            "20": {
+                "name": "Long Biên",
+                "pickup_point": {
+                    "1": "Bến Xe Gia Lam"
+                }
+            },
+            "21": {
+                "name": "Tây Hồ",
+                "pickup_point": {
+                    "1": ""
+                }
+            },
+            "22": {
+                "name": "Thanh Xuân",
+                "pickup_point": {
+                    "1": ""
+                }
+            },
+            "23": {
+                "name": "Sơn Tây",
+                "pickup_point": {
+                    "1": ""
+                }
+            }
+        }
+    },
+    "2": {
+        "name": "Tỉnh Phú Thọ",
+        "location": {
+            "1": "TP Việt trì",
+            "2": "Thị xã Phú Thọ",
+            "3": "Huyện Phù Ninh",
+            "4": "Huyện Tân Sơn",
+            "5": "Huyện Cẩm Khê",
+            "6": "Huyện Thanh Ba",
+            "7": "Huyện Tam Nông",
+            "8": "Huyện Yên Lập",
+            "9": "Huyện Thanh Thuỷ",
+            "10": "Huyện Hạ Hoà",
+            "11": "Huyện Lâm Thao",
+            "12": "Huyện Đoan Hùng",
+            "13": "Huyện Thanh Sơn"
+        }
+    },
+    "3": {
+        "name": "Tuyên Quang",
+        "location": {
+            "14": "Bến xe Tuyên Quang"
+        }
+    }
+}
