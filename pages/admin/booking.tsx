@@ -88,8 +88,9 @@ const AdminBooking: NextpageWithLayout = () => {
         updateBooking,
         updateSeat,
         removeBooking,
-        isLoading,
+        // isLoading,
         mutate,
+        firstLoading,
     } = useBooking(queryParams);
     const {
         // register,
@@ -467,7 +468,8 @@ const AdminBooking: NextpageWithLayout = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-            {isLoading || listProvince.isLoading || isPageLoading ? (
+            {/* isLoading || listProvince.isLoading || isPageLoading  */}
+            {firstLoading ? (
                 <CircularProgress />
             ) : (
                 showListTrip && (
@@ -481,8 +483,8 @@ const AdminBooking: NextpageWithLayout = () => {
                     />
                 )
             )}
-
-            {isLoading || listProvince.isLoading || isPageLoading ? (
+            {/* (isLoading || listProvince.isLoading || isPageLoading ) && */}
+            {firstLoading ? (
                 <CircularProgress />
             ) : (
                 !showListTrip && (

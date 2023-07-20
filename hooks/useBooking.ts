@@ -38,7 +38,7 @@ export function useBooking(
         null,
         config
     );
-
+    const firstLoading = listBooking === undefined && error === undefined;
     async function addBooking(data: IBookingForm) {
         await bookingApi.addBooking(data);
         await mutate();
@@ -62,6 +62,7 @@ export function useBooking(
         listBooking,
         error,
         isLoading,
+        firstLoading,
         updateSeat,
         addBooking,
         removeBooking,
