@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-import NextLink from "next/link";
+// import NextLink from "next/link";
 
 import {
     Avatar,
@@ -9,19 +9,19 @@ import {
     Divider,
     Hidden,
     lighten,
-    List,
-    ListItem,
-    ListItemText,
+    // List,
+    // ListItem,
+    // ListItemText,
     Popover,
     Typography,
 } from "@mui/material";
 import { useAuth } from "@/hooks";
-import InboxTwoToneIcon from "@mui/icons-material/InboxTwoTone";
+// import InboxTwoToneIcon from "@mui/icons-material/InboxTwoTone";
 import { styled } from "@mui/material/styles";
 import ExpandMoreTwoToneIcon from "@mui/icons-material/ExpandMoreTwoTone";
-import AccountBoxTwoToneIcon from "@mui/icons-material/AccountBoxTwoTone";
+// import AccountBoxTwoToneIcon from "@mui/icons-material/AccountBoxTwoTone";
 import LockOpenTwoToneIcon from "@mui/icons-material/LockOpenTwoTone";
-import AccountTreeTwoToneIcon from "@mui/icons-material/AccountTreeTwoTone";
+// import AccountTreeTwoToneIcon from "@mui/icons-material/AccountTreeTwoTone";
 import { logout } from "@/redux/selectedAuth";
 import { useDispatch } from "react-redux";
 const UserBoxButton = styled(Button)(
@@ -93,7 +93,7 @@ function HeaderUserbox() {
                             {user!.fullname}
                         </UserBoxLabel>
                         <UserBoxDescription variant="body2">
-                            {/* {user!.role} */} `just test`
+                            {user!.role}
                         </UserBoxDescription>
                     </UserBoxText>
                 </Hidden>
@@ -130,7 +130,7 @@ function HeaderUserbox() {
                     </UserBoxText>
                 </MenuUserBox>
                 <Divider sx={{ mb: 0 }} />
-                <List sx={{ p: 1 }} component="nav">
+                {/* <List sx={{ p: 1 }} component="nav">
                     <NextLink href="/management/profile" passHref>
                         <ListItem button>
                             <AccountBoxTwoToneIcon fontSize="small" />
@@ -149,7 +149,7 @@ function HeaderUserbox() {
                             <ListItemText primary="Account Settings" />
                         </ListItem>
                     </NextLink>
-                </List>
+                </List> */}
                 <Divider />
                 <Box sx={{ m: 1 }}>
                     <Button color="primary" fullWidth onClick={handleLogout}>

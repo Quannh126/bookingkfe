@@ -1,8 +1,8 @@
 import { useAuth } from "@/hooks";
 
 import { LoginForm } from "@/components/auth";
-import { Paper } from "@mui/material";
-import { Box } from "@mui/system";
+import { Container, Paper } from "@mui/material";
+// import { Box } from "@mui/system";
 // import { DialogTitle, Button } from "@mui/material";
 import { LoginPayload } from "@/models";
 import { useRouter } from "next/router";
@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import BaseLayout from "@/components/layout/BaseLayout";
 import { toast } from "react-toastify";
-import { getErrorMessage } from "@/utils";
+import { PureLightTheme, getErrorMessage } from "@/utils";
 // import AdminLayout from "@/components/layout/admin";
 export interface ILoginPage {}
 export default function LoginPage() {
@@ -41,12 +41,11 @@ export default function LoginPage() {
     }, [router]);
 
     return (
-        <Box>
+        <Container maxWidth="lg" sx={{ mt: PureLightTheme.spacing(25) }}>
             <Paper
                 elevation={4}
                 sx={{
                     mx: "auto",
-                    mt: 20,
                     p: 4,
                     maxWidth: "480px",
                     textAlign: "center",
@@ -54,7 +53,7 @@ export default function LoginPage() {
             >
                 <LoginForm onSubmit={handleSubmit} />
             </Paper>
-        </Box>
+        </Container>
     );
 }
 LoginPage.Layout = BaseLayout;

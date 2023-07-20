@@ -8,6 +8,11 @@ import { convertDateToString } from "@/utils";
 
 import useSWR from "swr";
 import { PublicConfiguration, SWRConfiguration } from "swr/_internal";
+import io from "socket.io-client";
+// import { useSocket } from "./useSocket";
+
+require("dotenv").config();
+const host = process.env.API_URL;
 export type CreateURLPayment = {
     amount: string;
     bankCode: string;
@@ -26,7 +31,7 @@ export function useCoach(
             new Date()
         )}`;
     }
-
+    const socket = io(host!, { transports: ["websocket"] });
     const config: SWRConfiguration = {
         dedupingInterval: 3 * 60 * 1000,
         revalidateOnFocus: false,
@@ -47,6 +52,8 @@ export function useCoach(
     async function addBooking(data: IBookingForm): Promise<any> {
         const orderIds = await coachApi.add(data);
 
+        socket.emit("changeSeats", { info: "changeSeats" });
+
         await mutate();
         return orderIds;
     }
@@ -62,5 +69,6 @@ export function useCoach(
         isLoading,
         addBooking,
         mutate,
+        socket,
     };
 }

@@ -23,7 +23,7 @@ export const axiosClient = axios.create({
     headers: {
         "Content-Type": "application/json",
     },
-    withCredentials: true, // Cho phép trình duyệt gửi cookie cùng với req
+    withCredentials: true, //Cho phép trình duyệt gửi cookie cùng với req
 });
 
 export const axiosClientFile = axios.create({

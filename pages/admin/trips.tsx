@@ -7,7 +7,7 @@ import {
     DialogActions,
     DialogContentText,
     DialogTitle,
-    Typography,
+    // Typography,
 } from "@mui/material";
 // import { TransitionProps } from "@mui/material/transitions";
 import { useTrip } from "@/hooks";
@@ -89,9 +89,7 @@ const AdminTrips: NextpageWithLayout = () => {
                 <DialogTitle id="alert-dialog-title">{"Thông báo"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        <Typography color="error">
-                            Bạn có chắc muốn xoá thông tin bản ghi không?
-                        </Typography>
+                        Bạn có chắc muốn xoá thông tin bản ghi không?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
