@@ -56,6 +56,7 @@ import {
 import { Skeleton } from "@mui/material";
 import SkeletonListCoach from "@/components/home/SkeletonListCoach";
 // import dynamic from "next/dynamic";
+
 // eslint-disable-next-line no-unused-vars
 type FunctionType = (data: IBookingForm) => any;
 // eslint-disable-next-line no-unused-vars
@@ -147,7 +148,16 @@ const Coach: NextpageWithLayout = () => {
         addBooking,
         createURL,
         mutate,
+        socket,
     } = useCoach(queryParams, router.isReady);
+    //socket-io
+    if (!isLoadingHook) {
+        socket.on("changeData", () => {
+            console.log("got change");
+            mutate();
+            // setChange([...change, data.info]);
+        });
+    }
 
     const onChangeFrom = (val: any) => {
         // console.log(val.target.value);
@@ -208,6 +218,7 @@ const Coach: NextpageWithLayout = () => {
     // if (!router.isReady) {
     //     return <LoadingPage />;
     // }
+
     return (
         <Box
             sx={{

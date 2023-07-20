@@ -2,6 +2,7 @@
 import { Box } from "@mui/system";
 import {
     Button,
+    CircularProgress,
     Container,
     // Typography,
     Dialog,
@@ -34,7 +35,7 @@ import TripDetail from "@/components/booking/trip-detail";
 import { BookForm, BookUpdateForm } from "@/components/booking";
 import { useBooking } from "@/hooks/useBooking";
 import IBookingTrip, { ISeatDetail } from "@/models/Book/book-trip";
-import LoadingPage from "@/components/common/loading";
+// import LoadingPage from "@/components/common/loading";
 // import { AlertContentProp, SnackAlert } from "@/components/common";
 import SidebarLayout from "@/components/layout/SidebarLayout";
 import { Route12, Route21 } from "@/config/routes";
@@ -42,6 +43,11 @@ import PageTitleWrapper from "@/components/PageTitleWrapper";
 import Head from "next/head";
 import moment from "moment";
 import { toast } from "react-toastify";
+import io from "socket.io-client";
+require("dotenv").config();
+const host = process.env.API_URL;
+const socket = io(host!, { transports: ["websocket"] });
+let count = 0;
 const AdminBooking: NextpageWithLayout = () => {
     const [showBookingForm, setShowBookingForm] = useState(false);
     const [selectedTrip, setSelectedTrip] = useState<IBookingTrip>(
@@ -74,6 +80,7 @@ const AdminBooking: NextpageWithLayout = () => {
     const [swapSeat, setSwapSeat] = useState(-1);
     const [singleSelectMode, setSingleSelectMode] = useState(false);
     // const { listTrips } = useTrip(queryParams);
+    // const [change, setChange] = useState(false);
 
     const {
         listBooking,
@@ -82,6 +89,7 @@ const AdminBooking: NextpageWithLayout = () => {
         updateSeat,
         removeBooking,
         isLoading,
+        mutate,
     } = useBooking(queryParams);
     const {
         // register,
@@ -100,6 +108,7 @@ const AdminBooking: NextpageWithLayout = () => {
         reValidateMode: "onSubmit",
     });
     const watchRoute = watch("route", "1-2");
+
     const handleClose = (event: Object, reason: string) => {
         if (reason && reason == "backdropClick") return;
         setShowBookingForm(false);
@@ -120,7 +129,6 @@ const AdminBooking: NextpageWithLayout = () => {
 
     const handleSearchSubmit = (data: IFilterTrip) => {
         setSelectedTrip({} as IBookingTrip);
-        // console.log(data);
         let params = `/search?route=${data.route}&journey_date=${moment(
             data.s_journey_date
         ).format("YYYY-MM-DD")}&pickup_point=${data.from_point}&dropoff_point=${
@@ -135,12 +143,10 @@ const AdminBooking: NextpageWithLayout = () => {
     };
 
     const handleAddClick = () => {
-        // setOpenSnack(false);
         toast.dismiss();
         setShowBookingForm(true);
     };
     const handleUpdateClick = async () => {
-        // setOpenSnack(false);
         toast.dismiss();
         const seat_number = selectedSeatsBooked[0];
 
@@ -159,8 +165,6 @@ const AdminBooking: NextpageWithLayout = () => {
                 ""
             )
             .substring(1);
-
-        // console.log(seat_number);
         if (book_detail) {
             setBookingData(book_detail);
             setListIdBooking(listId);
@@ -169,12 +173,6 @@ const AdminBooking: NextpageWithLayout = () => {
     };
     const handleSwapClick = () => {
         setSingleSelectMode(true);
-        // setSnackData({
-        //     content: "Vui lòng chọn chỗ muốn đổi",
-        //     typeAlert: "info",
-        //     openInit: true,
-        // });
-        // setOpenSnack(true);
         toast.info("Vui lòng chọn chỗ muốn đổi");
     };
     const handleClickDelete = () => {
@@ -187,14 +185,9 @@ const AdminBooking: NextpageWithLayout = () => {
             setPageLoading(true);
             await removeBooking(trip_id, list_seat);
             setPageLoading(false);
+            socket.emit("changeSeats", { info: "changeSeats" });
         } catch (error: any) {
             setPageLoading(false);
-            // setSnackData({
-            //     content: error?.response.data.message ?? "Có lỗi xảy ra",
-            //     typeAlert: "error",
-            //     openInit: true,
-            // });
-            // setOpenSnack(true);
             const msg = getErrorMessage(error);
             toast.error(msg ?? "Có lỗi xảy ra");
         }
@@ -211,21 +204,11 @@ const AdminBooking: NextpageWithLayout = () => {
             setSingleSelectMode(false);
             setSwapSeat(-1);
             toast.success("Đổi chỗ thành công");
-            // setSnackData({
-            //     content: "Đổi chỗ thành công",
-            //     typeAlert: "success",
-            //     openInit: true,
-            // });
-            // setOpenSnack(true);
-            // toast.clearWaitingQueue();
+
+            socket.emit("changeSeats", { info: "changeSeats" });
         } catch (error: any) {
             setPageLoading(false);
-            // setSnackData({
-            //     content: error?.response.data.message ?? "Có lỗi xảy ra",
-            //     typeAlert: "error",
-            //     openInit: true,
-            // });
-            // setOpenSnack(true);
+
             const msg = getErrorMessage(error);
             toast.error(msg ?? "Có lỗi xảy ra");
         }
@@ -244,6 +227,9 @@ const AdminBooking: NextpageWithLayout = () => {
             //     openInit: true,
             // });
             // setOpenSnack(true);
+            console.log("Submit add");
+            // socket-io
+            socket.emit("changeSeats", { info: "changeSeats" });
             toast.success("Đặt thành công");
         } catch (error: any) {
             setPageLoading(false);
@@ -260,12 +246,8 @@ const AdminBooking: NextpageWithLayout = () => {
             setPageLoading(false);
             setShowBookingUpdateForm(false);
             setSelectedSeatsBooked([]);
-            // setSnackData({
-            //     content: "Cập nhật thành công",
-            //     typeAlert: "success",
-            //     openInit: true,
-            // });
-            // setOpenSnack(true);
+            // socket-io
+            socket.emit("changeSeats", { info: "changeSeats" });
             toast.success("Cập nhật thành công");
         } catch (error: any) {
             console.log("update error", error);
@@ -305,6 +287,20 @@ const AdminBooking: NextpageWithLayout = () => {
     }
     //console.log("Render count: ", countRender++);
 
+    // socket.on("change_data_seat", () => {
+    //     console.log("got change");
+    //     mutate();
+    //     // setChange([...change, data.info]);
+    // });
+    let countMutate = 0;
+    socket.on("changeData", () => {
+        console.log("got change");
+        if (countMutate == 0) {
+            mutate();
+        }
+        // setChange([...change, data.info]);
+    });
+    console.log("render: ", count++);
     useEffect(() => {
         if (selectedTripId && listBooking) {
             setSelectedTrip(
@@ -313,33 +309,14 @@ const AdminBooking: NextpageWithLayout = () => {
         }
     }, [selectedTripId, listBooking]);
 
-    if (isLoading || !listProvince.data || !listBooking) {
-        console.log(
-            isLoading,
-            "||",
-
-            "||",
-            !listProvince.data,
-            "||",
-            !listBooking
-        );
-        return <LoadingPage />;
-    }
     return (
         <>
             <Head>
                 <title>Đặt vé xe</title>
             </Head>
-            {isPageLoading && <LoadingPage />}
-
-            {/* {openSnack && (
-                <SnackAlert
-                    openInit={true}
-                    content={snackData.content}
-                    typeAlert={snackData.typeAlert}
-                />
-            )} */}
+            {/* {isPageLoading && <LoadingPage />} */}
             <PageTitleWrapper>
+                {/* <Button onClick={handleSocket}>Connect</Button> */}
                 <Container maxWidth="lg">
                     <Box
                         component="form"
@@ -465,9 +442,7 @@ const AdminBooking: NextpageWithLayout = () => {
                 </DialogTitle>
                 <DialogContent sx={{ height: "60px", width: "400px" }}>
                     <DialogContentText id="alert-dialog-description">
-                        <Typography variant="h5">
-                            Có chắc muốn huỷ vé không?
-                        </Typography>
+                        Có chắc muốn huỷ vé không?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -492,35 +467,48 @@ const AdminBooking: NextpageWithLayout = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-            {showListTrip && (
-                <TableListBooking
-                    listProvince={!listProvince.data ? [] : listProvince.data}
-                    // listTrips={listTrips}
-                    listBooking={listBooking}
-                    handleClickToTrip={handleClickToTrip}
-                />
+            {isLoading || listProvince.isLoading || isPageLoading ? (
+                <CircularProgress />
+            ) : (
+                showListTrip && (
+                    <TableListBooking
+                        listProvince={
+                            !listProvince.data ? [] : listProvince.data
+                        }
+                        // listTrips={listTrips}
+                        listBooking={listBooking}
+                        handleClickToTrip={handleClickToTrip}
+                    />
+                )
             )}
-            {!showListTrip && (
-                <TripDetail
-                    setSwapSeat={setSwapSeat}
-                    swapSeat={swapSeat}
-                    setSwapId={setSwapId}
-                    handleChooseSwapSeat={handleChooseSwapSeat}
-                    handleSwapClick={handleSwapClick}
-                    journeyDate={journeyDate}
-                    listProvince={!listProvince.data ? [] : listProvince.data}
-                    tripDetail={selectedTrip}
-                    handleAddClick={handleAddClick}
-                    selectedSeats={selectedSeats}
-                    setSelectedSeats={setSelectedSeats}
-                    setShowListTrip={setShowListTrip}
-                    selectedSeatsBooked={selectedSeatsBooked}
-                    setSelectedSeatsBooked={setSelectedSeatsBooked}
-                    listDropoffAndPickUp={listDropoffAndPickUp}
-                    handleUpdateClick={handleUpdateClick}
-                    setSingleSelectMode={setSingleSelectMode}
-                    singleSelectMode={singleSelectMode}
-                />
+
+            {isLoading || listProvince.isLoading || isPageLoading ? (
+                <CircularProgress />
+            ) : (
+                !showListTrip && (
+                    <TripDetail
+                        setSwapSeat={setSwapSeat}
+                        swapSeat={swapSeat}
+                        setSwapId={setSwapId}
+                        handleChooseSwapSeat={handleChooseSwapSeat}
+                        handleSwapClick={handleSwapClick}
+                        journeyDate={journeyDate}
+                        listProvince={
+                            !listProvince.data ? [] : listProvince.data
+                        }
+                        tripDetail={selectedTrip}
+                        handleAddClick={handleAddClick}
+                        selectedSeats={selectedSeats}
+                        setSelectedSeats={setSelectedSeats}
+                        setShowListTrip={setShowListTrip}
+                        selectedSeatsBooked={selectedSeatsBooked}
+                        setSelectedSeatsBooked={setSelectedSeatsBooked}
+                        listDropoffAndPickUp={listDropoffAndPickUp}
+                        handleUpdateClick={handleUpdateClick}
+                        setSingleSelectMode={setSingleSelectMode}
+                        singleSelectMode={singleSelectMode}
+                    />
+                )
             )}
         </>
     );
