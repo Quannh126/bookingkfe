@@ -53,7 +53,7 @@ const AdminBooking: NextpageWithLayout = () => {
     const [selectedTrip, setSelectedTrip] = useState<IBookingTrip>(
         {} as IBookingTrip
     );
-    const [isPageLoading, setPageLoading] = useState(false);
+    // const [isPageLoading, setPageLoading] = useState(false);
     const [listIdBooking, setListIdBooking] = useState("");
     const [selectedTripId, setSelectedTripID] = useState("");
     const [showBookingUpdateForm, setShowBookingUpdateForm] = useState(false);
@@ -183,12 +183,12 @@ const AdminBooking: NextpageWithLayout = () => {
         try {
             // console.log("log", trip_id, list_seat);
             setOpenWarning(false);
-            setPageLoading(true);
+            // setPageLoading(true);
             await removeBooking(trip_id, list_seat);
-            setPageLoading(false);
+            // setPageLoading(false);
             socket.emit("changeSeats", { info: "changeSeats" });
         } catch (error: any) {
-            setPageLoading(false);
+            // setPageLoading(false);
             const msg = getErrorMessage(error);
             toast.error(msg ?? "Có lỗi xảy ra");
         }
@@ -198,9 +198,9 @@ const AdminBooking: NextpageWithLayout = () => {
             // setOpenSnack(false);
             toast.dismiss();
             setSelectedSeatsBooked([]);
-            setPageLoading(true);
+            // setPageLoading(true);
             await updateSeat(seat, swapId);
-            setPageLoading(false);
+            // setPageLoading(false);
             setSwapId("");
             setSingleSelectMode(false);
             setSwapSeat(-1);
@@ -208,7 +208,7 @@ const AdminBooking: NextpageWithLayout = () => {
 
             socket.emit("changeSeats", { info: "changeSeats" });
         } catch (error: any) {
-            setPageLoading(false);
+            // setPageLoading(false);
 
             const msg = getErrorMessage(error);
             toast.error(msg ?? "Có lỗi xảy ra");
@@ -216,10 +216,10 @@ const AdminBooking: NextpageWithLayout = () => {
     };
     async function handleBookSubmit(data: IBookingForm) {
         try {
-            setPageLoading(true);
+            // setPageLoading(true);
             await addBooking(data);
 
-            setPageLoading(false);
+            // setPageLoading(false);
             setShowBookingForm(false);
             setSelectedSeats([]);
             // setSnackData({
@@ -233,7 +233,7 @@ const AdminBooking: NextpageWithLayout = () => {
             socket.emit("changeSeats", { info: "changeSeats" });
             toast.success("Đặt thành công");
         } catch (error: any) {
-            setPageLoading(false);
+            // setPageLoading(false);
             setVisibleAlertText(true);
             const msg = getErrorMessage(error);
             toast.error(msg ?? "Có lỗi xảy ra");
@@ -242,9 +242,9 @@ const AdminBooking: NextpageWithLayout = () => {
     }
     async function handleBookUpdateSubmit(data: IBookingUpdateForm) {
         try {
-            setPageLoading(true);
+            // setPageLoading(true);
             await updateBooking(data);
-            setPageLoading(false);
+            // setPageLoading(false);
             setShowBookingUpdateForm(false);
             setSelectedSeatsBooked([]);
             // socket-io
@@ -253,7 +253,7 @@ const AdminBooking: NextpageWithLayout = () => {
         } catch (error: any) {
             console.log("update error", error);
 
-            setPageLoading(false);
+            // setPageLoading(false);
             // setVisibleAlertText(true);
             // setAlertText(error?.response.data.message ?? "Có lỗi xảy ra");
             const msg = getErrorMessage(error);
