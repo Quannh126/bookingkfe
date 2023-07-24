@@ -2,7 +2,7 @@
 
 import {
     Button,
-    Typography,
+    // Typography,
     Dialog,
     DialogTitle,
     DialogActions,
@@ -23,7 +23,9 @@ import {
 import { ICustomerDetail } from "@/models";
 import SidebarLayout from "@/components/layout/SidebarLayout";
 import Head from "next/head";
-import PageTitleWrapper from "@/components/PageTitleWrapper";
+// import PageTitleWrapper from "@/components/PageTitleWrapper";
+// import Footer from "@/components/Footer";
+import { PureLightTheme } from "@/utils";
 
 // import { SnackAlert, AlertContentProp } from "@/components/common";
 
@@ -91,11 +93,7 @@ const AdminCustomer: NextpageWithLayout = () => {
             <Head>
                 <title>Quản lý khách hàng</title>
             </Head>
-            <PageTitleWrapper>
-                <Typography component="h1" variant="h5">
-                    Quản lý khách hàng
-                </Typography>
-            </PageTitleWrapper>
+
             <Container maxWidth="lg">
                 <Grid
                     container
@@ -104,10 +102,17 @@ const AdminCustomer: NextpageWithLayout = () => {
                     alignItems="stretch"
                     spacing={3}
                 >
-                    <Grid item xs={12}>
+                    <Grid
+                        item
+                        xs={12}
+                        sx={{
+                            marginTop: PureLightTheme.spacing(2),
+                            marginBottom: PureLightTheme.spacing(2),
+                        }}
+                    >
                         <Button
                             onClick={() => setShowCustomerForm(true)}
-                            variant="outlined"
+                            variant="contained"
                         >
                             Thêm mới khách hàng
                         </Button>
@@ -166,6 +171,7 @@ const AdminCustomer: NextpageWithLayout = () => {
                     </DialogActions>
                 </Dialog>
             </Container>
+            {/* <Footer /> */}
         </>
     );
 };

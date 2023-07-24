@@ -219,24 +219,6 @@ function SidebarMenu() {
                                 <ListItem component="div">
                                     <Button
                                         className={
-                                            currentRoute === "/admin/dashboard"
-                                                ? "active"
-                                                : ""
-                                        }
-                                        disableRipple
-                                        component="a"
-                                        onClick={() => {
-                                            dispatch(closeSidebar());
-                                            handelRoute("/admin/dashboard");
-                                        }}
-                                        startIcon={<BrightnessLowTwoToneIcon />}
-                                    >
-                                        Dashboard
-                                    </Button>
-                                </ListItem>
-                                <ListItem component="div">
-                                    <Button
-                                        className={
                                             currentRoute === "/admin/users"
                                                 ? "active"
                                                 : ""
@@ -268,6 +250,24 @@ function SidebarMenu() {
                     >
                         <SubMenuWrapper>
                             <List component="div">
+                                <ListItem component="div">
+                                    <Button
+                                        className={
+                                            currentRoute === "/admin/dashboard"
+                                                ? "active"
+                                                : ""
+                                        }
+                                        disableRipple
+                                        component="a"
+                                        onClick={() => {
+                                            dispatch(closeSidebar());
+                                            handelRoute("/admin/dashboard");
+                                        }}
+                                        startIcon={<BrightnessLowTwoToneIcon />}
+                                    >
+                                        Dashboard
+                                    </Button>
+                                </ListItem>
                                 <ListItem component="div">
                                     <Button
                                         className={

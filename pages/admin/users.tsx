@@ -2,7 +2,7 @@
 
 import {
     Button,
-    Typography,
+    // Typography,
     Dialog,
     DialogTitle,
     DialogActions,
@@ -19,8 +19,9 @@ import React, { useState } from "react";
 import { IUserDetail, IUserForm, NextpageWithLayout } from "@/models";
 import SidebarLayout from "@/components/layout/SidebarLayout";
 import Head from "next/head";
-import PageTitleWrapper from "@/components/PageTitleWrapper";
+// import PageTitleWrapper from "@/components/PageTitleWrapper";
 import { TableListUser, UserForm, UserUpdateForm } from "@/components/users";
+import { PureLightTheme } from "@/utils";
 
 // import { SnackAlert, AlertContentProp } from "@/components/common";
 
@@ -87,11 +88,7 @@ const AdminUser: NextpageWithLayout = () => {
             <Head>
                 <title>Quản lý tài khoản</title>
             </Head>
-            <PageTitleWrapper>
-                <Typography component="h2" variant="h3">
-                    Quản lý tài khoản
-                </Typography>
-            </PageTitleWrapper>
+
             <Container maxWidth="lg">
                 <Grid
                     container
@@ -100,10 +97,17 @@ const AdminUser: NextpageWithLayout = () => {
                     alignItems="stretch"
                     spacing={3}
                 >
-                    <Grid item xs={12}>
+                    <Grid
+                        item
+                        xs={12}
+                        sx={{
+                            marginTop: PureLightTheme.spacing(2),
+                            marginBottom: PureLightTheme.spacing(2),
+                        }}
+                    >
                         <Button
                             onClick={() => setShowUserForm(true)}
-                            variant="outlined"
+                            variant="contained"
                         >
                             Thêm mới tài khoản
                         </Button>

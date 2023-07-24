@@ -13,7 +13,13 @@ import {
     // TableFooter,
     // TablePagination,
 } from "@mui/material";
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import {
+    DataGrid,
+    GridColDef,
+    GridRenderCellParams,
+    GridToolbarContainer,
+    GridToolbarExport,
+} from "@mui/x-data-grid";
 
 import { ICarDetail } from "@/models";
 import EditIcon from "@mui/icons-material/Edit";
@@ -28,13 +34,23 @@ export interface ITableListCarProps {
     handleRemoveClick: (data: ICarDetail) => void;
 }
 type Row = ICarDetail;
-// function CustomToolbar() {
-//     return (
-//         <GridToolbarContainer>
-//             <GridToolbarExport />
-//         </GridToolbarContainer>
-//     );
-// }
+function CustomToolbar() {
+    return (
+        <GridToolbarContainer>
+            <GridToolbarExport
+                csvOptions={{
+                    utf8WithBom: true,
+                    includeHeaders: true,
+                    fileName: "Danh sách",
+                }}
+                printOptions={{
+                    hideFooter: true,
+                    hideToolbar: true,
+                }}
+            />
+        </GridToolbarContainer>
+    );
+}
 export function TableListCar({
     listCar,
     handleEditClick,
@@ -182,6 +198,7 @@ export function TableListCar({
                             labelRowsPerPage: "Số dòng trong trang",
                         },
                     }}
+                    components={{ Toolbar: CustomToolbar }}
                     // components={{
                     //     Toolbar: CustomToolbar,
                     // }}

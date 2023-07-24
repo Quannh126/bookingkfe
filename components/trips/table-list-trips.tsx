@@ -92,7 +92,6 @@ export function TableListTrips({
                             sm={6}
                             md={4}
                             lg={3}
-                            xl={2}
                             sx={{ paddingLeft: 1, paddingTop: 1 }}
                         >
                             <Card elevation={2} sx={{ height: "100%" }}>
@@ -226,7 +225,6 @@ export function TableListTrips({
                     sm={6}
                     md={4}
                     lg={3}
-                    xl={2}
                     sx={{ paddingLeft: 1, paddingTop: 1 }}
                 >
                     <Card sx={{ height: "100%" }}>
