@@ -48,6 +48,7 @@ import { PureLightTheme } from "@/utils";
 import BaseLayout from "@/components/layout/BaseLayout";
 import Logo from "@/components/Logo";
 import LoadingPage from "@/components/common/loading";
+import Footer from "@/components/Footer";
 // import useSWR, { SWRConfiguration } from "swr";
 
 const SearchWrapper = styled(Card)<CardProps>(
@@ -162,6 +163,7 @@ const Home: NextpageWithLayout = () => {
                     component="img"
                     sx={{
                         height: 600,
+
                         width: "100%",
                     }}
                     src="/img/background.jpg"
@@ -324,6 +326,7 @@ const Home: NextpageWithLayout = () => {
             </Container>
 
             <Popular />
+            <Footer />
         </Box>
     );
 };

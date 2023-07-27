@@ -7,6 +7,7 @@ import {
     DialogActions,
     DialogContentText,
     DialogTitle,
+    Container,
     // Typography,
 } from "@mui/material";
 // import { TransitionProps } from "@mui/material/transitions";
@@ -22,6 +23,8 @@ import SidebarLayout from "@/components/layout/SidebarLayout";
 // import TableListCar from "@/components/cars/table-list-cars";
 // import { useRouter } from "next/router";
 import LoadingPage from "@/components/common/loading";
+import Head from "next/head";
+import { PureLightTheme } from "@/utils";
 const AdminTrips: NextpageWithLayout = () => {
     const [showTripForm, setShowTripForm] = useState(false);
     const [selected, setSelected] = useState({});
@@ -85,6 +88,24 @@ const AdminTrips: NextpageWithLayout = () => {
     if (isLoading || !listProvince) return <LoadingPage />;
     return (
         <>
+            <Head>
+                <title>Lập lịch chạy</title>
+            </Head>
+            <Container
+                maxWidth="lg"
+                sx={{
+                    marginTop: PureLightTheme.spacing(2),
+                    marginBottom: PureLightTheme.spacing(2),
+                }}
+            >
+                <TableListTrips
+                    listProvince={!listProvince.data ? [] : listProvince.data}
+                    listTrips={listTrips}
+                    handleEditClick={handleEditClick}
+                    handleRemoveClick={handleRemoveClick}
+                    setShowTripForm={setShowTripForm}
+                />
+            </Container>
             <Dialog open={showAlert} keepMounted>
                 <DialogTitle id="alert-dialog-title">{"Thông báo"}</DialogTitle>
                 <DialogContent>
@@ -125,14 +146,6 @@ const AdminTrips: NextpageWithLayout = () => {
                     handleClose2={handleClose2}
                 />
             )}
-
-            <TableListTrips
-                listProvince={!listProvince.data ? [] : listProvince.data}
-                listTrips={listTrips}
-                handleEditClick={handleEditClick}
-                handleRemoveClick={handleRemoveClick}
-                setShowTripForm={setShowTripForm}
-            />
         </>
     );
 };

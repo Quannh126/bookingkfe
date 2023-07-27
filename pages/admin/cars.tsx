@@ -1,5 +1,5 @@
 // import AdminLayout from "@/components/layout/admin";
-import { Box } from "@mui/system";
+// import { Box } from "@mui/system";
 import {
     Button,
     // Typography,
@@ -8,20 +8,29 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
+    Container,
 } from "@mui/material";
 // import { TransitionProps } from "@mui/material/transitions";
 import { useCar } from "@/hooks";
 import { ICarForm, NextpageWithLayout } from "../../models";
-import React, { useRef, useState } from "react";
+import React, {
+    // useRef,
+
+    useState,
+} from "react";
 import { CarForm, TableListCar, CarUpdateForm } from "@/components/cars";
 import { ICarDetail } from "@/models";
-import { CSVLink } from "react-csv";
-import GetAppIcon from "@mui/icons-material/GetApp";
+// import { CSVLink } from "react-csv";
+// import GetAppIcon from "@mui/icons-material/GetApp";
 // import useMutation from "@/hooks/useUpload";
 import { axiosClient } from "@/api-client";
 import axios from "axios";
 import SidebarLayout from "@/components/layout/SidebarLayout";
-import Footer from "@/components/Footer";
+// import Footer from "@/components/Footer";
+// import PageTitleWrapper from "@/components/PageTitleWrapper";
+import Head from "next/head";
+import { PureLightTheme } from "@/utils";
+// import { GridToolbarContainer, GridToolbarExport } from "@mui/x-data-grid";
 // import TableListCar from "@/components/cars/table-list-cars";
 const AdminCars: NextpageWithLayout = () => {
     const [showCarForm, setShowCarForm] = useState(false);
@@ -131,65 +140,36 @@ const AdminCars: NextpageWithLayout = () => {
         }
     }
 
-    const csvLinkRef = useRef<
-        CSVLink & HTMLAnchorElement & { link: HTMLAnchorElement }
-    >(null); // setup the ref that we'll use for the hidden CsvLink click once we've updated the data
-
-    const [data, setData] = useState<any[]>([]);
-    const headers = [
-        { label: "Tên", key: "name" },
-        { label: "Kiểu xe", key: "type_car" },
-        { label: "Số ghê", key: "capacity" },
-        { label: "Biển số xe", key: "license_plate" },
-        { label: "Tên tài xế", key: "driver_name" },
-        { label: "Số điện thoại", key: "phonenumber" },
-        { label: "Trạng thái", key: "status" },
-    ];
-    const hanldeExportButton = async () => {
-        const data: any[] | [] = await listCar!.map(
-            ({
-                name,
-                type_car,
-                capacity,
-                license_plate,
-                driver_name,
-                phonenumber,
-                status,
-            }) => ({
-                name,
-                type_car,
-                capacity,
-                license_plate,
-                driver_name,
-                phonenumber,
-                status,
-            })
-        );
-        setData(data);
-        csvLinkRef?.current?.link.click();
-    };
-
     return (
-        <Box>
-            {/* <Typography component="h1" variant="h4" p={2}>
-                Quản lý xe
-            </Typography> */}
+        <>
+            <Head>
+                <title>Quản lý xe</title>
+            </Head>
 
-            <Button
-                sx={{ ml: 2 }}
-                onClick={() => setShowCarForm(true)}
-                variant="outlined"
+            <Container
+                maxWidth="lg"
+                sx={{
+                    marginTop: PureLightTheme.spacing(2),
+                    marginBottom: PureLightTheme.spacing(2),
+                }}
             >
-                Thêm xe
-            </Button>
-            <CSVLink
+                <Button
+                    sx={{ ml: 2 }}
+                    onClick={() => setShowCarForm(true)}
+                    variant="contained"
+                >
+                    Thêm xe
+                </Button>
+            </Container>
+
+            {/* <CSVLink
                 headers={headers}
                 data={data}
                 className="exportButton"
                 filename="Danh-sach-xe.csv"
                 ref={csvLinkRef}
-            ></CSVLink>
-            <Button
+            ></CSVLink> */}
+            {/* <Button
                 sx={{ ml: 2 }}
                 color="primary"
                 variant="contained"
@@ -197,7 +177,7 @@ const AdminCars: NextpageWithLayout = () => {
                 onClick={hanldeExportButton}
             >
                 Export As CSV
-            </Button>
+            </Button> */}
             <Dialog
                 open={showCarForm}
                 // TransitionComponent={Transition}
@@ -247,15 +227,18 @@ const AdminCars: NextpageWithLayout = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-            {listCar && (
-                <TableListCar
-                    listCar={listCar}
-                    handleEditClick={handleEditClick}
-                    handleRemoveClick={hanleRemoveClick}
-                />
-            )}
-            <Footer />
-        </Box>
+            <Container maxWidth="lg">
+                {listCar && (
+                    <TableListCar
+                        listCar={listCar}
+                        handleEditClick={handleEditClick}
+                        handleRemoveClick={hanleRemoveClick}
+                    />
+                )}
+            </Container>
+
+            {/* <Footer /> */}
+        </>
     );
 };
 

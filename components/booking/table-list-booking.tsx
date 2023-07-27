@@ -51,8 +51,7 @@ export function TableListBooking({
                             item
                             xs={12}
                             sm={6}
-                            md={4}
-                            lg={3}
+                            md={3}
 
                             // sx={{ paddingLeft: 1, paddingTop: 1 }}
                         >
@@ -201,9 +200,6 @@ export function TableListBooking({
                             </Card>
                         </Grid>
                     ))}
-                <Grid xs={12} md={4} item>
-                    <Box></Box>
-                </Grid>
             </Grid>
         </Container>
     );
