@@ -352,6 +352,7 @@ export default function SeatSelection({
                             onClick={() => {
                                 setShowListTrip(true);
                                 setSelectedSeats([]);
+                                setSelectedSeatsBooked([]);
                             }}
                             startIcon={<ArrowBackIosIcon />}
                             sx={{ ml: 1 }}
@@ -441,7 +442,15 @@ export default function SeatSelection({
                             }
                             let isSwapSeat = seat + 1 === swapSeat;
                             return (
-                                <Grid item xs={12} sm={6} md={6} key={index}>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                    md={6}
+                                    lg={4}
+                                    xl={3}
+                                    key={index}
+                                >
                                     <Box>
                                         <Card
                                             elevation={2}
