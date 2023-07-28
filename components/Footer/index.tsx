@@ -13,13 +13,14 @@ function Footer() {
         <FooterWrapper className="footer-wrapper">
             <Box
                 pb={4}
+                m={0}
                 display={{ xs: "block", md: "flex" }}
-                alignItems="center"
+                alignItems="centesr"
                 textAlign={{ xs: "center", md: "left" }}
                 justifyContent="space-between"
             >
                 <Grid container spacing={4}>
-                    <Grid xs={12} md={6} item>
+                    <Grid xs={12} md={4} item>
                         <Typography sx={{ fontWeight: 500, fontSize: "18px" }}>
                             CÔNG TY CỔ PHẦN TẬP ĐOÀN B.Y
                         </Typography>
@@ -65,12 +66,25 @@ function Footer() {
                         </Box>
                     </Grid>
 
-                    <Grid xs={12} md={3} item>
+                    <Grid xs={12} md={4} item>
                         <Typography sx={{ fontWeight: 500, fontSize: "18px" }}>
                             Các hình thức thanh toán
                         </Typography>
+                        <Box display="flex">
+                            <Box
+                                component="img"
+                                height="56px"
+                                width="75px"
+                                src="icon/visa_82256.png"
+                            />
+                            <Box
+                                component="img"
+                                height="56px"
+                                src="icon/vn_pay.png"
+                            />
+                        </Box>
                     </Grid>
-                    <Grid xs={12} md={3} item>
+                    <Grid xs={12} md={4} item>
                         <Typography sx={{ fontWeight: 500, fontSize: "18px" }}>
                             Bản đồ
                         </Typography>

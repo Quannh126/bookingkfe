@@ -11,6 +11,7 @@ import {
 } from "../models";
 // import { Popular } from "@/components/home";
 // import { useBooking } from "@/hooks/useBooking";
+import Footer from "@/components/Footer";
 import React, { createContext, useState } from "react";
 import {
     // Button,
@@ -25,9 +26,11 @@ import {
     Select,
     Typography,
     styled,
+    // IconButton,
+    Avatar,
 } from "@mui/material";
 // import LoadingPage from "@/components/common/loading";
-
+import LocalPhoneTwoToneIcon from "@mui/icons-material/LocalPhoneTwoTone";
 import ListBooking from "@/components/home/list_trip_booking";
 import { useRouter } from "next/router";
 import { CreateURLPayment, useCoach } from "@/hooks";
@@ -95,7 +98,21 @@ const HeaderWrapper = styled(Card)(
 //       overflow-x: hidden;
 //   `
 // );
-
+const HotlineWapper = styled(Box)(
+    () => `
+    padding: 8px;
+    position: fixed;
+    bottom: 115px;
+    right: 0px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 24px 0px 0px 24px;
+    background-color: #5569ff;
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+}
+  `
+);
 const SearchWrapper = styled(Card)<CardProps>(
     ({ theme }) => `
     background-color: ${theme.colors.alpha.white[100]};
@@ -497,6 +514,20 @@ const Coach: NextpageWithLayout = () => {
                     </>
                 </Grid>
             </Container>
+            <HotlineWapper>
+                <Avatar sx={{ backgroundColor: "#fff" }}>
+                    <LocalPhoneTwoToneIcon />
+                </Avatar>
+                <Typography
+                    sx={{
+                        color: "#fff",
+                        marginLeft: PureLightTheme.spacing(1),
+                    }}
+                >
+                    Tổng đài hỗ trợ
+                </Typography>
+            </HotlineWapper>
+            <Footer />
         </Box>
     );
 };

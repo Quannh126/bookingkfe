@@ -4,7 +4,7 @@ import { Box } from "@mui/system";
 // import { Stack } from "@mui/material";
 // import { useRouter } from 'next/router'
 import { ILocationGrouped, NextpageWithLayout } from "../models";
-import { Popular } from "@/components/home";
+// import { Popular } from "@/components/home";
 
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -32,7 +32,9 @@ import {
     Select,
     // TextField,
     // Typography,
-    // Typography,
+    // IconButton,
+    Typography,
+    Avatar,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -50,10 +52,25 @@ import Logo from "@/components/Logo";
 import LoadingPage from "@/components/common/loading";
 import Footer from "@/components/Footer";
 // import useSWR, { SWRConfiguration } from "swr";
-
+import LocalPhoneTwoToneIcon from "@mui/icons-material/LocalPhoneTwoTone";
 const SearchWrapper = styled(Card)<CardProps>(
     ({ theme }) => `
     background-color: ${theme.colors.alpha.white[100]};
+  `
+);
+const HotlineWapper = styled(Box)(
+    ({ theme }) => `
+    padding: ${theme.spacing(1)};
+    position: fixed;
+    bottom: 115px;
+    right: 0px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 24px 0px 0px 24px;
+    background-color: #5569ff;
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+}
   `
 );
 // const OverviewWrapper = styled(Box)(
@@ -325,7 +342,20 @@ const Home: NextpageWithLayout = () => {
                 </SearchWrapper>
             </Container>
 
-            <Popular />
+            {/* <Popular /> */}
+            <HotlineWapper>
+                <Avatar sx={{ backgroundColor: "#fff" }}>
+                    <LocalPhoneTwoToneIcon />
+                </Avatar>
+                <Typography
+                    sx={{
+                        color: "#fff",
+                        marginLeft: PureLightTheme.spacing(1),
+                    }}
+                >
+                    Tổng đài hỗ trợ
+                </Typography>
+            </HotlineWapper>
             <Footer />
         </Box>
     );
