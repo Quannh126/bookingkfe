@@ -276,7 +276,7 @@ const AdminBooking: NextpageWithLayout = () => {
         config
     );
 
-    // const listDropoffAndPickUp = useSWR<
+    // const {data: listDropoffAndPickUp, isLoading: isLoadingL} = useSWR<
     //     { pickup: Array<NameValue>; dropoff: Array<NameValue> },
     //     Error
     // >([`/locations/points/${watchRoute}`], null, configPoint);

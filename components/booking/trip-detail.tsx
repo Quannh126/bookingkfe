@@ -206,8 +206,8 @@ export default function TripDetail({
                                 </Box>
                             </CardContent>
                         </Card>
-                        <Box>{selectedSeats.toString()}</Box>
-                        <Box>{selectedSeatsBooked.toString()}</Box>
+                        {/* <Box>{selectedSeats.toString()}</Box>
+                        <Box>{selectedSeatsBooked.toString()}</Box> */}
                     </Grid>
                     {/* <Grid item xs={12} lg={5} xl={5}></Grid> */}
                     <Grid item xs={12} lg={9} xl={10}>
