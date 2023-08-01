@@ -516,7 +516,7 @@ const Coach: NextpageWithLayout = () => {
             </Container>
             <HotlineWapper>
                 <Avatar sx={{ backgroundColor: "#fff" }}>
-                    <LocalPhoneTwoToneIcon />
+                    <LocalPhoneTwoToneIcon color="primary" />
                 </Avatar>
                 <Typography
                     sx={{

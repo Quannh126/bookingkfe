@@ -345,7 +345,7 @@ const Home: NextpageWithLayout = () => {
             {/* <Popular /> */}
             <HotlineWapper>
                 <Avatar sx={{ backgroundColor: "#fff" }}>
-                    <LocalPhoneTwoToneIcon />
+                    <LocalPhoneTwoToneIcon color="primary" />
                 </Avatar>
                 <Typography
                     sx={{
