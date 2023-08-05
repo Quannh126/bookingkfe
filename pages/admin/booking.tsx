@@ -185,6 +185,8 @@ const AdminBooking: NextpageWithLayout = () => {
             setOpenWarning(false);
             // setPageLoading(true);
             await removeBooking(trip_id, list_seat);
+            setShowBookingUpdateForm(false);
+            setSelectedSeatsBooked([]);
             // setPageLoading(false);
             socket.emit("changeSeats", { info: "changeSeats" });
         } catch (error: any) {

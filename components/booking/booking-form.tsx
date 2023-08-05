@@ -26,7 +26,7 @@ import { TYPE_PAYMENT } from "@/config/type-sell";
 import PhoneNumberField from "../form/phonenumber-field";
 import useSWR, { SWRConfiguration } from "swr";
 import IBookingTrip from "@/models/Book/book-trip";
-import { PureLightTheme } from "@/utils";
+// import { PureLightTheme } from "@/utils";
 export interface BookFormProps {
     configProvince: Array<NameValue> | [];
     // eslint-disable-next-line no-unused-vars
@@ -59,9 +59,9 @@ export function BookForm({
     tripDetail,
     selectedSeats,
     s_journey_date,
-    alertText,
-    visibleAlertText,
-}: BookFormProps) {
+}: // alertText,
+// visibleAlertText,
+BookFormProps) {
     const schema = yup.object().shape({
         customer: yup.object().shape({
             name: yup.string().required("Xin hãy nhập tên khách hàng"),
@@ -350,7 +350,7 @@ export function BookForm({
                 </DialogContent>
                 <DialogActions>
                     <Box sx={{ marginTop: 2 }}>
-                        {visibleAlertText && (
+                        {/* {visibleAlertText && (
                             <Typography
                                 sx={{
                                     color: PureLightTheme.colors.error.main,
@@ -363,7 +363,7 @@ export function BookForm({
                                 {" "}
                                 {alertText}
                             </Typography>
-                        )}
+                        )} */}
                         <Button type="submit" variant="contained">
                             Đặt vé
                         </Button>
