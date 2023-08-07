@@ -8,12 +8,14 @@ import {
     useTheme,
     styled,
     CardContent,
+    CircularProgress,
 } from "@mui/material";
 import Label from "@/components/Label";
 // import Text from "@/components/Text";
 import { Chart } from "@/components/Chart";
 import type { ApexOptions } from "apexcharts";
 import { eachDayOfInterval, format } from "date-fns";
+import useSWR, { SWRConfiguration } from "swr";
 // import { useState } from "react";
 const AvatarWrapper = styled(Avatar)(
     ({ theme }) => `
@@ -72,12 +74,7 @@ const subTotal = total - totalLastMonth;
 const currentMonth = new Date().getMonth() + 1;
 let listDays = getMonthDays(yeah, currentMonth).map((day) => "Ngày " + day);
 const randomData = generateRandomArray(listDays.length);
-const chart2Data = [
-    {
-        name: "Doanh số tháng " + currentMonth,
-        data: randomData,
-    },
-];
+
 function ChartOfMonth() {
     const theme = useTheme();
     // const [month, setMounth] = useState(currentMonth);
@@ -152,7 +149,24 @@ function ChartOfMonth() {
             },
         },
     };
+    const config: SWRConfiguration = {
+        dedupingInterval: 60 * 60 * 1000,
+        revalidateOnMount: true,
+        revalidateOnFocus: false,
+    };
 
+    const { data, isLoading: isLoadingBookingData } = useSWR<
+        Array<number> | [],
+        Error
+    >(`/booking/getMonthData`, null, config);
+    if (isLoadingBookingData) return <CircularProgress />;
+    const chart2Data = [
+        {
+            name: "Doanh số tháng " + currentMonth,
+            data: data!,
+        },
+    ];
+    const total = (data as number[]).reduce((total, val) => total + val, 0);
     return (
         <Grid
             container
@@ -215,7 +229,7 @@ function ChartOfMonth() {
                                     {`${total.toLocaleString()} VNĐ`}
                                 </Typography>
                             </Box>
-                            <Box
+                            {/* <Box
                                 sx={{
                                     display: "flex",
                                     alignItems: "center",
@@ -238,7 +252,7 @@ function ChartOfMonth() {
                                         subTotal > 0 ? "+" : ""
                                     } ${subTotal.toLocaleString()} VNĐ`}{" "}
                                 </Label>
-                            </Box>
+                            </Box> */}
                         </Box>
                         <Chart
                             options={chartOptions}

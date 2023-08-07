@@ -13,12 +13,17 @@ import {
     ListItemText,
     List,
     ListItemAvatar,
+    Skeleton,
+    CircularProgress,
 } from "@mui/material";
 // import TrendingUp from "@mui/icons-material/TrendingUp";
 import Text from "@/components/Text";
 import { Chart } from "@/components/Chart";
 import type { ApexOptions } from "apexcharts";
 import { Circle } from "@mui/icons-material";
+import useSWR, { SWRConfiguration } from "swr";
+import LoadingPage from "@/components/common/loading";
+// import { NameValue } from "@/models";
 const Red = "#FF1E00";
 const Green = "#59CE8F";
 const Blue = "#5569ff";
@@ -64,6 +69,7 @@ const caculatorPerCent = (arr: Array<number>, index: number) => {
     const percent = ((arr[index] / total) * 100).toFixed(0);
     return percent + "%";
 };
+
 function DonutOfDay() {
     const theme = useTheme();
 
@@ -141,12 +147,28 @@ function DonutOfDay() {
         },
     };
 
-    const chartSeries = [60, 35, 5];
-    const chartSeries2 = [12, 4, 5];
+    // const chartSeries = [60, 35, 5];
+    // const chartSeries2 = [12, 4, 5];
     const chartOptions2 = {
         ...chartOptions,
         labels: ["Xe đang hoạt động", "Xe chờ đặt lịch", "Xe đang bảo dưỡng"],
     };
+
+    const config: SWRConfiguration = {
+        dedupingInterval: 2 * 60 * 1000,
+        revalidateOnMount: true,
+        revalidateOnFocus: true,
+        refreshWhenHidden: true,
+    };
+    const { data: chartSeries2, isLoading: isLoadingCarData } = useSWR<
+        Array<number> | [],
+        Error
+    >(`/cars/getDonutData`, null, config);
+    const { data: chartSeries, isLoading: isLoadingBookingData } = useSWR<
+        Array<number> | [],
+        Error
+    >(`/booking/getDonutData`, null, config);
+    if (isLoadingBookingData || isLoadingCarData) return <CircularProgress />;
     return (
         <Card>
             <Grid spacing={0} container>
@@ -178,6 +200,7 @@ function DonutOfDay() {
                                 justifyContent="center"
                                 alignItems="center"
                             >
+                                <Skeleton variant="rectangular" height={250} />
                                 <Chart
                                     height={250}
                                     options={chartOptions}
@@ -224,9 +247,11 @@ function DonutOfDay() {
                                                 variant="h4"
                                                 noWrap
                                             >
-                                                5%
+                                                {chartSeries![2]}
                                             </Typography>
-                                            <Text color="error">3423</Text>
+                                            {/* <Text color="error">
+                                                {chartSeries![2]}
+                                            </Text> */}
                                         </Box>
                                     </ListItem>
                                     <ListItem disableGutters>
@@ -250,9 +275,11 @@ function DonutOfDay() {
                                                 variant="h4"
                                                 noWrap
                                             >
-                                                35%
+                                                {chartSeries![1]}
                                             </Typography>
-                                            <Text color="error">34344</Text>
+                                            {/* <Text color="error">
+                                                {chartSeries![1]}
+                                            </Text> */}
                                         </Box>
                                     </ListItem>
                                     <ListItem disableGutters>
@@ -276,9 +303,11 @@ function DonutOfDay() {
                                                 variant="h4"
                                                 noWrap
                                             >
-                                                60%
+                                                {chartSeries![0]}
                                             </Typography>
-                                            <Text color="error">324234</Text>
+                                            {/* <Text color="error">
+                                                {chartSeries![0]}
+                                            </Text> */}
                                         </Box>
                                     </ListItem>
                                 </List>
@@ -355,14 +384,11 @@ function DonutOfDay() {
                                                 variant="h4"
                                                 noWrap
                                             >
-                                                {caculatorPerCent(
-                                                    chartSeries2,
-                                                    2
-                                                )}
+                                                {chartSeries2![2]}
                                             </Typography>
-                                            <Text color="error">
-                                                {chartSeries2[2]}
-                                            </Text>
+                                            {/* <Text color="error">
+                                                {chartSeries2![2]}
+                                            </Text> */}
                                         </Box>
                                     </ListItem>
                                     <ListItem disableGutters>
@@ -386,14 +412,11 @@ function DonutOfDay() {
                                                 variant="h4"
                                                 noWrap
                                             >
-                                                {caculatorPerCent(
-                                                    chartSeries2,
-                                                    1
-                                                )}
+                                                {chartSeries2![1]}
                                             </Typography>
-                                            <Text color="error">
-                                                {chartSeries2[1]}
-                                            </Text>
+                                            {/* <Text color="error">
+                                                {chartSeries2![1]}
+                                            </Text> */}
                                         </Box>
                                     </ListItem>
                                     <ListItem disableGutters>
@@ -417,14 +440,11 @@ function DonutOfDay() {
                                                 variant="h4"
                                                 noWrap
                                             >
-                                                {caculatorPerCent(
-                                                    chartSeries2,
-                                                    0
-                                                )}
+                                                {chartSeries2![0]}
                                             </Typography>
-                                            <Text color="error">
-                                                {chartSeries2[0]}
-                                            </Text>
+                                            {/* <Text color="error">
+                                                {chartSeries2![0]}
+                                            </Text> */}
                                         </Box>
                                     </ListItem>
                                 </List>

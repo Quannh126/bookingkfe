@@ -8,11 +8,13 @@ import {
     useTheme,
     styled,
     CardContent,
+    CircularProgress,
 } from "@mui/material";
 import Label from "@/components/Label";
 
 import { Chart } from "@/components/Chart";
 import type { ApexOptions } from "apexcharts";
+import useSWR, { SWRConfiguration } from "swr";
 // import { useState } from "react";
 // import { eachDayOfInterval, format } from "date-fns";
 // import { useState } from "react";
@@ -180,7 +182,24 @@ function ChartOfYear() {
             },
         },
     };
+    const config: SWRConfiguration = {
+        dedupingInterval: 60 * 60 * 1000,
+        revalidateOnMount: true,
+        revalidateOnFocus: false,
+    };
 
+    const { data, isLoading: isLoadingBookingData } = useSWR<
+        Array<number> | [],
+        Error
+    >(`/booking/getYearData`, null, config);
+    if (isLoadingBookingData) return <CircularProgress />;
+    const chart2Data = [
+        {
+            name: "Doanh số năm " + currentYear,
+            data: data!,
+        },
+    ];
+    const total = (data as number[]).reduce((total, val) => total + val, 0);
     return (
         <Grid
             container
@@ -243,7 +262,7 @@ function ChartOfYear() {
                                     {`${total.toLocaleString()} VNĐ`}
                                 </Typography>
                             </Box>
-                            <Box
+                            {/* <Box
                                 sx={{
                                     display: "flex",
                                     alignItems: "center",
@@ -266,7 +285,7 @@ function ChartOfYear() {
                                         subTotal > 0 ? "+" : ""
                                     } ${subTotal.toLocaleString()} VNĐ`}{" "}
                                 </Label>
-                            </Box>
+                            </Box> */}
                         </Box>
                         <Chart
                             options={chartOptions}

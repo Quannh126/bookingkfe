@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 // import PageTitleWrapper from "@/components/PageTitleWrapper";
 import DonutOfDay from "@/components/contexts/Dashboards/Charts/DonutOfDay";
 import ChartComponents from "@/components/contexts/Dashboards/Charts/ChartComponents";
+import { PureLightTheme } from "@/utils";
 // import PageHeader from "@/components/contexts/Dashboards/Charts/PageHeader";
 
 const Admin: NextpageWithLayout = () => {
@@ -31,7 +32,10 @@ const Admin: NextpageWithLayout = () => {
                     spacing={4}
                 >
                     <Grid item xs={12}>
-                        <Typography variant="h3">
+                        <Typography
+                            variant="h3"
+                            marginTop={PureLightTheme.spacing(1)}
+                        >
                             Thống kê trong ngày
                         </Typography>
                     </Grid>
