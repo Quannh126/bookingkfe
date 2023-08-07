@@ -10,7 +10,7 @@ import {
     CardContent,
     CircularProgress,
 } from "@mui/material";
-import Label from "@/components/Label";
+// import Label from "@/components/Label";
 // import Text from "@/components/Text";
 import { Chart } from "@/components/Chart";
 import type { ApexOptions } from "apexcharts";
@@ -52,15 +52,15 @@ const AvatarWrapper = styled(Avatar)(
 
 //     return days.map((day) => format(day, "d"));
 // };
-function generateRandomArray(length: number) {
-    const array = [];
-    for (let i = 0; i < length; i++) {
-        const randomNum = Math.floor(Math.random() * 10000) + 10000;
-        const roundedNum = Math.floor(randomNum / 1000) * 100000;
-        array.push(roundedNum);
-    }
-    return array;
-}
+// function generateRandomArray(length: number) {
+//     const array = [];
+//     for (let i = 0; i < length; i++) {
+//         const randomNum = Math.floor(Math.random() * 10000) + 10000;
+//         const roundedNum = Math.floor(randomNum / 1000) * 100000;
+//         array.push(roundedNum);
+//     }
+//     return array;
+// }
 
 function getWeekDaysFromDate(date: Date): string[] {
     const weekdays = [
@@ -90,20 +90,20 @@ function getWeekDaysFromDate(date: Date): string[] {
 
     return weekDaysFormatted;
 }
-const randomData = generateRandomArray(7);
+// const randomData = generateRandomArray(7);
 const listLabel = getWeekDaysFromDate(new Date());
 // console.log(listLabel);
-const chart2Data = [
-    {
-        name: "Doanh trong tuần ",
-        data: randomData,
-    },
-];
+// const chart2Data = [
+//     {
+//         name: "Doanh trong tuần ",
+//         data: randomData,
+//     },
+// ];
 // const yeah = 2023;
 
-const total = randomData.reduce((total, val) => total + val, 0);
-const totalLastMonth = 2000000;
-const subTotal = total - totalLastMonth;
+// const total = randomData.reduce((total, val) => total + val, 0);
+// const totalLastMonth = 2000000;
+// const subTotal = total - totalLastMonth;
 // const currentMonth = new Date().getMonth() + 1;
 function ChartOfWeek() {
     const theme = useTheme();

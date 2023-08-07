@@ -17,12 +17,12 @@ import {
     CircularProgress,
 } from "@mui/material";
 // import TrendingUp from "@mui/icons-material/TrendingUp";
-import Text from "@/components/Text";
+// import Text from "@/components/Text";
 import { Chart } from "@/components/Chart";
 import type { ApexOptions } from "apexcharts";
 import { Circle } from "@mui/icons-material";
 import useSWR, { SWRConfiguration } from "swr";
-import LoadingPage from "@/components/common/loading";
+// import LoadingPage from "@/components/common/loading";
 // import { NameValue } from "@/models";
 const Red = "#FF1E00";
 const Green = "#59CE8F";
@@ -63,12 +63,12 @@ const ListItemAvatarWrapper = styled(ListItemAvatar)(
   }
 `
 );
-const caculatorPerCent = (arr: Array<number>, index: number) => {
-    if (arr.length == 0 || index < 0) return "";
-    const total = arr.reduce((s, val) => s + val, 0);
-    const percent = ((arr[index] / total) * 100).toFixed(0);
-    return percent + "%";
-};
+// const caculatorPerCent = (arr: Array<number>, index: number) => {
+//     if (arr.length == 0 || index < 0) return "";
+//     const total = arr.reduce((s, val) => s + val, 0);
+//     const percent = ((arr[index] / total) * 100).toFixed(0);
+//     return percent + "%";
+// };
 
 function DonutOfDay() {
     const theme = useTheme();

@@ -10,7 +10,7 @@ import {
     CardContent,
     CircularProgress,
 } from "@mui/material";
-import Label from "@/components/Label";
+// import Label from "@/components/Label";
 
 import { Chart } from "@/components/Chart";
 import type { ApexOptions } from "apexcharts";
@@ -46,36 +46,36 @@ const AvatarWrapper = styled(Avatar)(
 `
 );
 
-function generateRandomArray(length: number) {
-    const array = [];
-    for (let i = 0; i < length; i++) {
-        const randomNum = Math.floor(Math.random() * 10000) + 10000; // Tạo số ngẫu nhiên từ 10,000 đến 20,000
-        const roundedNum = Math.floor(randomNum / 1000) * 1000000; // Làm tròn số để chia hết cho 1000
-        array.push(roundedNum);
-    }
-    return array;
-}
+// function generateRandomArray(length: number) {
+//     const array = [];
+//     for (let i = 0; i < length; i++) {
+//         const randomNum = Math.floor(Math.random() * 10000) + 10000; // Tạo số ngẫu nhiên từ 10,000 đến 20,000
+//         const roundedNum = Math.floor(randomNum / 1000) * 1000000; // Làm tròn số để chia hết cho 1000
+//         array.push(roundedNum);
+//     }
+//     return array;
+// }
 
 // const currentYear = new Date().getFullYear();
 // const currentMonth = new Date().getMonth() + 1;
 
 // const monthDays = getMonthDays(currentYear, currentMonth);
 
-const randomData = generateRandomArray(12);
-const randomData2 = generateRandomArray(12);
-const total = randomData.reduce((total, val) => total + val, 0);
-const totalLastMonth = randomData2.reduce((total, val) => total + val, 0);
-const subTotal = total - totalLastMonth;
+// const randomData = generateRandomArray(12);
+// const randomData2 = generateRandomArray(12);
+// const total = randomData.reduce((total, val) => total + val, 0);
+// const totalLastMonth = randomData2.reduce((total, val) => total + val, 0);
+// const subTotal = total - totalLastMonth;
 const currentYear = new Date().getFullYear();
 // const currentMonth = new Date().getMonth() + 1;
 // let listDays = getMonthDays(currentYear, currentMonth).map((day) => "Ngày " + day);
 
-const chart2Data = [
-    {
-        name: "Doanh số năm " + currentYear,
-        data: randomData,
-    },
-];
+// const chart2Data = [
+//     {
+//         name: "Doanh số năm " + currentYear,
+//         data: randomData,
+//     },
+// ];
 
 function ChartOfYear() {
     const theme = useTheme();
