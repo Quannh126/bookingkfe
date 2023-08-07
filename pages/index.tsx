@@ -118,22 +118,23 @@ const Home: NextpageWithLayout = () => {
         });
     };
     const onChangeFrom = (val: any) => {
-        console.log(val.target.value);
+        // console.log(val.target.value);
         dispatch(setFilterSL(val.target.value));
         // setFormData({ ...formData, ...{ startLocation: val.target.value } });
         // checkButtonDisabled();
     };
     const onChangeTo = (val: any) => {
-        console.log(val.target.value);
+        // console.log(val.target.value);
         dispatch(setFilterEL(val.target.value));
         //setFormData({ ...formData, ...{ endLocation: val.target.value } });
         // checkButtonDisabled();
     };
 
     const onChangeDate = (val: any) => {
-        console.log(val._d);
-        const journeyDate = today.format("YYYY-MM-DD");
+        // console.log(val._d);
+        const journeyDate = moment(val._d).format("YYYY-MM-DD");
         dispatch(setFilterJD(journeyDate));
+        // console.log(journeyDate);
         //setFormData({ ...formData, ...{ journeyDate } });
         // checkButtonDisabled();
     };
