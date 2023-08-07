@@ -70,7 +70,7 @@ function Footer() {
                         <Typography sx={{ fontWeight: 500, fontSize: "18px" }}>
                             Các hình thức thanh toán
                         </Typography>
-                        <Box display="flex">
+                        <Box display="flex" sx={{ justifyContent: "center" }}>
                             <Box
                                 component="img"
                                 height="56px"

@@ -180,13 +180,14 @@ const Home: NextpageWithLayout = () => {
                     component="img"
                     sx={{
                         height: 600,
-
+                        zIndex: -1,
                         width: "100%",
+                        position: "absolute",
                     }}
                     src="/img/background.jpg"
                 ></Box>
             </Box>
-            <Container maxWidth="lg">
+            <Container maxWidth="lg" sx={{ marginTop: 25, marginBottom: 20 }}>
                 <SearchWrapper elevation={2}>
                     <CardContent sx={{ padding: PureLightTheme.spacing(3) }}>
                         {isLoading || !locations ? (
