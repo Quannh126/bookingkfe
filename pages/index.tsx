@@ -97,7 +97,7 @@ const HeaderWrapper = styled(Card)(
 //     color: #FDEAD2,
 //   `
 // );
-const today = moment();
+// const today = moment();
 // const threeLengthArray: Array<string> = [];
 const Home: NextpageWithLayout = () => {
     // const router = useRouter();
