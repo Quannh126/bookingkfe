@@ -9,6 +9,7 @@ import { Container, Grid, Typography } from "@mui/material";
 import DonutOfDay from "@/components/contexts/Dashboards/Charts/DonutOfDay";
 
 import Footer from "@/components/Footer";
+import { PureLightTheme } from "@/utils";
 // import PageTitleWrapper from "@/components/PageTitleWrapper";
 // import PageHeader from "@/components/contexts/Dashboards/Charts/PageHeader";
 
@@ -29,7 +30,7 @@ const Dashboard: NextpageWithLayout = () => {
                     alignItems="stretch"
                     spacing={4}
                 >
-                    <Grid item xs={12}>
+                    <Grid item xs={12} marginTop={PureLightTheme.spacing(1)}>
                         <Typography variant="h3">
                             Thống kê trong ngày
                         </Typography>

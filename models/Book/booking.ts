@@ -10,4 +10,5 @@ export interface IBooking {
     status_payment: string;
     pickup_point: string;
     dropoff_point: string;
+    ticket_code: string;
 }

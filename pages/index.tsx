@@ -97,7 +97,7 @@ const HeaderWrapper = styled(Card)(
 //     color: #FDEAD2,
 //   `
 // );
-const today = moment();
+// const today = moment();
 // const threeLengthArray: Array<string> = [];
 const Home: NextpageWithLayout = () => {
     // const router = useRouter();
@@ -118,22 +118,23 @@ const Home: NextpageWithLayout = () => {
         });
     };
     const onChangeFrom = (val: any) => {
-        console.log(val.target.value);
+        // console.log(val.target.value);
         dispatch(setFilterSL(val.target.value));
         // setFormData({ ...formData, ...{ startLocation: val.target.value } });
         // checkButtonDisabled();
     };
     const onChangeTo = (val: any) => {
-        console.log(val.target.value);
+        // console.log(val.target.value);
         dispatch(setFilterEL(val.target.value));
         //setFormData({ ...formData, ...{ endLocation: val.target.value } });
         // checkButtonDisabled();
     };
 
     const onChangeDate = (val: any) => {
-        console.log(val._d);
-        const journeyDate = today.format("YYYY-MM-DD");
+        // console.log(val._d);
+        const journeyDate = moment(val._d).format("YYYY-MM-DD");
         dispatch(setFilterJD(journeyDate));
+        // console.log(journeyDate);
         //setFormData({ ...formData, ...{ journeyDate } });
         // checkButtonDisabled();
     };
@@ -180,13 +181,14 @@ const Home: NextpageWithLayout = () => {
                     component="img"
                     sx={{
                         height: 600,
-
+                        zIndex: -1,
                         width: "100%",
+                        position: "absolute",
                     }}
                     src="/img/background.jpg"
                 ></Box>
             </Box>
-            <Container maxWidth="lg">
+            <Container maxWidth="lg" sx={{ marginTop: 25, marginBottom: 20 }}>
                 <SearchWrapper elevation={2}>
                     <CardContent sx={{ padding: PureLightTheme.spacing(3) }}>
                         {isLoading || !locations ? (

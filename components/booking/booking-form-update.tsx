@@ -124,6 +124,7 @@ BookUpdateFormProps) {
             selected_seats: selectedSeats,
             fare: selectedSeats.split("-").length * Number(tripDetail.fare),
             status_payment: book_detail!.booking.status_payment,
+            ticket_code: book_detail!.booking.ticket_code,
         },
         resolver: yupResolver(schema),
     });

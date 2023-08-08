@@ -8,11 +8,13 @@ import {
     useTheme,
     styled,
     CardContent,
+    CircularProgress,
 } from "@mui/material";
-import Label from "@/components/Label";
+// import Label from "@/components/Label";
 // import Text from "@/components/Text";
 import { Chart } from "@/components/Chart";
 import type { ApexOptions } from "apexcharts";
+import useSWR, { SWRConfiguration } from "swr";
 // import { eachDayOfInterval, format } from "date-fns";
 // import { useState } from "react";
 const AvatarWrapper = styled(Avatar)(
@@ -50,54 +52,58 @@ const AvatarWrapper = styled(Avatar)(
 
 //     return days.map((day) => format(day, "d"));
 // };
-function generateRandomArray(length: number) {
-    const array = [];
-    for (let i = 0; i < length; i++) {
-        const randomNum = Math.floor(Math.random() * 10000) + 10000; // Tạo số ngẫu nhiên từ 10,000 đến 20,000
-        const roundedNum = Math.floor(randomNum / 1000) * 100000; // Làm tròn số để chia hết cho 1000
-        array.push(roundedNum);
-    }
-    return array;
-}
+// function generateRandomArray(length: number) {
+//     const array = [];
+//     for (let i = 0; i < length; i++) {
+//         const randomNum = Math.floor(Math.random() * 10000) + 10000;
+//         const roundedNum = Math.floor(randomNum / 1000) * 100000;
+//         array.push(roundedNum);
+//     }
+//     return array;
+// }
 
-function getWeekDays(date: Date) {
-    const weekDays = [
+function getWeekDaysFromDate(date: Date): string[] {
+    const weekdays = [
+        "CN",
         "Thứ 2",
         "Thứ 3",
         "Thứ 4",
         "Thứ 5",
         "Thứ 6",
         "Thứ 7",
-        "Chủ nhật",
     ];
-    const dateStrings = [];
+    const weekDaysFormatted: string[] = [];
 
-    for (let i = 1; i <= 7; i++) {
-        const currentDate = new Date(
-            date.getTime() + (i - 1) * 24 * 60 * 60 * 1000
-        ); // Tính toán ngày tương ứng
-        const dateString = currentDate.toLocaleDateString("en-US", {
-            day: "2-digit",
-            month: "2-digit",
-        }); // Chuyển đổi sang dạng dd/mm
-        dateStrings.push(dateString);
+    const currentDay = date.getDay();
+    const daysUntil = currentDay; // Số ngày cần trừ để đến thứ 2
+    const firstDayOfWeek = new Date(date);
+    firstDayOfWeek.setDate(date.getDate() - daysUntil); // Đặt ngày là ngày đầu tiên của tuần (thứ 2)
+
+    for (let i = 0; i < 7; i++) {
+        const day = new Date(firstDayOfWeek);
+        day.setDate(firstDayOfWeek.getDate() + i);
+        const formattedDay = `${weekdays[i]} (${day.getDate()}/${
+            day.getMonth() + 1
+        })`;
+        weekDaysFormatted.push(formattedDay);
     }
 
-    return dateStrings.map((day, i) => weekDays[i] + " (" + day + ")");
+    return weekDaysFormatted;
 }
-const randomData = generateRandomArray(7);
-const listLabel = getWeekDays(new Date());
-const chart2Data = [
-    {
-        name: "Doanh trong tuần ",
-        data: randomData,
-    },
-];
+// const randomData = generateRandomArray(7);
+const listLabel = getWeekDaysFromDate(new Date());
+// console.log(listLabel);
+// const chart2Data = [
+//     {
+//         name: "Doanh trong tuần ",
+//         data: randomData,
+//     },
+// ];
 // const yeah = 2023;
 
-const total = randomData.reduce((total, val) => total + val, 0);
-const totalLastMonth = 2000000;
-const subTotal = total - totalLastMonth;
+// const total = randomData.reduce((total, val) => total + val, 0);
+// const totalLastMonth = 2000000;
+// const subTotal = total - totalLastMonth;
 // const currentMonth = new Date().getMonth() + 1;
 function ChartOfWeek() {
     const theme = useTheme();
@@ -177,7 +183,25 @@ function ChartOfWeek() {
             },
         },
     };
+    const config: SWRConfiguration = {
+        dedupingInterval: 60 * 60 * 1000,
+        revalidateOnMount: true,
+        revalidateOnFocus: true,
+        refreshInterval: 1 * 60 * 1000,
+    };
 
+    const { data, isLoading: isLoadingBookingData } = useSWR<
+        Array<number> | [],
+        Error
+    >(`/booking/getWeekData`, null, config);
+    if (isLoadingBookingData) return <CircularProgress />;
+    const chart2Data = [
+        {
+            name: "Doanh trong tuần ",
+            data: data!,
+        },
+    ];
+    const total = (data as number[]).reduce((total, val) => total + val, 0);
     return (
         <Grid
             container
@@ -240,7 +264,7 @@ function ChartOfWeek() {
                                     {`${total.toLocaleString()} VNĐ`}
                                 </Typography>
                             </Box>
-                            <Box
+                            {/* <Box
                                 sx={{
                                     display: "flex",
                                     alignItems: "center",
@@ -263,7 +287,7 @@ function ChartOfWeek() {
                                         subTotal > 0 ? "+" : ""
                                     } ${subTotal.toLocaleString()} VNĐ`}{" "}
                                 </Label>
-                            </Box>
+                            </Box> */}
                         </Box>
                         <Chart
                             options={chartOptions}

@@ -8,11 +8,13 @@ import {
     useTheme,
     styled,
     CardContent,
+    CircularProgress,
 } from "@mui/material";
-import Label from "@/components/Label";
+// import Label from "@/components/Label";
 
 import { Chart } from "@/components/Chart";
 import type { ApexOptions } from "apexcharts";
+import useSWR, { SWRConfiguration } from "swr";
 // import { useState } from "react";
 // import { eachDayOfInterval, format } from "date-fns";
 // import { useState } from "react";
@@ -44,36 +46,36 @@ const AvatarWrapper = styled(Avatar)(
 `
 );
 
-function generateRandomArray(length: number) {
-    const array = [];
-    for (let i = 0; i < length; i++) {
-        const randomNum = Math.floor(Math.random() * 10000) + 10000; // Tạo số ngẫu nhiên từ 10,000 đến 20,000
-        const roundedNum = Math.floor(randomNum / 1000) * 1000000; // Làm tròn số để chia hết cho 1000
-        array.push(roundedNum);
-    }
-    return array;
-}
+// function generateRandomArray(length: number) {
+//     const array = [];
+//     for (let i = 0; i < length; i++) {
+//         const randomNum = Math.floor(Math.random() * 10000) + 10000; // Tạo số ngẫu nhiên từ 10,000 đến 20,000
+//         const roundedNum = Math.floor(randomNum / 1000) * 1000000; // Làm tròn số để chia hết cho 1000
+//         array.push(roundedNum);
+//     }
+//     return array;
+// }
 
 // const currentYear = new Date().getFullYear();
 // const currentMonth = new Date().getMonth() + 1;
 
 // const monthDays = getMonthDays(currentYear, currentMonth);
 
-const randomData = generateRandomArray(12);
-const randomData2 = generateRandomArray(12);
-const total = randomData.reduce((total, val) => total + val, 0);
-const totalLastMonth = randomData2.reduce((total, val) => total + val, 0);
-const subTotal = total - totalLastMonth;
+// const randomData = generateRandomArray(12);
+// const randomData2 = generateRandomArray(12);
+// const total = randomData.reduce((total, val) => total + val, 0);
+// const totalLastMonth = randomData2.reduce((total, val) => total + val, 0);
+// const subTotal = total - totalLastMonth;
 const currentYear = new Date().getFullYear();
 // const currentMonth = new Date().getMonth() + 1;
 // let listDays = getMonthDays(currentYear, currentMonth).map((day) => "Ngày " + day);
 
-const chart2Data = [
-    {
-        name: "Doanh số năm " + currentYear,
-        data: randomData,
-    },
-];
+// const chart2Data = [
+//     {
+//         name: "Doanh số năm " + currentYear,
+//         data: randomData,
+//     },
+// ];
 
 function ChartOfYear() {
     const theme = useTheme();
@@ -180,7 +182,24 @@ function ChartOfYear() {
             },
         },
     };
+    const config: SWRConfiguration = {
+        dedupingInterval: 60 * 60 * 1000,
+        revalidateOnMount: true,
+        revalidateOnFocus: false,
+    };
 
+    const { data, isLoading: isLoadingBookingData } = useSWR<
+        Array<number> | [],
+        Error
+    >(`/booking/getYearData`, null, config);
+    if (isLoadingBookingData) return <CircularProgress />;
+    const chart2Data = [
+        {
+            name: "Doanh số năm " + currentYear,
+            data: data!,
+        },
+    ];
+    const total = (data as number[]).reduce((total, val) => total + val, 0);
     return (
         <Grid
             container
@@ -243,7 +262,7 @@ function ChartOfYear() {
                                     {`${total.toLocaleString()} VNĐ`}
                                 </Typography>
                             </Box>
-                            <Box
+                            {/* <Box
                                 sx={{
                                     display: "flex",
                                     alignItems: "center",
@@ -266,7 +285,7 @@ function ChartOfYear() {
                                         subTotal > 0 ? "+" : ""
                                     } ${subTotal.toLocaleString()} VNĐ`}{" "}
                                 </Label>
-                            </Box>
+                            </Box> */}
                         </Box>
                         <Chart
                             options={chartOptions}
